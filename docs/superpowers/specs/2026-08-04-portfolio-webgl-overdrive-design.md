@@ -10,6 +10,17 @@ A página passa a existir dentro de um campo operacional tridimensional. Um canv
 
 O verde-limão continua sendo o único acento. A geometria usa pontos, linhas, planos, grades e pulsos que evocam estrutura, fluxo e conexão — nunca estrelas, galáxias, claquetes, projetores ou controles de reprodução.
 
+## Material visual disponível
+
+A experiência usará interfaces reais como matéria principal dos projetos. Toda imagem copiada para `public/projetos` deve ser uma captura demonstrativa ou um derivado sanitizado; os arquivos originais permanecem fora do repositório do portfólio.
+
+- **Alinnea:** o repositório `C:\Users\leand\OneDrive\Documentos\GitHub\ALINNEA` contém seed e painel de demonstração. As novas capturas devem vir apenas do usuário demo e das rotas demonstrativas, sem pacientes, prontuários ou dados clínicos reais. A captura pública atual da landing page continua válida.
+- **DocHub:** priorizar os formulários vazios de cadastro de funcionário e nova obra, que comunicam importação automatizada de PDFs sem expor pessoas. Não usar capturas contendo “Maria Mobile Upload”, e-mail de suporte, senha, CNO, CPF/CNPJ ou nomes operacionais.
+- **Roadmap:** usar a visão semanal e o mapa de disponibilidade com técnicos e projetos demonstrativos. Não usar a visão que exibe nomes de coordenadores se esses nomes não forem explicitamente confirmados como fictícios.
+- **Radar Fiscal:** as capturas recebidas contêm CNPJ, e-mail, UUIDs ou nomes. Nenhum original será publicado. Será criado um derivado sanitizado da tela de parcelamentos ou painel, preservando a estrutura da interface e removendo identificadores antes de entrar em `public/projetos`.
+
+O processo de sanitização deve ser verificável por inspeção visual do arquivo final. Cortar visualmente uma imagem no CSS não é suficiente se o arquivo público ainda contiver o dado.
+
 ## Arquitetura
 
 ### Camada espacial
@@ -45,7 +56,7 @@ O hero e sua entrada automática permanecem. Quando a rolagem começa, o bloco g
 
 ### Projetos
 
-É o principal momento espacial. Alinnea abre a sequência como um plano largo, com imagem em parallax multicamada e leve inclinação controlada pela rolagem. Roadmap e DocHub entram como dois planos tipográficos em profundidades distintas. Os demais projetos formam uma sequência de superfícies que se aproxima e se estabiliza na grade existente.
+É o principal momento espacial. Alinnea abre a sequência como um plano largo, com imagem em parallax multicamada e leve inclinação controlada pela rolagem. Roadmap, DocHub e Radar Fiscal passam a ter planos visuais próprios, usando as capturas seguras definidas acima. Cada plano entra por um eixo e profundidade diferentes, mas todos convergem para a grade editorial existente. Os demais projetos formam uma sequência de superfícies que se aproxima e se estabiliza.
 
 No desktop, a seção pode usar um trecho sticky e progressão vertical longa, sem transformar a roda do mouse em rolagem horizontal. No mobile, os cartões permanecem verticais e recebem apenas perspectiva, máscara e parallax compactos.
 
@@ -124,6 +135,7 @@ O ciclo visual terá uma captura completa desktop/mobile, uma única correção 
 - Projetos formam o principal momento WebGL e contato encerra com o clímax visual.
 - Nenhum conteúdo depende de animação, WebGL ou rolagem para existir.
 - Não há scroll hijacking, metáforas cinematográficas na interface ou exposição de dados privados.
+- Alinnea, DocHub, Roadmap e Radar Fiscal aparecem com material visual real ou demonstrativo, sem publicar os arquivos sensíveis de origem.
 - Desktop e mobile não apresentam overflow, bloqueio de interação ou queda perceptível causada por excesso de renderização.
 - `prefers-reduced-motion` e falha de WebGL entregam uma página completa e estática.
 - Testes, typecheck e build passam antes do encerramento.
