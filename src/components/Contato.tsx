@@ -1,95 +1,45 @@
-import { site, whatsappLink, contatoPendente } from '@/lib/site';
+import { site, whatsappLink } from '@/lib/site';
 
-/**
- * 05 — CONTATO
- *
- * A claquete marca o começo de uma tomada, não o fim. É por isso que o fim da
- * página é a coisa mais clara dela: o único ponto do site em que o verde-limão
- * toma a tela inteira, porque é o único ponto em que ele é a ação.
- */
 export function Contato() {
   return (
-    <section id="contato" className="bg-mark text-black">
+    <section id="contato" aria-labelledby="contato-titulo" className="bg-mark text-black">
       <div className="shell py-20 md:py-32">
-        <div data-cut className="max-w-[42ch]">
-          <h2 className="title text-[2.25rem] sm:text-[3rem] md:text-[4rem]">
-            Me conta como funciona hoje
-          </h2>
-
-          <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-black/80 sm:text-lg">
-            Sem proposta na primeira conversa e sem jargão. Me descreve o processo do
-            jeito que ele acontece, com a planilha e a gambiarra inclusas. Se eu não for
-            a pessoa certa para isso, eu falo — é mais barato para nós dois.
-          </p>
-
-          <div className="mt-10">
-            <a
-              href={whatsappLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 border-2 border-black px-7 py-4 font-mono text-[0.8125rem] font-semibold tracking-[0.16em] text-black uppercase transition-colors duration-200 hover:bg-black hover:text-mark"
-            >
-              Chamar no WhatsApp
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-200 group-hover:translate-x-1"
-              >
-                &rarr;
-              </span>
-            </a>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)] lg:items-end lg:gap-20">
+          <div>
+            <h2 id="contato-titulo" className="title max-w-[17ch] text-[2.4rem] sm:text-[3.5rem] md:text-[4.5rem]">
+              Tem uma operação que ainda depende de planilha, retrabalho ou conferência manual?
+            </h2>
+            <p className="mt-7 max-w-[58ch] text-base leading-7 text-black/75 sm:text-lg">
+              Me conte como o processo funciona hoje. Eu ajudo a transformar a necessidade
+              em uma entrega clara, sem esconder a conversa atrás de jargão técnico.
+            </p>
           </div>
 
-          {contatoPendente ? (
-            <p className="burn mt-8 max-w-[52ch] leading-relaxed text-black/70 normal-case tracking-[0.06em]">
-              O número de WhatsApp ainda é um placeholder. Troque{' '}
-              <code className="font-semibold">whatsapp</code> em{' '}
-              <code className="font-semibold">src/lib/site.ts</code> antes de publicar,
-              ou este botão não leva a lugar nenhum.
-            </p>
-          ) : null}
-
-          <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3 border-t border-black/25 pt-6">
-            {site.github ? (
-              <a
-                href={site.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="burn text-black/70 underline decoration-black/30 underline-offset-4 transition-colors hover:text-black hover:decoration-black"
-              >
-                GitHub
-              </a>
-            ) : null}
-            {site.linkedin ? (
-              <a
-                href={site.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="burn text-black/70 underline decoration-black/30 underline-offset-4 transition-colors hover:text-black hover:decoration-black"
-              >
-                LinkedIn
-              </a>
-            ) : null}
-            {site.instagram ? (
-              <a
-                href={site.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="burn text-black/70 underline decoration-black/30 underline-offset-4 transition-colors hover:text-black hover:decoration-black"
-              >
-                Instagram
-              </a>
-            ) : null}
-            {site.email ? (
-              <a
-                href={`mailto:${site.email}`}
-                className="burn text-black/70 underline decoration-black/30 underline-offset-4 transition-colors hover:text-black hover:decoration-black"
-              >
-                {site.email}
-              </a>
-            ) : null}
+          <div className="border-t-2 border-black">
+            <ContactLink href={whatsappLink()} label="WhatsApp" external />
+            <ContactLink href={`mailto:${site.email}`} label={site.email} />
+            <ContactLink href={site.linkedin} label="LinkedIn" external />
+            <ContactLink href={site.instagram} label="@lhs.oliveira" external />
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+function ContactLink({ href, label, external = false }: { href: string; label: string; external?: boolean }) {
+  return (
+    <a
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+      className="group flex min-h-14 items-center justify-between gap-4 border-b border-black/30 py-4 text-sm font-semibold text-black transition-colors hover:bg-black hover:px-4 hover:text-mark sm:text-base"
+    >
+      {label}
+      <span aria-hidden className="transition-transform group-hover:translate-x-1">
+        {external ? '↗' : '→'}
+      </span>
+    </a>
+  );
+}
+

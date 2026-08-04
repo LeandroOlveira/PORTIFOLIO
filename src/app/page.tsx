@@ -2,7 +2,7 @@ import { Abertura } from '@/components/Abertura';
 import { Processo } from '@/components/Processo';
 import { Projetos } from '@/components/Projetos';
 import { Stack } from '@/components/Stack';
-import { QuemSou } from '@/components/QuemSou';
+import { Trajetoria } from '@/components/Trajetoria';
 import { Notas } from '@/components/Notas';
 import { Contato } from '@/components/Contato';
 import { getNotas, getProjetos } from '@/lib/content';
@@ -17,7 +17,7 @@ export default function Home() {
       <Projetos projetos={projetos} />
       <Stack />
       <Processo />
-      <QuemSou />
+      <Trajetoria />
       <Notas notas={notas} />
       <Contato />
     </>
