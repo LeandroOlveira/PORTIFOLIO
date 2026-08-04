@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest';
+import { getProjetos, parseProjeto } from '@/lib/content';
+
+const valid = {
+  titulo: 'Alinnea',
+  resumo: 'CRM para psicólogos.',
+  problema: 'Rotinas clínicas espalhadas.',
+  resultado: 'Agenda, prontuário e comunicação reunidos.',
+  status: 'publicado',
+  tipo: 'SaaS próprio',
+  url: 'https://alinnea.com.br/',
+  imagem: '/projetos/alinnea.webp',
+  stack: ['Next.js'],
+  destaque: true,
+  ordem: 1,
+};
+
+describe('project content', () => {
+  it('parses the explicit project contract', () => {
+    expect(parseProjeto('alinnea', valid, 'corpo')).toMatchObject({
+      slug: 'alinnea',
+      status: 'publicado',
+      ordem: 1,
+      destaque: true,
+    });
+  });
+
+  it('rejects unknown status with the file name', () => {
+    expect(() => parseProjeto('invalido', { ...valid, status: 'pronto' }, '')).toThrow(
+      'content/projetos/invalido.mdx: status inválido',
+    );
+  });
+
+  it('rejects a missing required field', () => {
+    const { problema: _problema, ...missing } = valid;
+    expect(() => parseProjeto('incompleto', missing, '')).toThrow(
+      'content/projetos/incompleto.mdx: problema é obrigatório',
+    );
+  });
+
+  it('loads seven real projects in explicit order', () => {
+    const projects = getProjetos();
+    expect(projects).toHaveLength(7);
+    expect(projects.map((project) => project.slug)).toEqual([
+      'alinnea',
+      'roadmap',
+      'dochub',
+      'radar-fiscal',
+      'petgest',
+      'gabriela-lorenson',
+      'ebano',
+    ]);
+  });
+});

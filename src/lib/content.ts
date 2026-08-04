@@ -4,25 +4,38 @@ import matter from 'gray-matter';
 
 const RAIZ = path.join(process.cwd(), 'content');
 
+export const projectStatuses = [
+  'publicado',
+  'entregue',
+  'em-construcao',
+  'demonstracao',
+] as const;
+
+export type ProjectStatus = (typeof projectStatuses)[number];
+
 export type Projeto = {
   slug: string;
   titulo: string;
-  /** O resumo de uma linha que aparece no clipe. */
-  linha: string;
-  /** O processo como estava: longo, tremido, sem foco. */
-  bruto: string[];
-  /** O que foi entregue. */
-  corte: string[];
+  resumo: string;
+  problema: string;
+  resultado: string;
+  status: ProjectStatus;
+  tipo: string;
+  url?: string;
+  imagem?: string;
   stack: string[];
+  destaque: boolean;
+  ordem: number;
+  corpo: string;
+  /** Campos transitórios consumidos pela apresentação antiga até a Task 4. */
+  linha: string;
+  bruto: string[];
+  corte: string[];
   ano: string;
   setor: string;
-  /** Duração real do projeto, se souber. Vazio some da claquete. */
   duracao?: string;
-  url?: string;
   repo?: string;
-  /** true = conteúdo de demonstração; a UI marca isso na cara. */
   demo?: boolean;
-  corpo: string;
 };
 
 export type Nota = {
@@ -51,22 +64,59 @@ function ler(pasta: string): { slug: string; data: Record<string, unknown>; corp
 
 export function getProjetos(): Projeto[] {
   return ler('projetos')
-    .map(({ slug, data, corpo }) => ({
-      slug,
-      titulo: String(data.titulo ?? slug),
-      linha: String(data.linha ?? ''),
-      bruto: (data.bruto as string[]) ?? [],
-      corte: (data.corte as string[]) ?? [],
-      stack: (data.stack as string[]) ?? [],
-      ano: String(data.ano ?? ''),
-      setor: String(data.setor ?? ''),
-      duracao: data.duracao ? String(data.duracao) : undefined,
-      url: data.url ? String(data.url) : undefined,
-      repo: data.repo ? String(data.repo) : undefined,
-      demo: Boolean(data.demo),
-      corpo,
-    }))
-    .sort((a, b) => b.ano.localeCompare(a.ano) || a.titulo.localeCompare(b.titulo));
+    .map(({ slug, data, corpo }) => parseProjeto(slug, data, corpo))
+    .sort((a, b) => a.ordem - b.ordem || a.titulo.localeCompare(b.titulo));
+}
+
+function requiredString(slug: string, data: Record<string, unknown>, field: string) {
+  const value = data[field];
+  if (typeof value !== 'string' || !value.trim()) {
+    throw new Error(`content/projetos/${slug}.mdx: ${field} é obrigatório`);
+  }
+  return value.trim();
+}
+
+export function parseProjeto(
+  slug: string,
+  data: Record<string, unknown>,
+  corpo: string,
+): Projeto {
+  const status = requiredString(slug, data, 'status');
+  if (!projectStatuses.includes(status as ProjectStatus)) {
+    throw new Error(`content/projetos/${slug}.mdx: status inválido`);
+  }
+
+  const ordem = Number(data.ordem);
+  if (!Number.isFinite(ordem)) {
+    throw new Error(`content/projetos/${slug}.mdx: ordem é obrigatória`);
+  }
+
+  const resumo = requiredString(slug, data, 'resumo');
+  const problema = requiredString(slug, data, 'problema');
+  const resultado = requiredString(slug, data, 'resultado');
+  const tipo = requiredString(slug, data, 'tipo');
+
+  return {
+    slug,
+    titulo: requiredString(slug, data, 'titulo'),
+    resumo,
+    problema,
+    resultado,
+    status: status as ProjectStatus,
+    tipo,
+    url: typeof data.url === 'string' && data.url ? data.url : undefined,
+    imagem: typeof data.imagem === 'string' && data.imagem ? data.imagem : undefined,
+    stack: Array.isArray(data.stack) ? data.stack.map(String) : [],
+    destaque: data.destaque === true,
+    ordem,
+    corpo,
+    linha: resumo,
+    bruto: [problema],
+    corte: [resultado],
+    ano: '',
+    setor: tipo,
+    demo: status === 'demonstracao',
+  };
 }
 
 export function getProjeto(slug: string): Projeto | undefined {
