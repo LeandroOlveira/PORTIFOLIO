@@ -61,10 +61,10 @@ enquadramento e cortes retangulares, nunca nos nomes da interface.
 STORY: O visitante entende a oferta, encontra projetos reais, reconhece repertório técnico
 e trajetória operacional, e abre um dos canais reais de contato.
 
-FIRST VIEWPORT: Headline assimétrica já legível no HTML, duas máscaras retangulares saem
+FIRST VIEWPORT: Headline assimétrica já legível no HTML, duas faixas diagonais estreitas saem
 automaticamente em menos de 1,2 segundo, e projetos ficam disponíveis no scroll seguinte.
 
-FORM: Portfólio editorial em movimento; uma abertura coreografada e o restante disciplinado.
+FORM [SEED: spec-3b3faa8]: Portfólio editorial em movimento; uma abertura coreografada e o restante disciplinado.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish
 review, the verdict, and DESIGN.md

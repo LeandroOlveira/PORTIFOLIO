@@ -21,6 +21,7 @@ describe('Abertura', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Produtos digitais para operações reais.',
     );
+    expect(screen.getByText(/Leandro Oliveira · Desenvolvedor full stack/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Conversar sobre um projeto' })).toHaveAttribute(
       'href',
       expect.stringContaining('https://wa.me/5544997762271'),

@@ -17,11 +17,15 @@ export function Projetos({ projetos }: { projetos: Projeto[] }) {
         </div>
 
         <div className="mt-14 grid gap-px bg-line md:mt-20 md:grid-cols-12">
-          {destaques.map((projeto, index) => (
+          {destaques.map((projeto) => (
             <ProjetoCard
               key={projeto.slug}
               projeto={projeto}
-              className={index === 0 ? 'md:col-span-7' : 'md:col-span-5'}
+              className={
+                projeto.imagem
+                  ? 'md:col-span-12 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(24rem,0.85fr)]'
+                  : 'md:col-span-6'
+              }
               destaque
             />
           ))}
@@ -51,7 +55,11 @@ function ProjetoCard({
   return (
     <article className={`group flex min-h-full flex-col bg-ink ${className}`}>
       {projeto.imagem ? (
-        <div className={`overflow-hidden border-b border-line bg-panel ${destaque ? 'aspect-[16/9]' : 'aspect-[4/3]'}`}>
+        <div
+          className={`overflow-hidden border-b border-line bg-panel ${
+            destaque ? 'aspect-[16/9] lg:aspect-auto lg:min-h-[30rem] lg:border-r lg:border-b-0' : 'aspect-[4/3]'
+          }`}
+        >
           <img
             src={projeto.imagem}
             alt={`Interface do projeto ${projeto.titulo}`}

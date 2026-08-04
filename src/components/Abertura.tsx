@@ -33,8 +33,9 @@ export function Abertura() {
       aria-labelledby="abertura-titulo"
       className="relative min-h-svh overflow-hidden bg-ink pt-14"
     >
-      <div className="shell grid min-h-[calc(100svh-3.5rem)] content-between gap-16 py-12 sm:py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.55fr)] lg:gap-x-20 lg:py-20">
-        <div className="max-w-[65rem] self-center lg:col-span-2">
+      <div className="shell grid min-h-[calc(100svh-3.5rem)] content-between gap-12 py-12 sm:py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.55fr)] lg:grid-rows-[1fr_auto] lg:gap-x-20 lg:gap-y-10 lg:py-16">
+        <div className="max-w-[65rem] self-center">
+          <p className="meta mb-6 text-mark">Leandro Oliveira · Desenvolvedor full stack</p>
           <h1 id="abertura-titulo" className="hero-title text-paper">
             Produtos digitais{' '}
             <span className="block text-mark">para operações reais.</span>
@@ -60,7 +61,7 @@ export function Abertura() {
 
         <ul
           aria-label="Provas de experiência"
-          className="grid self-end border-t border-line sm:grid-cols-3 lg:grid-cols-1"
+          className="grid self-end border-t border-line sm:grid-cols-3 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:grid-cols-1"
         >
           <Proof title="Produto">SaaS próprios em construção e operação.</Proof>
           <Proof title="Entrega">Sistemas e sites publicados para negócios reais.</Proof>

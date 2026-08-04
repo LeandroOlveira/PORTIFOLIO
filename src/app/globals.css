@@ -159,12 +159,12 @@
 
   .intro-mask-mark {
     background: var(--color-mark);
-    clip-path: polygon(0 0, 46% 0, 58% 100%, 0 100%);
+    clip-path: polygon(0 0, 14% 0, 24% 100%, 10% 100%);
   }
 
   .intro-mask-ink {
-    background: var(--color-black);
-    clip-path: polygon(46% 0, 100% 0, 100% 100%, 58% 100%);
+    background: var(--color-paper);
+    clip-path: polygon(13% 0, 19% 0, 29% 100%, 23% 100%);
   }
 
   /* --- Etiqueta de stack ------------------------------------------------- */

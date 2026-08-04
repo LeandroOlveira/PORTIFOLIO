@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-04T18:52:38-03:00",
+  "title": "Design System: Portfólio de Leandro Oliveira",
+  "extensions": {
+    "colorMeta": {
+      "black": {
+        "role": "neutral",
+        "displayName": "Preto profundo",
+        "canonical": "#050505",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#0b0b0b",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Painel",
+        "canonical": "#111111",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Linha",
+        "canonical": "#232323",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Linha forte",
+        "canonical": "#333333",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel quente",
+        "canonical": "#f2f2f0",
+        "tonalRamp": ["oklch(15% 0.004 100)", "oklch(25% 0.004 100)", "oklch(35% 0.004 100)", "oklch(45% 0.004 100)", "oklch(60% 0.004 100)", "oklch(72% 0.004 100)", "oklch(84% 0.004 100)", "oklch(95% 0.004 100)"]
+      },
+      "mid": {
+        "role": "neutral",
+        "displayName": "Cinza médio",
+        "canonical": "#9a9c93",
+        "tonalRamp": ["oklch(15% 0.012 110)", "oklch(25% 0.012 110)", "oklch(35% 0.012 110)", "oklch(45% 0.012 110)", "oklch(60% 0.012 110)", "oklch(72% 0.012 110)", "oklch(84% 0.012 110)", "oklch(95% 0.012 110)"]
+      },
+      "dim": {
+        "role": "neutral",
+        "displayName": "Cinza baixo",
+        "canonical": "#85877f",
+        "tonalRamp": ["oklch(15% 0.012 110)", "oklch(25% 0.012 110)", "oklch(35% 0.012 110)", "oklch(45% 0.012 110)", "oklch(60% 0.012 110)", "oklch(72% 0.012 110)", "oklch(84% 0.012 110)", "oklch(95% 0.012 110)"]
+      },
+      "mark": {
+        "role": "primary",
+        "displayName": "Verde de decisão",
+        "canonical": "#d4ff00",
+        "tonalRamp": ["oklch(15% 0.20 115)", "oklch(25% 0.20 115)", "oklch(35% 0.20 115)", "oklch(45% 0.20 115)", "oklch(60% 0.20 115)", "oklch(72% 0.20 115)", "oklch(84% 0.20 115)", "oklch(95% 0.20 115)"]
+      },
+      "mark-press": {
+        "role": "primary",
+        "displayName": "Verde pressionado",
+        "canonical": "#bfe600",
+        "tonalRamp": ["oklch(15% 0.18 115)", "oklch(25% 0.18 115)", "oklch(35% 0.18 115)", "oklch(45% 0.18 115)", "oklch(60% 0.18 115)", "oklch(72% 0.18 115)", "oklch(84% 0.18 115)", "oklch(95% 0.18 115)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Tese principal da abertura." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos editoriais de seção." },
+      "title": { "displayName": "Title", "purpose": "Nomes de projetos, etapas, notas e marcos." },
+      "body": { "displayName": "Body", "purpose": "Explicação, contexto e prova." },
+      "label": { "displayName": "Label Mono", "purpose": "Status, datas, tecnologia, índices e CTAs." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state-fast", "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Mudanças de cor e contorno em tags e estados compactos." },
+      { "name": "state-standard", "value": "200ms ease-out", "purpose": "Resposta de cor e deslocamento de seta em botões." },
+      { "name": "image-reveal", "value": "500ms ease", "purpose": "Transição de escala de cinza para cor em imagens de projeto." },
+      { "name": "entry-band", "value": "760ms expo.inOut; stagger 120ms; delay 80ms", "purpose": "Travessia automática das duas faixas diagonais da abertura." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal sobre superfícies escuras.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\"><span>CONVERSAR SOBRE UM PROJETO</span><span aria-hidden=\"true\" class=\"ds-btn-primary-arrow\">→</span></a>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; gap:0.75rem; background:var(--color-mark,#d4ff00); color:var(--color-black,#050505); padding:0.875rem 1.5rem; font-family:var(--font-martian),ui-monospace,monospace; font-size:0.75rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; transition:background-color 200ms ease-out; } .ds-btn-primary:hover { background:var(--color-mark-press,#bfe600); } .ds-btn-primary:focus-visible { outline:2px solid var(--color-mark,#d4ff00); outline-offset:3px; } .ds-btn-primary-arrow { transition:transform 200ms ease-out; } .ds-btn-primary:hover .ds-btn-primary-arrow { transform:translateX(0.25rem); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária transparente sobre superfícies escuras.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\"><span>VER PROJETOS</span><span aria-hidden=\"true\" class=\"ds-btn-outline-arrow\">→</span></a>",
+      "css": ".ds-btn-outline { display:inline-flex; align-items:center; gap:0.75rem; background:transparent; color:var(--color-paper,#f2f2f0); border:1px solid var(--color-line-strong,#333333); padding:0.875rem 1.5rem; font-family:var(--font-martian),ui-monospace,monospace; font-size:0.75rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; transition:border-color 200ms ease-out,color 200ms ease-out; } .ds-btn-outline:hover { border-color:var(--color-mark,#d4ff00); color:var(--color-mark,#d4ff00); } .ds-btn-outline:focus-visible { outline:2px solid var(--color-mark,#d4ff00); outline-offset:3px; } .ds-btn-outline-arrow { transition:transform 200ms ease-out; } .ds-btn-outline:hover .ds-btn-outline-arrow { transform:translateX(0.25rem); }"
+    },
+    {
+      "name": "Inverted Button",
+      "kind": "button",
+      "refersTo": "button-inverted",
+      "description": "Ação em contorno preto para superfícies verdes.",
+      "html": "<a class=\"ds-btn-inverted\" href=\"#\"><span>INICIAR CONVERSA</span><span aria-hidden=\"true\" class=\"ds-btn-inverted-arrow\">→</span></a>",
+      "css": ".ds-btn-inverted { display:inline-flex; align-items:center; gap:0.75rem; background:transparent; color:var(--color-black,#050505); border:2px solid var(--color-black,#050505); padding:0.875rem 1.5rem; font-family:var(--font-martian),ui-monospace,monospace; font-size:0.75rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; transition:background-color 200ms ease-out,color 200ms ease-out; } .ds-btn-inverted:hover { background:var(--color-black,#050505); color:var(--color-mark,#d4ff00); } .ds-btn-inverted:focus-visible { outline:2px solid var(--color-black,#050505); outline-offset:3px; } .ds-btn-inverted-arrow { transition:transform 200ms ease-out; } .ds-btn-inverted:hover .ds-btn-inverted-arrow { transform:translateX(0.25rem); }"
+    },
+    {
+      "name": "Technology Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Classificação técnica compacta sem virar grade de logos.",
+      "html": "<span class=\"ds-tag\">NEXT.JS</span>",
+      "css": ".ds-tag { display:inline-flex; align-items:center; border:1px solid var(--color-line-strong,#333333); padding:0.3125rem 0.5625rem; color:var(--color-mid,#9a9c93); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; font-weight:500; line-height:1; letter-spacing:0.14em; text-transform:uppercase; transition:border-color 180ms cubic-bezier(0.16,1,0.3,1),color 180ms cubic-bezier(0.16,1,0.3,1); } .ds-tag:hover { border-color:var(--color-mark,#d4ff00); color:var(--color-mark,#d4ff00); }"
+    },
+    {
+      "name": "Project Status",
+      "kind": "custom",
+      "description": "Estado textual com marcador quadrado cheio ou vazado.",
+      "html": "<span class=\"ds-status\"><span aria-hidden=\"true\" class=\"ds-status-dot\"></span>PUBLICADO</span>",
+      "css": ".ds-status { display:inline-flex; align-items:center; gap:0.5rem; color:var(--color-mid,#9a9c93); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; font-weight:500; line-height:1; letter-spacing:0.14em; text-transform:uppercase; } .ds-status-dot { display:block; width:0.5rem; height:0.5rem; background:var(--color-mark,#d4ff00); }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "Cartão editorial retangular organizado por status, problema, resultado e stack.",
+      "html": "<article class=\"ds-project-card\"><div class=\"ds-project-meta\"><span>ENTREGUE</span><span>SISTEMA WEB</span></div><h3>DOCHUB</h3><p>Controle de documentação para uma operação de obra.</p><div class=\"ds-project-result\"><small>RESULTADO</small><strong>Fluxo entregue com prova textual e sem exposição de dados internos.</strong></div><a href=\"#\">CONHECER PROJETO</a></article>",
+      "css": ".ds-project-card { display:flex; min-height:26rem; flex-direction:column; background:var(--color-ink,#0b0b0b); color:var(--color-paper,#f2f2f0); padding:2rem; border:1px solid var(--color-line,#232323); font-family:var(--font-archivo),system-ui,sans-serif; } .ds-project-meta { display:flex; justify-content:space-between; gap:0.75rem; color:var(--color-mid,#9a9c93); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; } .ds-project-card h3 { margin:2rem 0 0; font-size:2.25rem; line-height:1.02; letter-spacing:-0.025em; text-transform:uppercase; } .ds-project-card p { color:var(--color-mid,#9a9c93); line-height:1.5; } .ds-project-result { margin-top:2rem; border-top:1px solid var(--color-line,#232323); padding-top:1.5rem; } .ds-project-result small { display:block; color:var(--color-mark,#d4ff00); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; } .ds-project-result strong { display:block; margin-top:0.75rem; font-size:0.875rem; line-height:1.5; } .ds-project-card a { margin-top:auto; padding-top:2rem; color:var(--color-paper,#f2f2f0); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; text-underline-offset:0.25rem; } .ds-project-card a:hover { color:var(--color-mark,#d4ff00); } .ds-project-card a:focus-visible { outline:2px solid var(--color-mark,#d4ff00); outline-offset:3px; }"
+    },
+    {
+      "name": "Fixed Navigation",
+      "kind": "nav",
+      "description": "Cabeçalho compacto com assinatura, navegação direta e WhatsApp persistente.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegação principal\"><a class=\"ds-nav-brand\" href=\"#\">lhs<span>.</span>oliveira</a><div class=\"ds-nav-links\"><a href=\"#projetos\">Projetos</a><a href=\"#stack\">Stack</a><a href=\"#trajetoria\">Trajetória</a></div><a class=\"ds-nav-cta\" href=\"#contato\">WHATSAPP</a></nav>",
+      "css": ".ds-nav { display:flex; min-height:3.5rem; align-items:center; justify-content:space-between; gap:1.25rem; background:rgba(11,11,11,0.95); border-bottom:1px solid var(--color-line,#232323); padding:0 1.25rem; font-family:var(--font-archivo),system-ui,sans-serif; } .ds-nav a { text-decoration:none; } .ds-nav-brand { color:var(--color-paper,#f2f2f0); font-size:0.9375rem; font-weight:700; letter-spacing:-0.01em; } .ds-nav-brand span { color:var(--color-mark,#d4ff00); } .ds-nav-links { display:flex; gap:1.75rem; } .ds-nav-links a { color:var(--color-mid,#9a9c93); font-size:0.875rem; transition:color 180ms ease-out; } .ds-nav-links a:hover { color:var(--color-paper,#f2f2f0); } .ds-nav-cta { display:inline-flex; min-height:2.75rem; align-items:center; background:var(--color-mark,#d4ff00); color:var(--color-black,#050505); padding:0 1rem; font-size:0.75rem; font-weight:600; letter-spacing:0.08em; transition:background-color 180ms ease-out; } .ds-nav-cta:hover { background:var(--color-mark-press,#bfe600); } .ds-nav a:focus-visible { outline:2px solid var(--color-mark,#d4ff00); outline-offset:3px; } @media (max-width:767px) { .ds-nav-links { display:none; } }"
+    },
+    {
+      "name": "Contact Link",
+      "kind": "custom",
+      "description": "Linha de contato invertida para a seção verde de conversão.",
+      "html": "<a class=\"ds-contact-link\" href=\"#\"><span>WHATSAPP</span><span aria-hidden=\"true\" class=\"ds-contact-arrow\">↗</span></a>",
+      "css": ".ds-contact-link { display:flex; min-height:3.5rem; align-items:center; justify-content:space-between; gap:1rem; border-top:2px solid var(--color-black,#050505); border-bottom:1px solid rgba(5,5,5,0.3); background:var(--color-mark,#d4ff00); color:var(--color-black,#050505); padding:1rem 0; font-family:var(--font-archivo),system-ui,sans-serif; font-size:1rem; font-weight:600; text-decoration:none; transition:background-color 180ms ease-out,color 180ms ease-out; } .ds-contact-link:hover { background:var(--color-black,#050505); color:var(--color-mark,#d4ff00); } .ds-contact-link:focus-visible { outline:2px solid var(--color-black,#050505); outline-offset:3px; } .ds-contact-arrow { transition:transform 200ms ease-out; } .ds-contact-link:hover .ds-contact-arrow { transform:translateX(0.25rem); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Produto e operação",
+    "overview": "O sistema apresenta trabalho técnico com a clareza de um painel editorial: contraste alto, hierarquia incisiva e prova concreta antes de ornamento. A atmosfera é sóbria, direta e confiante; o verde-limão cria pontos de decisão dentro de uma base escura, sem competir com o conteúdo.\n\nO cinema aparece como linguagem estrutural — enquadramento, ritmo, cortes retangulares e uma abertura breve — e não como vocabulário da interface. O conjunto evita tanto a grade genérica de portfólio quanto a simulação de controles de reprodução, mantendo produto e operação como assunto principal.",
+    "keyCharacteristics": [
+      "Alto contraste com um único acento cromático.",
+      "Tipografia larga e condensada por hierarquia, não por decoração.",
+      "Módulos retangulares articulados por linhas de um pixel.",
+      "Assimetria controlada em telas largas e fluxo direto no mobile.",
+      "Movimento concentrado na entrada automática, com conteúdo sempre disponível."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "O verde de decisão é o único acento; reserve-o para ação, estado, foco ou trecho essencial de uma tese.", "section": "colors" },
+      { "name": "The Tonal Structure Rule", "body": "Separe superfícies escuras com alternância tonal e linhas, nunca com uma coleção de cores decorativas.", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Use Archivo para mensagem e leitura; use Martian Mono apenas para dados curtos e classificações.", "section": "typography" },
+      { "name": "The Compressed Thesis Rule", "body": "Títulos principais são largos, pesados, em caixa alta e com entrelinha curta; parágrafos nunca imitam essa compressão.", "section": "typography" },
+      { "name": "The One-Pixel Grid Rule", "body": "Construa grupos de módulos com fundo de linha e espaçamento de um pixel, deixando as próprias superfícies formarem a grade.", "section": "layout" },
+      { "name": "The Mobile Sequence Rule", "body": "No mobile, preserve a ordem argumento → prova → ação; não comprima a estrutura desktop em colunas estreitas.", "section": "layout" },
+      { "name": "The Flat-by-Default Rule", "body": "Superfícies permanecem sem sombra; contraste tonal, linhas e recorte de imagem são os únicos mecanismos de profundidade.", "section": "elevation" },
+      { "name": "The Square Surface Rule", "body": "Componentes funcionais não usam raio; hierarquia vem de proporção, cor e borda.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do mantenha o verde raro e funcional: ação, foco, estado ou argumento essencial.",
+      "Do use linhas de um pixel e alternância tonal para organizar listas e módulos.",
+      "Do preserve alvos interativos de pelo menos 44px e foco visível de alto contraste.",
+      "Do trate projetos sem captura pública segura como composições tipográficas intencionais.",
+      "Do mantenha toda informação essencial acessível antes e sem animação."
+    ],
+    "donts": [
+      "Don't introduza cartões arredondados, sombras ou gradientes para simular profundidade.",
+      "Don't transforme cinema em nomes de seção, controles de reprodução ou metáforas para explicar o trabalho.",
+      "Don't use Martian Mono em parágrafos ou títulos de mensagem.",
+      "Don't crie uma segunda cor de acento nem uma grade de logos de tecnologia.",
+      "Don't publique capturas com dados pessoais ou operacionais identificáveis."
+    ]
+  }
+}

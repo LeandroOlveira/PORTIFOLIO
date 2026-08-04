@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getProjetos, parseProjeto } from '@/lib/content';
+import { getNotas, getProjetos, parseProjeto } from '@/lib/content';
 
 const valid = {
   titulo: 'Alinnea',
@@ -50,5 +50,10 @@ describe('project content', () => {
       'gabriela-lorenson',
       'ebano',
     ]);
+  });
+
+  it('keeps editorial headings free of the discarded cinema labels', () => {
+    const notes = getNotas();
+    expect(notes.map((note) => note.corpo).join('\n')).not.toMatch(/^##\s+O corte$/im);
   });
 });
