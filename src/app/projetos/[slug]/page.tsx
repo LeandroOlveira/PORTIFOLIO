@@ -2,154 +2,113 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getProjeto, getProjetos } from '@/lib/content';
-import { Selo } from '@/components/Selo';
 import { Botao } from '@/components/Botao';
+import { StatusProjeto } from '@/components/StatusProjeto';
+import { getProjeto, getProjetos } from '@/lib/content';
 import { whatsappLink } from '@/lib/site';
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return getProjetos().map((p) => ({ slug: p.slug }));
+  return getProjetos().map((projeto) => ({ slug: projeto.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const p = getProjeto(slug);
-  if (!p) return {};
-  return { title: p.titulo, description: p.linha };
+  const projeto = getProjeto(slug);
+  if (!projeto) return {};
+
+  return { title: projeto.titulo, description: projeto.resumo };
 }
 
-export default async function Projeto({ params }: Props) {
+export default async function ProjetoPage({ params }: Props) {
   const { slug } = await params;
-  const p = getProjeto(slug);
-  if (!p) notFound();
+  const projeto = getProjeto(slug);
+  if (!projeto) notFound();
 
   return (
     <article className="bg-ink pt-14">
       <div className="shell py-16 md:py-24">
         <Link
-          href="/#entregas"
-          className="burn group inline-flex items-center gap-3 text-dim transition-colors hover:text-mark"
+          href="/#projetos"
+          className="burn group inline-flex items-center gap-3 text-mid transition-colors hover:text-mark"
         >
           <span aria-hidden className="transition-transform group-hover:-translate-x-1">
-            &larr;
+            ←
           </span>
-          Entregas
+          Projetos
         </Link>
 
-        <h1 className="title-tight mt-10 max-w-[20ch] text-[2rem] text-paper sm:text-[2.75rem] md:text-[3.25rem]">
-          {p.titulo}
-        </h1>
-        {p.linha ? (
-          <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-mid sm:text-lg">
-            {p.linha}
-          </p>
+        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,28rem)] lg:items-end lg:gap-16">
+          <div>
+            <StatusProjeto status={projeto.status} />
+            <h1 className="title-tight mt-6 max-w-[20ch] text-[2.5rem] text-paper sm:text-[3.5rem] md:text-[4.5rem]">
+              {projeto.titulo}
+            </h1>
+            <p className="mt-6 max-w-[58ch] text-base leading-7 text-mid sm:text-lg">
+              {projeto.resumo}
+            </p>
+          </div>
+
+          <dl className="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-1">
+            <ProjectFact term="Tipo" description={projeto.tipo} />
+            <ProjectFact term="Problema" description={projeto.problema} />
+            <ProjectFact term="Resultado" description={projeto.resultado} emphasis />
+          </dl>
+        </div>
+
+        {projeto.imagem ? (
+          <div className="mt-14 aspect-[16/9] overflow-hidden border border-line bg-panel md:mt-20">
+            <img
+              src={projeto.imagem}
+              alt={`Interface do projeto ${projeto.titulo}`}
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
         ) : null}
 
-        <div className="slate mt-10">
-          {p.ano ? (
-            <span className="slate-field burn">
-              <span className="slate-key">Ano</span>
-              <span className="slate-val">{p.ano}</span>
-            </span>
-          ) : null}
-          {p.setor ? (
-            <span className="slate-field burn">
-              <span className="slate-key">Setor</span>
-              <span className="slate-val">{p.setor}</span>
-            </span>
-          ) : null}
-          {p.duracao ? (
-            <span className="slate-field burn">
-              <span className="slate-key">Duração</span>
-              <span className="slate-val">{p.duracao}</span>
-            </span>
-          ) : null}
-          {p.demo ? (
-            <span className="ml-auto">
-              <Selo />
-            </span>
-          ) : null}
+        {projeto.stack.length > 0 ? (
+          <ul aria-label="Tecnologias do projeto" className="mt-10 flex flex-wrap gap-2">
+            {projeto.stack.map((tecnologia) => (
+              <li key={tecnologia} className="burn tag">
+                {tecnologia}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="prose-cut mt-14 max-w-[68ch] border-t border-line pt-12 md:mt-20">
+          <MDXRemote source={projeto.corpo} />
         </div>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2 md:gap-0">
-          <div className="md:pr-10 lg:pr-16">
-            <p className="burn text-dim">Bruto</p>
-            <ul className="mt-5 space-y-4">
-              {p.bruto.map((b) => (
-                <li key={b} className="relative pl-6">
-                  <span
-                    aria-hidden
-                    className="absolute top-[0.7em] left-0 block h-px w-3 bg-dim"
-                  />
-                  <span className="text-[0.9375rem] leading-relaxed text-mid">{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="md:border-l md:border-line md:pl-10 lg:pl-16">
-            <p className="burn text-mark">Corte final</p>
-            <ul className="mt-5 space-y-4">
-              {p.corte.map((c) => (
-                <li key={c} className="relative pl-6">
-                  <span
-                    aria-hidden
-                    className="absolute top-[0.7em] left-0 block h-px w-3 bg-mark"
-                  />
-                  <span className="text-[0.9375rem] leading-relaxed text-paper">{c}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <ul className="mt-10 flex flex-wrap gap-2">
-          {p.stack.map((t) => (
-            <li key={t} className="burn tag">
-              {t}
-            </li>
-          ))}
-        </ul>
-
-        <div className="prose-cut mt-16 max-w-[68ch] border-t border-line pt-12">
-          <MDXRemote source={p.corpo} />
-        </div>
-
-        {(p.url || p.repo) && (
-          <div className="mt-12 flex flex-wrap gap-6 border-t border-line pt-8">
-            {p.url ? (
-              <a
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="burn text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark hover:decoration-mark"
-              >
-                Ver o sistema
-              </a>
-            ) : null}
-            {p.repo ? (
-              <a
-                href={p.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="burn text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark hover:decoration-mark"
-              >
-                Repositório
-              </a>
-            ) : null}
-          </div>
-        )}
-
-        <div className="mt-16 border-t border-line pt-12">
-          <p className="title-tight max-w-[24ch] text-[1.5rem] text-paper sm:text-[1.875rem]">
-            Seu processo se parece com esse?
-          </p>
-          <div className="mt-7">
-            <Botao href={whatsappLink()}>Chamar no WhatsApp</Botao>
-          </div>
+        <div className="mt-14 flex flex-wrap gap-4 border-t border-line pt-10">
+          {projeto.url ? (
+            <Botao href={projeto.url}>Abrir projeto</Botao>
+          ) : null}
+          <Botao href={whatsappLink()} variante={projeto.url ? 'contorno' : 'marcador'}>
+            Conversar sobre um projeto
+          </Botao>
         </div>
       </div>
     </article>
+  );
+}
+
+function ProjectFact({
+  term,
+  description,
+  emphasis = false,
+}: {
+  term: string;
+  description: string;
+  emphasis?: boolean;
+}) {
+  return (
+    <div className="bg-black p-5 sm:p-6">
+      <dt className={`burn ${emphasis ? 'text-mark' : 'text-dim'}`}>{term}</dt>
+      <dd className={`mt-3 text-sm leading-6 ${emphasis ? 'text-paper' : 'text-mid'}`}>
+        {description}
+      </dd>
+    </div>
   );
 }

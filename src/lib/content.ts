@@ -27,15 +27,6 @@ export type Projeto = {
   destaque: boolean;
   ordem: number;
   corpo: string;
-  /** Campos transitórios consumidos pela apresentação antiga até a Task 4. */
-  linha: string;
-  bruto: string[];
-  corte: string[];
-  ano: string;
-  setor: string;
-  duracao?: string;
-  repo?: string;
-  demo?: boolean;
 };
 
 export type Nota = {
@@ -110,12 +101,6 @@ export function parseProjeto(
     destaque: data.destaque === true,
     ordem,
     corpo,
-    linha: resumo,
-    bruto: [problema],
-    corte: [resultado],
-    ano: '',
-    setor: tipo,
-    demo: status === 'demonstracao',
   };
 }
 
@@ -141,7 +126,7 @@ export function getNota(slug: string): Nota | undefined {
   return getNotas().find((n) => n.slug === slug);
 }
 
-/** `2025-11-04` → `04.11.25` — o formato curto da claquete. */
+/** `2025-11-04` → `04.11.25`. */
 export function dataCurta(iso: string): string {
   const [a, m, d] = iso.split('-');
   if (!a || !m || !d) return iso;
