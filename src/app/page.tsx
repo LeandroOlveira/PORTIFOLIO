@@ -1,6 +1,7 @@
 import { Abertura } from '@/components/Abertura';
 import { Processo } from '@/components/Processo';
 import { Projetos } from '@/components/Projetos';
+import { Stack } from '@/components/Stack';
 import { QuemSou } from '@/components/QuemSou';
 import { Notas } from '@/components/Notas';
 import { Contato } from '@/components/Contato';
@@ -14,6 +15,7 @@ export default function Home() {
     <>
       <Abertura />
       <Projetos projetos={projetos} />
+      <Stack />
       <Processo />
       <QuemSou />
       <Notas notas={notas} />
