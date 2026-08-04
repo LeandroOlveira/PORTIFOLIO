@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Martian_Mono } from 'next/font/google';
 import { site } from '@/lib/site';
-import { Transporte } from '@/components/Transporte';
 import { Cabecalho } from '@/components/Cabecalho';
 import { Rodape } from '@/components/Rodape';
-import { Scroll } from '@/components/Scroll';
 import './globals.css';
 
 const archivo = Archivo({
@@ -20,8 +18,10 @@ const martian = Martian_Mono({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${site.nome} — ${site.papel}`,
     template: `%s — ${site.nome}`,
@@ -49,29 +49,22 @@ export const viewport: Viewport = {
  * originou, inclusive depois do build de produção.
  */
 const CONTRATO = `
-IMPECCABLE · CONTRATO DE DIREÇÃO · seed f1522d39 (reroll 2, índice 6)
+IMPECCABLE · CONTRATO DE DIREÇÃO · revisão produto e operação
 
-THESIS: Todo cliente entrega bruto — longo, tremido, sem foco. O que ele devolve é o
-corte. Recusa o portfólio de dev padrão: fundo escuro com accent neon, borda verde nos
-cards, grid de fundo, grade de logos de stack.
+THESIS: Produtos digitais para operações reais. Recusa tanto o portfólio de dev reduzido
+a logos quanto a experiência que obriga o visitante a decifrar uma metáfora antes da oferta.
 
-OWN-WORLD: Mesa de edição. Preto de projeção (#0b0b0b) com uma camada gráfica queimada
-por cima: hairlines, guias de área segura, timecode em mono tabular. Verde-limão
-(#d4ff00) é a cor do marcador e do trecho selecionado, nunca decoração. Sem brilho,
-sem sombra colorida, sem raio de canto. Archivo Expanded para título, Martian Mono
-para a camada técnica.
+OWN-WORLD: Preto profundo, grafite, branco quente e verde-limão (#d4ff00). Archivo largo
+carrega a tese; Martian Mono fica restrita a tecnologia e dados. Cinema vive no ritmo,
+enquadramento e cortes retangulares, nunca nos nomes da interface.
 
-STORY: O visitante entende em segundos que essa pessoa recebe processo bagunçado e
-devolve sistema. Acredita porque vê o par bruto/corte de cada entrega, e não uma lista
-de tecnologias. Age abrindo o WhatsApp.
+STORY: O visitante entende a oferta, encontra projetos reais, reconhece repertório técnico
+e trajetória operacional, e abre um dos canais reais de contato.
 
-FIRST VIEWPORT: Close extremo — a palavra BRUTO em escala 8x, cortada nos quatro lados,
-timecode correndo no canto superior direito e guias de área segura nas quatro quinas.
-O scroll recua a câmera; no meio do recuo há um corte duro para CORTE FINAL. Quando o
-recuo termina, a headline e a ação primária (WhatsApp) pousam embaixo, à esquerda.
+FIRST VIEWPORT: Headline assimétrica já legível no HTML, duas máscaras retangulares saem
+automaticamente em menos de 1,2 segundo, e projetos ficam disponíveis no scroll seguinte.
 
-FORM: Mesa de edição, candidato 6 da lista fundamentada da rodada 3, encenado com
-first-viewport-cropped-giant. Seed key f1522d39, reroll 2.
+FORM: Portfólio editorial em movimento; uma abertura coreografada e o restante disciplinado.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish
 review, the verdict, and DESIGN.md
@@ -82,7 +75,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR" className={`${archivo.variable} ${martian.variable}`}>
       <body className="bg-ink text-paper antialiased">
         <div hidden dangerouslySetInnerHTML={{ __html: `<!--${CONTRATO}-->` }} />
-        <Scroll />
         <a
           href="#conteudo"
           className="burn sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-mark focus:px-4 focus:py-3 focus:text-black"
@@ -92,7 +84,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Cabecalho />
         <main id="conteudo">{children}</main>
         <Rodape />
-        <Transporte />
       </body>
     </html>
   );
