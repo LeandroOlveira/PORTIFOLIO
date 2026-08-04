@@ -13,7 +13,7 @@ Em poucos segundos, um visitante deve conseguir responder:
 1. Quem é Leandro: desenvolvedor full stack com experiência em produto, integrações, dados e liderança técnica.
 2. O que ele faz: constrói produtos digitais e sistemas que resolvem operações reais.
 3. Que provas existem: SaaS próprios, sistemas entregues, sites publicados e uma ferramenta interna usada por uma área de aproximadamente 80 pessoas.
-4. Como entrar em contato: por WhatsApp quando o número real estiver configurado; até lá, por e-mail ou LinkedIn, sem links fictícios.
+4. Como entrar em contato: por WhatsApp, e-mail, LinkedIn ou Instagram, todos com dados reais.
 
 ## Direção visual
 
@@ -53,7 +53,7 @@ Conteúdo principal:
 - Nome: **Leandro Oliveira**.
 - Headline: **Produtos digitais para operações reais.**
 - Apoio: desenvolvimento full stack, produto, integrações e automação orientados a problemas concretos de negócio.
-- Ação primária: **Conversar sobre um projeto**.
+- Ação primária: **Conversar sobre um projeto**, abrindo o WhatsApp em `+55 44 99776-2271`.
 - Ação secundária: **Ver projetos**.
 
 A primeira dobra usa uma composição assimétrica. A headline ocupa a maior área; uma faixa lateral ou inferior apresenta três provas curtas e factuais:
@@ -133,9 +133,10 @@ Fechamento curto e direto:
 
 Regras:
 
-- WhatsApp é a ação principal apenas quando houver um número real configurado.
-- Enquanto o número não existir, o botão principal usa `mailto:leandroappa@gmail.com`.
-- LinkedIn aponta para `https://www.linkedin.com/in/lhsoliveira`.
+- WhatsApp é a ação principal e usa o número `+55 44 99776-2271` (valor normalizado para link: `5544997762271`).
+- E-mail: `leandroappa@gmail.com`.
+- LinkedIn: `https://www.linkedin.com/in/lhsoliveira`.
+- Instagram: `https://www.instagram.com/lhs.oliveira` (`@lhs.oliveira`).
 - Nenhum placeholder aparece para visitantes.
 
 ## Componentes e dados
@@ -160,7 +161,7 @@ Os projetos continuam em arquivos MDX, mas o frontmatter passa a representar fat
 
 ### Dados pessoais e carreira
 
-Identidade, contatos, stack e trajetória ficam em módulos TypeScript tipados. Links vazios não são renderizados. A ação de contato é resolvida por uma função única que escolhe WhatsApp real ou e-mail.
+Identidade, contatos, stack e trajetória ficam em módulos TypeScript tipados. Links vazios não são renderizados. A ação principal de contato é resolvida por uma função única que gera o link do WhatsApp com o número normalizado e uma mensagem inicial curta.
 
 ### Imagens
 
@@ -195,7 +196,7 @@ Identidade, contatos, stack e trajetória ficam em módulos TypeScript tipados. 
 - JavaScript indisponível: todo o conteúdo permanece visível e navegável.
 - Imagem ausente: o projeto mantém título, resumo, status e link; não exibe quadro “pendente”.
 - URL ausente: o caso continua legível sem botão quebrado.
-- WhatsApp ausente: o contato usa e-mail automaticamente.
+- Contato inválido durante o desenvolvimento: testes e validação do build impedem a publicação de um link quebrado.
 - Projeto em construção: o estado é explícito e não oferece CTA enganoso de cadastro ou compra.
 - Conteúdo MDX inválido: o build falha com mensagem que identifica o arquivo e o campo.
 
@@ -205,7 +206,7 @@ Identidade, contatos, stack e trajetória ficam em módulos TypeScript tipados. 
 
 - Validar o schema dos projetos e todos os valores de `status`.
 - Garantir ordenação e seleção dos projetos destacados.
-- Testar a resolução do canal de contato com e sem WhatsApp configurado.
+- Testar a normalização do número e a geração do link real de WhatsApp.
 - Testar que a abertura contém headline e ações no HTML inicial.
 - Testar que tecnologias solicitadas aparecem na seção de stack.
 - Testar que termos cinematográficos removidos não voltam como rótulos de navegação e seções.
@@ -238,7 +239,6 @@ Identidade, contatos, stack e trajetória ficam em módulos TypeScript tipados. 
 
 ## Pendências para publicação
 
-- Número real de WhatsApp, caso continue como canal principal.
 - Retrato profissional, se o autor quiser aparecer na seção de trajetória.
 - Seleção final de capturas sem dados sensíveis para Roadmap, DocHub e Radar Fiscal.
 - Domínio definitivo do portfólio.
