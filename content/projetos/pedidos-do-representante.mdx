@@ -1,0 +1,32 @@
+---
+titulo: Pedidos de representante ligados ao ERP
+linha: O pedido parou de ser digitado duas vezes por duas pessoas diferentes.
+setor: Distribuição
+ano: '2024'
+duracao: ''
+stack: ['React', 'Node.js', 'Fila de mensagens', 'Integração REST']
+demo: true
+bruto:
+  - 'Representante anotava o pedido no bloco, mandava foto ou áudio, e o interno digitava no ERP.'
+  - 'Preço e disponibilidade vinham de uma tabela em PDF que envelhecia sozinha.'
+  - 'Divergência entre o que foi vendido e o que foi faturado só aparecia na conferência.'
+corte:
+  - 'Catálogo com preço e saldo lidos do próprio ERP, então a tabela não envelhece mais.'
+  - 'Pedido montado pelo representante entra no ERP pela integração, sem redigitação.'
+  - 'Erro de integração vira uma fila visível com o motivo, não um pedido que sumiu.'
+---
+
+## O que estava acontecendo
+
+O gargalo não era o representante nem o interno. Era o fato de o mesmo pedido existir em
+dois lugares e depender de uma pessoa para os dois lugares concordarem.
+
+## O que eu cortei
+
+Não reescrevi o ERP e não tentei substituir nada que já funcionava. Integração honesta é
+assim: você aceita que o sistema legado é o dono do dado e constrói em volta dele.
+
+## O que ficou
+
+Uma camada fina, com fila e reprocessamento, que qualquer pessoa consegue auditar quando
+um pedido não chega. Falha de integração é normal — falha silenciosa é que não pode.

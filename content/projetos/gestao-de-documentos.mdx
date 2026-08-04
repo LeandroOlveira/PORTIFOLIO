@@ -1,0 +1,37 @@
+---
+titulo: Controle de documentos com vencimento
+linha: Ninguém mais descobre que um documento venceu no dia da fiscalização.
+setor: Gestão operacional
+ano: '2025'
+duracao: ''
+stack: ['React', 'NestJS', 'PostgreSQL', 'Prisma']
+demo: true
+bruto:
+  - 'Uma planilha compartilhada com uma aba por tipo de documento e três pessoas editando ao mesmo tempo.'
+  - 'O vencimento só era notado quando alguém abria a aba certa — normalmente no dia em que o documento já não valia mais.'
+  - 'Cobrança de renovação por WhatsApp, sem registro de quem foi cobrado nem de quando.'
+corte:
+  - 'Um cadastro por documento, com data de validade, responsável e o arquivo anexado no mesmo lugar.'
+  - 'Aviso automático em janelas configuráveis antes do vencimento, para o responsável e para quem supervisiona.'
+  - 'Histórico de cobrança e renovação preso ao documento, então a pergunta "quem avisou?" tem resposta.'
+---
+
+## O que estava acontecendo
+
+O processo funcionava, e é importante dizer isso: a planilha dava conta enquanto o
+volume era pequeno e enquanto a mesma pessoa cuidava dela. O problema apareceu quando
+o volume cresceu e o cuidado virou responsabilidade de três pessoas ao mesmo tempo.
+
+Ninguém errou. A ferramenta é que não tinha como avisar sozinha.
+
+## O que eu cortei
+
+A primeira versão não tinha relatório, não tinha dashboard e não tinha permissão por
+perfil. Tinha cadastro, tinha data e tinha aviso. Foi para o ar assim, e o resto entrou
+depois — com a operação já usando e já reclamando das coisas certas.
+
+## O que ficou
+
+Um sistema pequeno o suficiente para uma pessoa entender lendo o código, com o schema
+versionado e o deploy documentado. A operação parou de descobrir vencimento por
+fiscalização.

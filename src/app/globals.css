@@ -1,0 +1,305 @@
+@import 'tailwindcss';
+
+/* ===========================================================================
+   CORTE FINAL — sistema visual
+   O escuro aqui é preto de projeção, não "dark mode". A camada gráfica é
+   queimada por cima: dura, chapada, sem brilho e sem sombra colorida.
+   O verde-limão é a cor do marcador e do trecho selecionado. Nada acende
+   sem estar sendo trabalhado.
+   =========================================================================== */
+
+@theme {
+  /* Fundo de projeção → painel → régua */
+  --color-black: #050505;
+  --color-ink: #0b0b0b;
+  --color-panel: #111111;
+  --color-raise: #171717;
+  --color-line: #232323;
+  --color-line-strong: #333333;
+
+  /* Camada queimada */
+  --color-paper: #f2f2f0;
+  --color-mid: #9a9c93; /* 6.9:1 sobre --color-ink — texto secundário */
+  --color-dim: #6e7066; /* 3.8:1 — apenas guias, réguas e traços, nunca corpo */
+
+  /* Marcador */
+  --color-mark: #d4ff00;
+  --color-mark-press: #bfe600;
+
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
+
+  --ease-cut: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ramp: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-mark);
+    color: var(--color-black);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-mark);
+    outline-offset: 3px;
+  }
+
+  /* O anel de foco padrão some dentro do preto; devolvemos contraste. */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-mark);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* --- Régua de contenção ------------------------------------------------ */
+  .shell {
+    width: 100%;
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* --- Camada queimada: timecode, rolo, metadados ------------------------ */
+  .burn {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .burn-lg {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Tipo de título: largo, pesado, corte seco ------------------------- */
+  .title {
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 112;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  .title-tight {
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 100;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+  }
+
+  /* --- Slate: a claquete. Três campos ou mais, lidos como dados. --------- */
+  /* A claquete. Ela nunca desenha a própria linha de cima: quem estiver acima
+     dela já traz uma, e duas réguas paralelas a 40px lêem como acidente. */
+  .slate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-line);
+    padding-block: 0.875rem;
+    color: var(--color-mid);
+  }
+
+  .slate-field {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4375rem;
+  }
+
+  .slate-key {
+    color: var(--color-dim);
+  }
+
+  .slate-val {
+    color: var(--color-paper);
+  }
+
+  /* --- Etiqueta de stack: queimada, não pílula -------------------------- */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-line-strong);
+    padding: 0.3125rem 0.5625rem;
+    color: var(--color-mid);
+    transition: border-color 180ms var(--ease-cut), color 180ms var(--ease-cut);
+  }
+
+  .tag-mark {
+    border-color: color-mix(in srgb, var(--color-mark) 45%, transparent);
+    color: var(--color-mark);
+  }
+
+  /* --- Guias de área segura do visor ------------------------------------ */
+  .guide-corner {
+    position: absolute;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-color: var(--color-dim);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  /* --- Faixa de leader: o preto entre um clipe e outro ------------------- */
+  .leader {
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  /* --- Corpo de leitura -------------------------------------------------- */
+  .prose-cut {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-paper) 88%, var(--color-ink));
+  }
+
+  .prose-cut > * + * {
+    margin-top: 1.5rem;
+  }
+
+  .prose-cut h2 {
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 108;
+    font-weight: 700;
+    font-size: 1.625rem;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: var(--color-paper);
+    margin-top: 3.5rem;
+  }
+
+  .prose-cut h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.015em;
+    color: var(--color-paper);
+    margin-top: 2.5rem;
+  }
+
+  .prose-cut a {
+    color: var(--color-mark);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose-cut strong {
+    color: var(--color-paper);
+    font-weight: 600;
+  }
+
+  .prose-cut ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .prose-cut li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .prose-cut li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--color-mark);
+  }
+
+  .prose-cut blockquote {
+    border-left: 1px solid var(--color-mark);
+    padding-left: 1.25rem;
+    color: var(--color-paper);
+  }
+
+  .prose-cut code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    padding: 0.125rem 0.375rem;
+    color: var(--color-mark);
+  }
+
+  .prose-cut pre {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    background: var(--color-black);
+    border: 1px solid var(--color-line);
+    padding: 1.25rem;
+    overflow-x: auto;
+  }
+
+  .prose-cut pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-paper);
+  }
+}
+
+/* --- Movimento reduzido: a página abre montada ---------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
