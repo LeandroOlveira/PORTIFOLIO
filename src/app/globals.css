@@ -7,7 +7,7 @@
    =========================================================================== */
 
 @theme {
-  /* Fundo de projeção → painel → régua */
+  /* Superfícies */
   --color-black: #050505;
   --color-ink: #0b0b0b;
   --color-panel: #111111;
@@ -15,12 +15,12 @@
   --color-line: #232323;
   --color-line-strong: #333333;
 
-  /* Camada queimada */
+  /* Texto */
   --color-paper: #f2f2f0;
   --color-mid: #9a9c93; /* 6.9:1 sobre --color-ink — texto secundário */
-  --color-dim: #6e7066; /* 3.8:1 — apenas guias, réguas e traços, nunca corpo */
+  --color-dim: #85877f;
 
-  /* Marcador */
+  /* Acento */
   --color-mark: #d4ff00;
   --color-mark-press: #bfe600;
 
@@ -28,8 +28,7 @@
   --font-sans: var(--font-archivo), system-ui, sans-serif;
   --font-mono: var(--font-martian), ui-monospace, monospace;
 
-  --ease-cut: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-ramp: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-fast: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
@@ -42,6 +41,10 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: auto;
+  }
+
+  section[id] {
+    scroll-margin-top: 3.5rem;
   }
 
   body {
@@ -64,7 +67,6 @@
     outline-offset: 3px;
   }
 
-  /* O anel de foco padrão some dentro do preto; devolvemos contraste. */
   a:focus-visible,
   button:focus-visible {
     outline: 2px solid var(--color-mark);
@@ -84,7 +86,7 @@
 }
 
 @layer components {
-  /* --- Régua de contenção ------------------------------------------------ */
+  /* --- Contenção --------------------------------------------------------- */
   .shell {
     width: 100%;
     max-width: 84rem;
@@ -98,8 +100,8 @@
     }
   }
 
-  /* --- Camada queimada: timecode, rolo, metadados ------------------------ */
-  .burn {
+  /* --- Metadados --------------------------------------------------------- */
+  .meta {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     font-weight: 500;
@@ -109,8 +111,7 @@
     line-height: 1;
   }
 
-  .burn-lg {
-    font-family: var(--font-mono);
+  .meta-lg {
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -118,7 +119,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* --- Tipo de título: largo, pesado, corte seco ------------------------- */
+  /* --- Títulos ----------------------------------------------------------- */
   .title {
     font-family: var(--font-display);
     font-variation-settings: 'wdth' 112;
@@ -166,41 +167,14 @@
     clip-path: polygon(46% 0, 100% 0, 100% 100%, 58% 100%);
   }
 
-  /* --- Slate: a claquete. Três campos ou mais, lidos como dados. --------- */
-  /* A claquete. Ela nunca desenha a própria linha de cima: quem estiver acima
-     dela já traz uma, e duas réguas paralelas a 40px lêem como acidente. */
-  .slate {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1.25rem;
-    border-bottom: 1px solid var(--color-line);
-    padding-block: 0.875rem;
-    color: var(--color-mid);
-  }
-
-  .slate-field {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.4375rem;
-  }
-
-  .slate-key {
-    color: var(--color-dim);
-  }
-
-  .slate-val {
-    color: var(--color-paper);
-  }
-
-  /* --- Etiqueta de stack: queimada, não pílula -------------------------- */
+  /* --- Etiqueta de stack ------------------------------------------------- */
   .tag {
     display: inline-flex;
     align-items: center;
     border: 1px solid var(--color-line-strong);
     padding: 0.3125rem 0.5625rem;
     color: var(--color-mid);
-    transition: border-color 180ms var(--ease-cut), color 180ms var(--ease-cut);
+    transition: border-color 180ms var(--ease-fast), color 180ms var(--ease-fast);
   }
 
   .tag-mark {
@@ -208,34 +182,18 @@
     color: var(--color-mark);
   }
 
-  /* --- Guias de área segura do visor ------------------------------------ */
-  .guide-corner {
-    position: absolute;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-color: var(--color-dim);
-    opacity: 0.55;
-    pointer-events: none;
-  }
-
-  /* --- Faixa de leader: o preto entre um clipe e outro ------------------- */
-  .leader {
-    height: 1px;
-    background: var(--color-line);
-  }
-
   /* --- Corpo de leitura -------------------------------------------------- */
-  .prose-cut {
+  .article-prose {
     font-size: 1.0625rem;
     line-height: 1.7;
     color: color-mix(in srgb, var(--color-paper) 88%, var(--color-ink));
   }
 
-  .prose-cut > * + * {
+  .article-prose > * + * {
     margin-top: 1.5rem;
   }
 
-  .prose-cut h2 {
+  .article-prose h2 {
     font-family: var(--font-display);
     font-variation-settings: 'wdth' 108;
     font-weight: 700;
@@ -247,7 +205,7 @@
     margin-top: 3.5rem;
   }
 
-  .prose-cut h3 {
+  .article-prose h3 {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.25rem;
@@ -256,29 +214,29 @@
     margin-top: 2.5rem;
   }
 
-  .prose-cut a {
+  .article-prose a {
     color: var(--color-mark);
     text-underline-offset: 4px;
     text-decoration-thickness: 1px;
   }
 
-  .prose-cut strong {
+  .article-prose strong {
     color: var(--color-paper);
     font-weight: 600;
   }
 
-  .prose-cut ul {
+  .article-prose ul {
     list-style: none;
     padding-left: 0;
   }
 
-  .prose-cut li {
+  .article-prose li {
     position: relative;
     padding-left: 1.5rem;
     margin-top: 0.75rem;
   }
 
-  .prose-cut li::before {
+  .article-prose li::before {
     content: '';
     position: absolute;
     left: 0;
@@ -288,13 +246,13 @@
     background: var(--color-mark);
   }
 
-  .prose-cut blockquote {
+  .article-prose blockquote {
     border-left: 1px solid var(--color-mark);
     padding-left: 1.25rem;
     color: var(--color-paper);
   }
 
-  .prose-cut code {
+  .article-prose code {
     font-family: var(--font-mono);
     font-size: 0.875em;
     background: var(--color-panel);
@@ -303,7 +261,7 @@
     color: var(--color-mark);
   }
 
-  .prose-cut pre {
+  .article-prose pre {
     font-family: var(--font-mono);
     font-size: 0.8125rem;
     line-height: 1.65;
@@ -313,7 +271,7 @@
     overflow-x: auto;
   }
 
-  .prose-cut pre code {
+  .article-prose pre code {
     background: none;
     border: none;
     padding: 0;
@@ -329,5 +287,9 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .intro-mask {
+    display: none !important;
   }
 }

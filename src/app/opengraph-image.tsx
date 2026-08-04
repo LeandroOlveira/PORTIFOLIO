@@ -21,7 +21,7 @@ export default function OG() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22 }}>
           <span style={{ color: '#f2f2f0', letterSpacing: -0.5 }}>lhs.oliveira</span>
-          <span style={{ color: '#6e7066', letterSpacing: 3 }}>00:00:00:00</span>
+          <span style={{ color: '#9a9c93', letterSpacing: 2 }}>PRODUTO · OPERAÇÃO</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -35,7 +35,7 @@ export default function OG() {
               textTransform: 'uppercase',
             }}
           >
-            Corte
+            Produtos digitais
           </span>
           <span
             style={{
@@ -46,7 +46,7 @@ export default function OG() {
               maxWidth: 900,
             }}
           >
-            Todo cliente me entrega bruto. Eu devolvo o corte.
+            para operações reais.
           </span>
         </div>
 

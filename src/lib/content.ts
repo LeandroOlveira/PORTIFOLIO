@@ -47,8 +47,8 @@ function ler(pasta: string): { slug: string; data: Record<string, unknown>; corp
     .readdirSync(dir)
     .filter((f) => f.endsWith('.mdx'))
     .map((f) => {
-      const bruto = fs.readFileSync(path.join(dir, f), 'utf8');
-      const { data, content } = matter(bruto);
+      const source = fs.readFileSync(path.join(dir, f), 'utf8');
+      const { data, content } = matter(source);
       return { slug: f.replace(/\.mdx$/, ''), data, corpo: content };
     });
 }

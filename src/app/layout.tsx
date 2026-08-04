@@ -77,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div hidden dangerouslySetInnerHTML={{ __html: `<!--${CONTRATO}-->` }} />
         <a
           href="#conteudo"
-          className="burn sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-mark focus:px-4 focus:py-3 focus:text-black"
+          className="meta sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-mark focus:px-4 focus:py-3 focus:text-black"
         >
           Pular para o conteúdo
         </a>

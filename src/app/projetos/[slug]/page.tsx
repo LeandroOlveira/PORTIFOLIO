@@ -31,7 +31,7 @@ export default async function ProjetoPage({ params }: Props) {
       <div className="shell py-16 md:py-24">
         <Link
           href="/#projetos"
-          className="burn group inline-flex items-center gap-3 text-mid transition-colors hover:text-mark"
+          className="meta group inline-flex items-center gap-3 text-mid transition-colors hover:text-mark"
         >
           <span aria-hidden className="transition-transform group-hover:-translate-x-1">
             ←
@@ -70,14 +70,14 @@ export default async function ProjetoPage({ params }: Props) {
         {projeto.stack.length > 0 ? (
           <ul aria-label="Tecnologias do projeto" className="mt-10 flex flex-wrap gap-2">
             {projeto.stack.map((tecnologia) => (
-              <li key={tecnologia} className="burn tag">
+              <li key={tecnologia} className="meta tag">
                 {tecnologia}
               </li>
             ))}
           </ul>
         ) : null}
 
-        <div className="prose-cut mt-14 max-w-[68ch] border-t border-line pt-12 md:mt-20">
+        <div className="article-prose mt-14 max-w-[68ch] border-t border-line pt-12 md:mt-20">
           <MDXRemote source={projeto.corpo} />
         </div>
 
@@ -105,7 +105,7 @@ function ProjectFact({
 }) {
   return (
     <div className="bg-black p-5 sm:p-6">
-      <dt className={`burn ${emphasis ? 'text-mark' : 'text-dim'}`}>{term}</dt>
+      <dt className={`meta ${emphasis ? 'text-mark' : 'text-dim'}`}>{term}</dt>
       <dd className={`mt-3 text-sm leading-6 ${emphasis ? 'text-paper' : 'text-mid'}`}>
         {description}
       </dd>

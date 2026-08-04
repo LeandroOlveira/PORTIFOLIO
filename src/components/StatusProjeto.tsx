@@ -9,7 +9,7 @@ const statusLabels: Record<ProjectStatus, string> = {
 
 export function StatusProjeto({ status }: { status: ProjectStatus }) {
   return (
-    <span className="burn inline-flex items-center gap-2 text-mid">
+    <span className="meta inline-flex items-center gap-2 text-mid">
       <span
         aria-hidden
         className={`block h-2 w-2 ${
@@ -20,4 +20,3 @@ export function StatusProjeto({ status }: { status: ProjectStatus }) {
     </span>
   );
 }
-

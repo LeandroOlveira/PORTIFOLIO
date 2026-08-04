@@ -4,9 +4,9 @@ export default function NaoEncontrado() {
   return (
     <div className="bg-ink pt-14">
       <div className="shell flex min-h-[70svh] flex-col justify-center py-20">
-        <p className="burn-lg text-mark">Sem sinal</p>
+        <p className="meta meta-lg text-mark">Página não encontrada</p>
         <h1 className="title mt-6 max-w-[16ch] text-[2.25rem] text-paper sm:text-[3rem]">
-          Esse trecho não existe
+          Este endereço não existe
         </h1>
         <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-mid">
           O endereço que você abriu não corresponde a nenhuma página aqui. Pode ser um

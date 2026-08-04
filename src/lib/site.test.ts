@@ -25,6 +25,13 @@ describe('site identity', () => {
     ]);
   });
 
+  it('keeps public navigation free of cinema object labels', () => {
+    const labels = navegacao.map((item) => item.label).join(' ').toLowerCase();
+    for (const banned of ['corte', 'clipe', 'claquete', 'timecode', 'transporte']) {
+      expect(labels).not.toContain(banned);
+    }
+  });
+
   it('describes every required technology in context', () => {
     expect(stack.map((item) => item.nome)).toEqual([
       'Python',

@@ -5,7 +5,7 @@ import { Selo } from '@/components/Selo';
 
 export const metadata: Metadata = {
   title: 'Notas',
-  description: 'O que eu aprendi apanhando, escrito antes de eu esquecer.',
+  description: 'Reflexões sobre produto, integração, IA aplicada e software em operação.',
 };
 
 export default function ListaDeNotas() {
@@ -14,48 +14,43 @@ export default function ListaDeNotas() {
   return (
     <div className="bg-ink pt-14">
       <div className="shell py-16 md:py-24">
-        <h1 className="title text-[2.25rem] text-paper sm:text-[3rem] md:text-[3.75rem]">
+        <h1 className="title text-[2.5rem] text-paper sm:text-[3.5rem] md:text-[4.5rem]">
           Notas
         </h1>
-        <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-mid sm:text-lg">
-          O que eu aprendi apanhando, escrito antes de eu esquecer. Sobre processo,
-          escopo e o que acontece quando software encontra operação de verdade.
+        <p className="mt-6 max-w-[56ch] text-base leading-7 text-mid sm:text-lg">
+          Reflexões sobre produto, integração, IA aplicada e software em operação.
         </p>
 
-        {notas.length === 0 ? (
-          <p className="burn mt-16 border border-line bg-panel px-5 py-6 text-mid normal-case tracking-[0.06em]">
-            Ainda não há notas publicadas. Crie um arquivo <code>.mdx</code> em{' '}
-            <code>content/notas/</code> e ele aparece aqui.
-          </p>
-        ) : (
-          <ul className="mt-14 md:mt-20">
-            {notas.map((n) => (
-              <li key={n.slug} className="border-t border-line">
-                <Link
-                  href={`/notas/${n.slug}`}
-                  className="group grid gap-4 py-8 md:grid-cols-[9rem_1fr_auto] md:items-baseline md:gap-10 md:py-10"
-                >
-                  <p className="burn text-dim transition-colors group-hover:text-mark">
-                    {dataCurta(n.data)}
-                  </p>
+        {notas.length > 0 ? (
+          <ul className="mt-14 border-b border-line md:mt-20">
+            {notas.map((nota) => (
+              <li key={nota.slug} className="border-t border-line">
+                <Link href={`/notas/${nota.slug}`} className="group grid gap-4 py-8 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-baseline md:gap-10 md:py-10">
+                  <time dateTime={nota.data} className="meta text-dim transition-colors group-hover:text-mark">
+                    {dataCurta(nota.data)}
+                  </time>
                   <div className="max-w-[58ch]">
-                    <h2 className="title-tight text-[1.25rem] text-paper transition-colors group-hover:text-mark sm:text-[1.5rem]">
-                      {n.titulo}
+                    <h2 className="title-tight text-xl text-paper transition-colors group-hover:text-mark sm:text-2xl">
+                      {nota.titulo}
                     </h2>
-                    <p className="mt-3 text-[0.9375rem] leading-relaxed text-mid">
-                      {n.resumo}
+                    <p className="mt-3 text-sm leading-6 text-mid sm:text-base">
+                      {nota.resumo}
                     </p>
-                    {n.demo ? (
+                    {nota.demo ? (
                       <span className="mt-4 inline-block">
-                        <Selo>Rascunho de exemplo</Selo>
+                        <Selo>Texto em revisão</Selo>
                       </span>
                     ) : null}
                   </div>
-                  <p className="burn text-dim md:text-right">{n.leitura}</p>
+                  <p className="meta text-dim md:text-right">{nota.leitura}</p>
                 </Link>
               </li>
             ))}
           </ul>
+        ) : (
+          <p className="mt-14 border-t border-line pt-8 text-base text-mid">
+            Novos textos serão publicados aqui.
+          </p>
         )}
       </div>
     </div>

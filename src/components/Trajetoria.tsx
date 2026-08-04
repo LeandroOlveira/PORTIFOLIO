@@ -26,7 +26,7 @@ export function Trajetoria() {
           <ol className="border-b border-line">
             {carreira.map((marco) => (
               <li key={marco.periodo} className="grid gap-4 border-t border-line py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8 md:py-10">
-                <p className="burn text-mark">{marco.periodo}</p>
+                <p className="meta text-mark">{marco.periodo}</p>
                 <div>
                   <h3 className="title-tight text-xl text-paper sm:text-2xl">
                     {marco.titulo}
@@ -43,4 +43,3 @@ export function Trajetoria() {
     </section>
   );
 }
-

@@ -14,7 +14,7 @@ export function Stack() {
         <ol className="mt-14 border-b border-line md:mt-20">
           {stack.map((item, index) => (
             <li key={item.nome} className="grid gap-4 border-t border-line py-7 sm:grid-cols-[3rem_minmax(0,0.8fr)_minmax(16rem,1fr)] sm:items-baseline sm:gap-8 md:py-9">
-              <span className="burn text-dim">{String(index + 1).padStart(2, '0')}</span>
+              <span className="meta text-dim">{String(index + 1).padStart(2, '0')}</span>
               <h3 className="title-tight text-2xl text-paper sm:text-3xl md:text-4xl">
                 {item.nome}
               </h3>
@@ -33,4 +33,3 @@ export function Stack() {
     </section>
   );
 }
-

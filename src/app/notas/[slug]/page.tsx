@@ -34,7 +34,7 @@ export default async function Nota({ params }: Props) {
       <div className="shell py-16 md:py-24">
         <Link
           href="/notas"
-          className="burn group inline-flex items-center gap-3 text-dim transition-colors hover:text-mark"
+          className="meta group inline-flex items-center gap-3 text-mid transition-colors hover:text-mark"
         >
           <span aria-hidden className="transition-transform group-hover:-translate-x-1">
             &larr;
@@ -46,18 +46,12 @@ export default async function Nota({ params }: Props) {
           {n.titulo}
         </h1>
 
-        <div className="slate mt-8 max-w-[68ch]">
-          <span className="slate-field burn">
-            <span className="slate-key">Data</span>
-            <span className="slate-val">
-              <time dateTime={n.data}>{dataCurta(n.data)}</time>
-            </span>
+        <div className="mt-8 flex max-w-[68ch] flex-wrap items-center gap-x-6 gap-y-3 border-y border-line py-4">
+          <span className="meta text-mid">
+            <time dateTime={n.data}>{dataCurta(n.data)}</time>
           </span>
           {n.leitura ? (
-            <span className="slate-field burn">
-              <span className="slate-key">Leitura</span>
-              <span className="slate-val">{n.leitura}</span>
-            </span>
+            <span className="meta text-mid">{n.leitura} de leitura</span>
           ) : null}
           {n.demo ? (
             <span className="ml-auto">
@@ -66,7 +60,7 @@ export default async function Nota({ params }: Props) {
           ) : null}
         </div>
 
-        <div className="prose-cut mt-12 max-w-[68ch]">
+        <div className="article-prose mt-12 max-w-[68ch]">
           <MDXRemote source={n.corpo} />
         </div>
 

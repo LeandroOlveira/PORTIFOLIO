@@ -37,7 +37,7 @@ export function Processo() {
         <ol className="mt-14 grid gap-px bg-line md:mt-20 lg:grid-cols-3">
           {etapas.map((etapa) => (
             <li key={etapa.numero} className="flex min-h-full flex-col bg-ink p-6 sm:p-8">
-              <span className="burn text-mark">{etapa.numero}</span>
+              <span className="meta text-mark">{etapa.numero}</span>
               <h3 className="title-tight mt-10 text-2xl text-paper sm:text-3xl">
                 {etapa.titulo}
               </h3>
@@ -54,4 +54,3 @@ export function Processo() {
     </section>
   );
 }
-

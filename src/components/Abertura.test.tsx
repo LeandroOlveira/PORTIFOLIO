@@ -14,8 +14,6 @@ vi.mock('gsap', () => ({
   },
 }));
 
-vi.mock('gsap/ScrollTrigger', () => ({ ScrollTrigger: {} }));
-
 describe('Abertura', () => {
   it('renders the complete offer and actions before animation', () => {
     render(<Abertura />);

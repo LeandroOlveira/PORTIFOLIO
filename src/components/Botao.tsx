@@ -44,7 +44,6 @@ export function Botao({ href, variante = 'marcador', children, ...rest }: Props)
   );
 }
 
-/** A seta anda um passo, como um frame avançando. */
 function Seta() {
   return (
     <span

@@ -33,7 +33,7 @@ function ContactLink({ href, label, external = false }: { href: string; label: s
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
-      className="group flex min-h-14 items-center justify-between gap-4 border-b border-black/30 py-4 text-sm font-semibold text-black transition-colors hover:bg-black hover:px-4 hover:text-mark sm:text-base"
+      className="group flex min-h-14 items-center justify-between gap-4 border-b border-black/30 py-4 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-mark sm:text-base"
     >
       {label}
       <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -42,4 +42,3 @@ function ContactLink({ href, label, external = false }: { href: string; label: s
     </a>
   );
 }
-

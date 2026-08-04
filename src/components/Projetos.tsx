@@ -64,7 +64,7 @@ function ProjetoCard({
       <div className={`flex flex-1 flex-col ${destaque ? 'p-6 sm:p-8' : 'p-5 sm:p-6'}`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <StatusProjeto status={projeto.status} />
-          <span className="burn text-dim">{projeto.tipo}</span>
+          <span className="meta text-dim">{projeto.tipo}</span>
         </div>
 
         <h3 className={`title-tight mt-8 text-paper ${destaque ? 'text-3xl sm:text-4xl' : 'text-2xl'}`}>
@@ -75,11 +75,11 @@ function ProjetoCard({
         {destaque ? (
           <div className="mt-8 grid gap-6 border-t border-line pt-6 sm:grid-cols-2">
             <div>
-              <p className="burn text-dim">Problema</p>
+              <p className="meta text-dim">Problema</p>
               <p className="mt-3 text-sm leading-6 text-mid">{projeto.problema}</p>
             </div>
             <div>
-              <p className="burn text-mark">Resultado</p>
+              <p className="meta text-mark">Resultado</p>
               <p className="mt-3 text-sm leading-6 text-paper">{projeto.resultado}</p>
             </div>
           </div>
@@ -92,7 +92,7 @@ function ProjetoCard({
         {projeto.stack.length > 0 ? (
           <ul aria-label={`Tecnologias de ${projeto.titulo}`} className="mt-7 flex flex-wrap gap-2">
             {projeto.stack.map((tecnologia) => (
-              <li key={tecnologia} className="burn tag">
+              <li key={tecnologia} className="meta tag">
                 {tecnologia}
               </li>
             ))}
@@ -103,7 +103,7 @@ function ProjetoCard({
           <Link
             href={`/projetos/${projeto.slug}`}
             aria-label={`Conhecer o projeto ${projeto.titulo}`}
-            className="burn text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark hover:decoration-mark"
+            className="meta text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark hover:decoration-mark"
           >
             Conhecer projeto
           </Link>
@@ -113,7 +113,7 @@ function ProjetoCard({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Abrir ${projeto.titulo}`}
-              className="burn text-mid transition-colors hover:text-mark"
+              className="meta text-mid transition-colors hover:text-mark"
             >
               Abrir site ↗
             </a>
@@ -123,4 +123,3 @@ function ProjetoCard({
     </article>
   );
 }
-
