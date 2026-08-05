@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-04T18:52:38-03:00",
+  "generatedAt": "2026-08-04T21:56:48-03:00",
   "title": "Design System: Portfólio de Leandro Oliveira",
   "extensions": {
     "colorMeta": {
@@ -77,7 +77,13 @@
       { "name": "state-fast", "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Mudanças de cor e contorno em tags e estados compactos." },
       { "name": "state-standard", "value": "200ms ease-out", "purpose": "Resposta de cor e deslocamento de seta em botões." },
       { "name": "image-reveal", "value": "500ms ease", "purpose": "Transição de escala de cinza para cor em imagens de projeto." },
-      { "name": "entry-band", "value": "760ms expo.inOut; stagger 120ms; delay 80ms", "purpose": "Travessia automática das duas faixas diagonais da abertura." }
+      { "name": "entry-band", "value": "760ms expo.inOut; stagger 120ms; delay 80ms", "purpose": "Travessia automática das duas faixas diagonais da abertura." },
+      { "name": "spatial-canvas", "value": "one fixed WebGL2 canvas; aria-hidden; pointer-events none", "purpose": "Campo decorativo único que conecta visualmente as seções da home sem carregar conteúdo." },
+      { "name": "profile-full", "value": "WebGL2; width >= 768px; cores > 4; saveData off; DPR <= 1.5", "purpose": "Coreografia espacial completa, pin de projetos e resposta sutil ao ponteiro quando hover existe." },
+      { "name": "profile-compact", "value": "width < 768px or cores <= 4 or saveData on; DPR <= 1", "purpose": "Mantém canvas e ativações de seção com deslocamentos menores, sem pin no palco de projetos." },
+      { "name": "profile-static", "value": "reduced motion or WebGL2 unavailable or initialization failure", "purpose": "Preserva o conteúdo HTML e o fluxo vertical sem alocar coreografia espacial." },
+      { "name": "home-scroll-choreography", "value": "GSAP ScrollTrigger; section activation; power3.out", "purpose": "Orquestra somente as seções semânticas da home depois que o renderer WebGL inicia com sucesso." },
+      { "name": "project-stage-full", "value": "scrub 1; pin true; pinSpacing true; start top 12%; end bottom 88%", "purpose": "Transforma projetos em momento espacial apenas no perfil full de desktop; compact e static mantêm sequência vertical." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" },
@@ -129,7 +135,7 @@
       "name": "Project Card",
       "kind": "card",
       "refersTo": "project-card",
-      "description": "Cartão editorial retangular organizado por status, problema, resultado e stack.",
+      "description": "Plano editorial de projeto que participa do palco espacial no desktop full e preserva a sequência vertical no mobile.",
       "html": "<article class=\"ds-project-card\"><div class=\"ds-project-meta\"><span>ENTREGUE</span><span>SISTEMA WEB</span></div><h3>DOCHUB</h3><p>Controle de documentação para uma operação de obra.</p><div class=\"ds-project-result\"><small>RESULTADO</small><strong>Fluxo entregue com prova textual e sem exposição de dados internos.</strong></div><a href=\"#\">CONHECER PROJETO</a></article>",
       "css": ".ds-project-card { display:flex; min-height:26rem; flex-direction:column; background:var(--color-ink,#0b0b0b); color:var(--color-paper,#f2f2f0); padding:2rem; border:1px solid var(--color-line,#232323); font-family:var(--font-archivo),system-ui,sans-serif; } .ds-project-meta { display:flex; justify-content:space-between; gap:0.75rem; color:var(--color-mid,#9a9c93); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; } .ds-project-card h3 { margin:2rem 0 0; font-size:2.25rem; line-height:1.02; letter-spacing:-0.025em; text-transform:uppercase; } .ds-project-card p { color:var(--color-mid,#9a9c93); line-height:1.5; } .ds-project-result { margin-top:2rem; border-top:1px solid var(--color-line,#232323); padding-top:1.5rem; } .ds-project-result small { display:block; color:var(--color-mark,#d4ff00); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; } .ds-project-result strong { display:block; margin-top:0.75rem; font-size:0.875rem; line-height:1.5; } .ds-project-card a { margin-top:auto; padding-top:2rem; color:var(--color-paper,#f2f2f0); font-family:var(--font-martian),ui-monospace,monospace; font-size:0.6875rem; letter-spacing:0.14em; text-underline-offset:0.25rem; } .ds-project-card a:hover { color:var(--color-mark,#d4ff00); } .ds-project-card a:focus-visible { outline:2px solid var(--color-mark,#d4ff00); outline-offset:3px; }"
     },
@@ -150,13 +156,15 @@
   ],
   "narrative": {
     "northStar": "Produto e operação",
-    "overview": "O sistema apresenta trabalho técnico com a clareza de um painel editorial: contraste alto, hierarquia incisiva e prova concreta antes de ornamento. A atmosfera é sóbria, direta e confiante; o verde-limão cria pontos de decisão dentro de uma base escura, sem competir com o conteúdo.\n\nO cinema aparece como linguagem estrutural — enquadramento, ritmo, cortes retangulares e uma abertura breve — e não como vocabulário da interface. O conjunto evita tanto a grade genérica de portfólio quanto a simulação de controles de reprodução, mantendo produto e operação como assunto principal.",
+    "overview": "O sistema apresenta trabalho técnico com a clareza de um painel editorial: contraste alto, hierarquia incisiva e prova concreta antes de ornamento. A atmosfera é sóbria, direta e confiante; o verde-limão cria pontos de decisão dentro de uma base escura, sem competir com o conteúdo.\n\nO cinema aparece como linguagem estrutural — enquadramento, ritmo, cortes retangulares, profundidade WebGL e coreografia de rolagem — e não como vocabulário da interface. Um único canvas decorativo conecta as seções da home, enquanto perfis progressivos mantêm produto e operação legíveis mesmo sem movimento.",
     "keyCharacteristics": [
       "Alto contraste com um único acento cromático.",
       "Tipografia larga e condensada por hierarquia, não por decoração.",
       "Módulos retangulares articulados por linhas de um pixel.",
       "Assimetria controlada em telas largas e fluxo direto no mobile.",
-      "Movimento concentrado na entrada automática, com conteúdo sempre disponível."
+      "Um único canvas WebGL decorativo, com perfis full, compact e static.",
+      "Projetos como momento espacial no desktop full e sequência vertical no mobile.",
+      "Conteúdo sempre disponível quando movimento ou WebGL não estão disponíveis."
     ],
     "rules": [
       { "name": "The One Accent Rule", "body": "O verde de decisão é o único acento; reserve-o para ação, estado, foco ou trecho essencial de uma tese.", "section": "colors" },
@@ -166,21 +174,26 @@
       { "name": "The One-Pixel Grid Rule", "body": "Construa grupos de módulos com fundo de linha e espaçamento de um pixel, deixando as próprias superfícies formarem a grade.", "section": "layout" },
       { "name": "The Mobile Sequence Rule", "body": "No mobile, preserve a ordem argumento → prova → ação; não comprima a estrutura desktop em colunas estreitas.", "section": "layout" },
       { "name": "The Flat-by-Default Rule", "body": "Superfícies permanecem sem sombra; contraste tonal, linhas e recorte de imagem são os únicos mecanismos de profundidade.", "section": "elevation" },
-      { "name": "The Square Surface Rule", "body": "Componentes funcionais não usam raio; hierarquia vem de proporção, cor e borda.", "section": "shapes" }
+      { "name": "The Square Surface Rule", "body": "Componentes funcionais não usam raio; hierarquia vem de proporção, cor e borda.", "section": "shapes" },
+      { "name": "The One Canvas Rule", "body": "Use um único canvas WebGL decorativo na home; conteúdo, semântica e interação permanecem no HTML.", "section": "motion" },
+      { "name": "The Progressive Motion Rule", "body": "A coreografia se adapta aos perfis full, compact e static; ausência de WebGL ou movimento nunca remove conteúdo.", "section": "motion" }
     ],
     "dos": [
       "Do mantenha o verde raro e funcional: ação, foco, estado ou argumento essencial.",
       "Do use linhas de um pixel e alternância tonal para organizar listas e módulos.",
       "Do preserve alvos interativos de pelo menos 44px e foco visível de alto contraste.",
-      "Do trate projetos sem captura pública segura como composições tipográficas intencionais.",
-      "Do mantenha toda informação essencial acessível antes e sem animação."
+      "Do use somente material visual público ou sanitizado; Alinnea, Roadmap, DocHub e Radar Fiscal têm prova segura.",
+      "Do mantenha projetos em sequência vertical no mobile e reserve o pin ao perfil full.",
+      "Do mantenha toda informação essencial acessível antes e sem animação ou WebGL."
     ],
     "donts": [
       "Don't introduza cartões arredondados, sombras ou gradientes para simular profundidade.",
       "Don't transforme cinema em nomes de seção, controles de reprodução ou metáforas para explicar o trabalho.",
       "Don't use Martian Mono em parágrafos ou títulos de mensagem.",
       "Don't crie uma segunda cor de acento nem uma grade de logos de tecnologia.",
-      "Don't publique capturas com dados pessoais ou operacionais identificáveis."
+      "Don't publique capturas com dados pessoais ou operacionais identificáveis.",
+      "Don't use o canvas WebGL para texto, navegação ou qualquer informação necessária.",
+      "Don't aplique ScrollTrigger fora da coreografia da home."
     ]
   }
 }

@@ -4,7 +4,7 @@
 
 ## Platform and stack
 
-Portfólio web em **Next.js 15 (App Router), TypeScript, Tailwind CSS v4, MDX e GSAP**. Projetos e notas são arquivos tipados em `content/`, permitindo publicar conteúdo sem alterar componentes. GSAP existe apenas na abertura automática; não há Lenis, ScrollTrigger, playhead ou interface de reprodução.
+Portfólio web em **Next.js 15 (App Router), TypeScript, Tailwind CSS v4, MDX, WebGL2 e GSAP**. Projetos e notas são arquivos tipados em `content/`, permitindo publicar conteúdo sem alterar componentes. Um único canvas WebGL decorativo sustenta a profundidade espacial; GSAP e ScrollTrigger ficam restritos à abertura e à coreografia da home. Não há Lenis, playhead ou interface de reprodução.
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Os sete projetos apresentados são reais:
 - **PetGest** — SaaS em construção.
 - **Radar Fiscal** — SaaS fiscal em construção.
 
-Capturas públicas só são usadas quando não expõem dados pessoais ou operacionais. A ausência de imagem em um caso é uma decisão editorial e de privacidade, não um convite a fabricar material.
+Capturas públicas ou sanitizadas só são usadas quando não expõem dados pessoais ou operacionais. Alinnea usa material visual seguro; Roadmap Projetos e DocHub têm capturas demonstrativas, e Radar Fiscal tem uma captura sanitizada para preservar a prova sem revelar informações internas. A ausência de imagem em qualquer outro caso continua sendo uma decisão editorial e de privacidade, não um convite a fabricar material.
 
 ## Contact and technology
 
@@ -45,19 +45,23 @@ Capturas públicas só são usadas quando não expõem dados pessoais ou operaci
 
 Português do Brasil, frases diretas e linguagem de negócio. Cada projeto parte do problema, registra o que foi entregue e informa honestamente seu estado. A tecnologia sustenta a prova, mas não substitui o resultado.
 
-Cinema é linguagem estrutural: enquadramento, contraste, ritmo, composição e uma breve entrada automática. Nomes de seções, controles e textos não simulam um set de filmagem.
+Cinema é linguagem estrutural: enquadramento, contraste, ritmo, composição, profundidade WebGL e coreografia de rolagem. Nomes de seções, controles e textos não simulam um set de filmagem.
 
 ## Visual system
 
 - Preto profundo e grafite como base; branco quente para texto; verde-limão `#D4FF00` como único acento.
 - Archivo para títulos largos e Martian Mono apenas em metadados e tecnologia.
 - Bordas retas, módulos editoriais e assimetria controlada; sem cartões genéricos arredondados.
-- Alinnea ocupa o principal espaço visual. Roadmap e DocHub são destaques editoriais tipográficos porque não há captura pública segura.
+- Alinnea ocupa o principal espaço visual. Roadmap, DocHub e Radar Fiscal participam com material sanitizado, mantendo a prova visual segura.
+- Projetos formam um momento espacial com pin no desktop de capacidade completa e permanecem uma sequência vertical direta no mobile ou em perfis compactos.
 
 ## Accessibility and constraints
 
-- Conteúdo principal já existe no HTML e não depende da animação para aparecer.
-- `prefers-reduced-motion` elimina as faixas da abertura e mantém todo o conteúdo disponível.
+- Conteúdo principal já existe no HTML e não depende de WebGL, pin ou animação para aparecer.
+- O canvas WebGL é único, decorativo, invisível para tecnologias assistivas e não captura interação.
+- A experiência escolhe entre os perfis `full`, `compact` e `static`: `full` habilita a coreografia espacial completa; `compact` reduz densidade, deslocamento e custo; `static` preserva o layout sem coreografia.
+- `prefers-reduced-motion`, indisponibilidade do WebGL2 ou falha de inicialização levam ao perfil `static`, mantendo todo o conteúdo disponível.
+- ScrollTrigger é usado somente na home e não transforma páginas de projeto ou notas em experiências dependentes de rolagem.
 - Navegação por teclado, foco visível, contraste adequado e alvos de toque de pelo menos 44px.
 - Layout mobile-first, sem rolagem horizontal.
 - Não fabricar métricas, clientes, depoimentos, telas ou resultados.
