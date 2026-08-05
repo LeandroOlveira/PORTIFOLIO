@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { getNotas, getProjetos, parseProjeto } from '@/lib/content';
 
@@ -50,6 +52,22 @@ describe('project content', () => {
       'gabriela-lorenson',
       'ebano',
     ]);
+  });
+
+  it('loads safe visual proof for the four operational products', () => {
+    const images = Object.fromEntries(getProjetos().map(({ slug, imagem }) => [slug, imagem]));
+
+    expect(images).toMatchObject({
+      alinnea: '/projetos/alinnea.png',
+      roadmap: '/projetos/roadmap.png',
+      dochub: '/projetos/dochub.png',
+      'radar-fiscal': '/projetos/radar-fiscal.png',
+    });
+
+    for (const imagePath of Object.values(images).filter(Boolean)) {
+      const assetPath = path.join(process.cwd(), 'public', String(imagePath).replace(/^\//, ''));
+      expect(fs.existsSync(assetPath)).toBe(true);
+    }
   });
 
   it('keeps editorial headings free of the discarded cinema labels', () => {
