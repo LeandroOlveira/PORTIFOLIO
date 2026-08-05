@@ -8,7 +8,12 @@ export function Projetos({ projetos }: { projetos: Projeto[] }) {
   const demais = projetos.filter((projeto) => !projeto.destaque);
 
   return (
-    <section id="projetos" aria-labelledby="projetos-titulo" className="border-t border-line bg-black py-20 md:py-32">
+    <section
+      id="projetos"
+      aria-labelledby="projetos-titulo"
+      data-motion-section="projects"
+      className="border-t border-line bg-black py-20 md:py-32"
+    >
       <div className="shell">
         <div id="projetos-titulo">
           <Titulo apoio="Produtos próprios, sistemas internos e trabalhos publicados. Em cada projeto, o foco está no problema operacional e no que passou a funcionar melhor.">
@@ -16,28 +21,35 @@ export function Projetos({ projetos }: { projetos: Projeto[] }) {
           </Titulo>
         </div>
 
-        <div className="mt-14 grid gap-px bg-line md:mt-20 md:grid-cols-12">
-          {destaques.map((projeto) => (
-            <ProjetoCard
-              key={projeto.slug}
-              projeto={projeto}
-              className={
-                projeto.imagem
-                  ? 'md:col-span-12 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(24rem,0.85fr)]'
-                  : 'md:col-span-6'
-              }
-              destaque
-            />
-          ))}
-        </div>
-
-        {demais.length > 0 ? (
-          <div className="mt-px grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
-            {demais.map((projeto) => (
-              <ProjetoCard key={projeto.slug} projeto={projeto} />
+        <div data-project-stage className="mt-14 md:mt-20">
+          <div className="grid gap-px bg-line md:grid-cols-12">
+            {destaques.map((projeto, index) => (
+              <ProjetoCard
+                key={projeto.slug}
+                projeto={projeto}
+                index={index}
+                className={
+                  projeto.imagem
+                    ? 'md:col-span-12 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(24rem,0.85fr)]'
+                    : 'md:col-span-6'
+                }
+                destaque
+              />
             ))}
           </div>
-        ) : null}
+
+          {demais.length > 0 ? (
+            <div className="mt-px grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
+              {demais.map((projeto, index) => (
+                <ProjetoCard
+                  key={projeto.slug}
+                  projeto={projeto}
+                  index={destaques.length + index}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
       </div>
     </section>
   );
@@ -45,17 +57,25 @@ export function Projetos({ projetos }: { projetos: Projeto[] }) {
 
 function ProjetoCard({
   projeto,
+  index,
   destaque = false,
   className = '',
 }: {
   projeto: Projeto;
+  index: number;
   destaque?: boolean;
   className?: string;
 }) {
   return (
-    <article className={`group flex min-h-full flex-col bg-ink ${className}`}>
+    <article
+      data-motion-item
+      data-project-plane={projeto.slug}
+      style={{ '--project-index': index } as React.CSSProperties}
+      className={`group flex min-h-full flex-col bg-ink ${className}`}
+    >
       {projeto.imagem ? (
         <div
+          data-project-media
           className={`overflow-hidden border-b border-line bg-panel ${
             destaque ? 'aspect-[16/9] lg:aspect-auto lg:min-h-[30rem] lg:border-r lg:border-b-0' : 'aspect-[4/3]'
           }`}

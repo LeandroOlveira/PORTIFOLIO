@@ -3,7 +3,7 @@ import { Titulo } from '@/components/Titulo';
 
 export function Stack() {
   return (
-    <section id="stack" aria-labelledby="stack-titulo" className="border-t border-line bg-ink py-20 md:py-32">
+    <section id="stack" aria-labelledby="stack-titulo" data-motion-section="stack" className="border-t border-line bg-ink py-20 md:py-32">
       <div className="shell">
         <div id="stack-titulo">
           <Titulo apoio="Tecnologia entra como ferramenta de produto: cada escolha precisa servir à experiência, aos dados e à manutenção da operação.">
@@ -13,7 +13,7 @@ export function Stack() {
 
         <ol className="mt-14 border-b border-line md:mt-20">
           {stack.map((item, index) => (
-            <li key={item.nome} className="grid gap-4 border-t border-line py-7 sm:grid-cols-[3rem_minmax(0,0.8fr)_minmax(16rem,1fr)] sm:items-baseline sm:gap-8 md:py-9">
+            <li data-motion-item key={item.nome} className="grid gap-4 border-t border-line py-7 sm:grid-cols-[3rem_minmax(0,0.8fr)_minmax(16rem,1fr)] sm:items-baseline sm:gap-8 md:py-9">
               <span className="meta text-dim">{String(index + 1).padStart(2, '0')}</span>
               <h3 className="title-tight text-2xl text-paper sm:text-3xl md:text-4xl">
                 {item.nome}

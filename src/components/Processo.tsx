@@ -26,7 +26,7 @@ const etapas = [
 
 export function Processo() {
   return (
-    <section id="processo" aria-labelledby="processo-titulo" className="border-t border-line bg-black py-20 md:py-32">
+    <section id="processo" aria-labelledby="processo-titulo" data-motion-section="process" className="border-t border-line bg-black py-20 md:py-32">
       <div className="shell">
         <div id="processo-titulo">
           <Titulo apoio="Do entendimento ao uso, trabalho em ciclos curtos o suficiente para que a operação participe das decisões.">
@@ -34,9 +34,9 @@ export function Processo() {
           </Titulo>
         </div>
 
-        <ol className="mt-14 grid gap-px bg-line md:mt-20 lg:grid-cols-3">
+        <ol data-process-grid className="mt-14 grid gap-px bg-line md:mt-20 lg:grid-cols-3">
           {etapas.map((etapa) => (
-            <li key={etapa.numero} className="flex min-h-full flex-col bg-ink p-6 sm:p-8">
+            <li data-motion-item key={etapa.numero} className="flex min-h-full flex-col bg-ink p-6 sm:p-8">
               <span className="meta text-mark">{etapa.numero}</span>
               <h3 className="title-tight mt-10 text-2xl text-paper sm:text-3xl">
                 {etapa.titulo}

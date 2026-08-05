@@ -6,7 +6,7 @@ import { Titulo } from '@/components/Titulo';
 
 export function Notas({ notas }: { notas: Nota[] }) {
   return (
-    <section id="notas" aria-labelledby="notas-titulo" className="border-t border-line bg-black py-20 md:py-32">
+    <section id="notas" aria-labelledby="notas-titulo" data-motion-section="notes" className="border-t border-line bg-black py-20 md:py-32">
       <div className="shell">
         <div id="notas-titulo">
           <Titulo
@@ -26,7 +26,7 @@ export function Notas({ notas }: { notas: Nota[] }) {
         {notas.length > 0 ? (
           <ul className="mt-14 border-b border-line md:mt-20">
             {notas.slice(0, 3).map((nota) => (
-              <li key={nota.slug} className="border-t border-line">
+              <li data-motion-item key={nota.slug} className="border-t border-line">
                 <Link href={`/notas/${nota.slug}`} className="group grid gap-4 py-8 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-baseline md:gap-10 md:py-10">
                   <time dateTime={nota.data} className="meta text-dim transition-colors group-hover:text-mark">
                     {dataCurta(nota.data)}

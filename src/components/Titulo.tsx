@@ -9,11 +9,11 @@ export function Titulo({
 }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end lg:gap-16">
-      <h2 className="title max-w-[14ch] text-[2.25rem] text-paper sm:text-[3rem] md:text-[3.75rem]">
+      <h2 data-motion-title className="title max-w-[14ch] text-[2.25rem] text-paper sm:text-[3rem] md:text-[3.75rem]">
         {children}
       </h2>
 
-      <div className="lg:pb-2">
+      <div data-motion-copy className="lg:pb-2">
         <p className="max-w-[46ch] text-[0.9375rem] leading-relaxed text-mid sm:text-base">
           {apoio}
         </p>

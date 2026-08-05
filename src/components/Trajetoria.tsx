@@ -4,7 +4,7 @@ import { Titulo } from '@/components/Titulo';
 
 export function Trajetoria() {
   return (
-    <section id="trajetoria" aria-labelledby="trajetoria-titulo" className="border-t border-line bg-ink py-20 md:py-32">
+    <section id="trajetoria" aria-labelledby="trajetoria-titulo" data-motion-section="trajectory" className="border-t border-line bg-ink py-20 md:py-32">
       <div className="shell">
         <div id="trajetoria-titulo">
           <Titulo apoio="Conheço software pelos dois lados: o código que precisa se sustentar e a operação que precisa confiar nele.">
@@ -23,9 +23,9 @@ export function Trajetoria() {
             </p>
           </div>
 
-          <ol className="border-b border-line">
+          <ol data-trajectory-list className="border-b border-line">
             {carreira.map((marco) => (
-              <li key={marco.periodo} className="grid gap-4 border-t border-line py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8 md:py-10">
+              <li data-motion-item key={marco.periodo} className="grid gap-4 border-t border-line py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8 md:py-10">
                 <p className="meta text-mark">{marco.periodo}</p>
                 <div>
                   <h3 className="title-tight text-xl text-paper sm:text-2xl">
