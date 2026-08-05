@@ -5,6 +5,7 @@ import { Stack } from '@/components/Stack';
 import { Trajetoria } from '@/components/Trajetoria';
 import { Notas } from '@/components/Notas';
 import { Contato } from '@/components/Contato';
+import { ScrollExperience } from '@/components/ScrollExperience';
 import { getNotas, getProjetos } from '@/lib/content';
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
 
   return (
     <>
+      <ScrollExperience />
       <Abertura />
       <Projetos projetos={projetos} />
       <Stack />
