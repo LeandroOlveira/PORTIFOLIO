@@ -29,6 +29,7 @@ export function Contato() {
           <div className="border-t-2 border-black">
             <ContactLink href={whatsappLink()} label="WhatsApp" external />
             <ContactLink href={`mailto:${site.email}`} label={site.email} />
+            <ContactLink href={site.github} label="GitHub" external />
             <ContactLink href={site.linkedin} label="LinkedIn" external />
             <ContactLink href={site.instagram} label="@lhs.oliveira" external />
           </div>

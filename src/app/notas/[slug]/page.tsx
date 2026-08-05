@@ -5,7 +5,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { dataCurta, getNota, getNotas } from '@/lib/content';
 import { Selo } from '@/components/Selo';
 import { Botao } from '@/components/Botao';
-import { whatsappLink } from '@/lib/site';
+import { JsonLd } from '@/components/JsonLd';
+import { site, whatsappLink } from '@/lib/site';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -17,10 +18,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const n = getNota(slug);
   if (!n) return {};
+  const caminho = `/notas/${n.slug}`;
+
   return {
     title: n.titulo,
     description: n.resumo,
-    openGraph: { type: 'article', title: n.titulo, description: n.resumo },
+    alternates: { canonical: caminho },
+    openGraph: {
+      type: 'article',
+      url: caminho,
+      title: n.titulo,
+      description: n.resumo,
+      publishedTime: n.data,
+    },
   };
 }
 
@@ -29,8 +39,35 @@ export default async function Nota({ params }: Props) {
   const n = getNota(slug);
   if (!n) notFound();
 
+  const endereco = `${site.url}/notas/${n.slug}`;
+
+  const notaJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: n.titulo,
+    description: n.resumo,
+    datePublished: n.data,
+    dateModified: n.data,
+    inLanguage: site.locale,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': endereco },
+    author: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
+    publisher: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
+  };
+
+  const trilhaJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: site.url },
+      { '@type': 'ListItem', position: 2, name: 'Notas', item: `${site.url}/notas` },
+      { '@type': 'ListItem', position: 3, name: n.titulo, item: endereco },
+    ],
+  };
+
   return (
     <article className="bg-ink pt-14">
+      <JsonLd dados={notaJsonLd} />
+      <JsonLd dados={trilhaJsonLd} />
       <div className="shell py-16 md:py-24">
         <Link
           href="/notas"

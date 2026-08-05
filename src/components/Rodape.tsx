@@ -16,6 +16,9 @@ export function Rodape() {
           <a href={`mailto:${site.email}`} className="sub meta text-mid transition-colors hover:text-mark">
             E-mail
           </a>
+          <a href={site.github} target="_blank" rel="noopener noreferrer" className="sub meta text-mid transition-colors hover:text-mark">
+            GitHub
+          </a>
           <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="sub meta text-mid transition-colors hover:text-mark">
             LinkedIn
           </a>

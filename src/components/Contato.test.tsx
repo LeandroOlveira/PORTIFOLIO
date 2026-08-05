@@ -3,8 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { Contato } from '@/components/Contato';
 
 describe('Contato', () => {
-  it('renderiza os quatro canais reais de contato', () => {
+  it('renderiza os cinco canais reais de contato', () => {
     render(<Contato />);
+
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/LeandroOlveira',
+    );
 
     expect(screen.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute(
       'href',

@@ -4,8 +4,9 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Botao } from '@/components/Botao';
 import { StatusProjeto } from '@/components/StatusProjeto';
+import { JsonLd } from '@/components/JsonLd';
 import { getProjeto, getProjetos } from '@/lib/content';
-import { whatsappLink } from '@/lib/site';
+import { site, whatsappLink } from '@/lib/site';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -18,7 +19,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const projeto = getProjeto(slug);
   if (!projeto) return {};
 
-  return { title: projeto.titulo, description: projeto.resumo };
+  const caminho = `/projetos/${projeto.slug}`;
+  const capa = projeto.imagens[0]?.src;
+
+  return {
+    title: projeto.titulo,
+    description: projeto.resumo,
+    alternates: { canonical: caminho },
+    openGraph: {
+      type: 'article',
+      url: caminho,
+      title: projeto.titulo,
+      description: projeto.resumo,
+      ...(capa ? { images: [capa] } : {}),
+    },
+  };
 }
 
 export default async function ProjetoPage({ params }: Props) {
@@ -26,8 +41,34 @@ export default async function ProjetoPage({ params }: Props) {
   const projeto = getProjeto(slug);
   if (!projeto) notFound();
 
+  const endereco = `${site.url}/projetos/${projeto.slug}`;
+
+  const obraJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: projeto.titulo,
+    description: projeto.resumo,
+    url: projeto.url ?? endereco,
+    creator: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
+    keywords: projeto.stack,
+    ...(projeto.imagens.length > 0
+      ? { image: projeto.imagens.map((captura) => `${site.url}${captura.src}`) }
+      : {}),
+  };
+
+  const trilhaJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: site.url },
+      { '@type': 'ListItem', position: 2, name: projeto.titulo, item: endereco },
+    ],
+  };
+
   return (
     <article className="bg-ink pt-14">
+      <JsonLd dados={obraJsonLd} />
+      <JsonLd dados={trilhaJsonLd} />
       <div className="shell py-16 md:py-24">
         <Link
           href="/#projetos"

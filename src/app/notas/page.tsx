@@ -3,9 +3,14 @@ import Link from 'next/link';
 import { dataCurta, getNotas } from '@/lib/content';
 import { Selo } from '@/components/Selo';
 
+const DESCRICAO =
+  'Reflexões sobre produto, integração, IA aplicada e software em operação.';
+
 export const metadata: Metadata = {
   title: 'Notas',
-  description: 'Reflexões sobre produto, integração, IA aplicada e software em operação.',
+  description: DESCRICAO,
+  alternates: { canonical: '/notas' },
+  openGraph: { type: 'website', url: '/notas', title: 'Notas', description: DESCRICAO },
 };
 
 export default function ListaDeNotas() {
@@ -18,7 +23,7 @@ export default function ListaDeNotas() {
           Notas
         </h1>
         <p className="mt-6 max-w-[56ch] text-base leading-7 text-mid sm:text-lg">
-          Reflexões sobre produto, integração, IA aplicada e software em operação.
+          {DESCRICAO}
         </p>
 
         {notas.length > 0 ? (

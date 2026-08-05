@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { Projeto } from '@/lib/content';
 import { StatusProjeto } from '@/components/StatusProjeto';
 import { Botao, BotaoAcao } from '@/components/Botao';
@@ -21,6 +21,18 @@ const LARGURA_ESTREITA = 768;
  * projeto. De perfil exato ela não ocupa área nenhuma.
  */
 const ANGULO = 90;
+
+/**
+ * `useLayoutEffect` no cliente, `useEffect` no servidor.
+ *
+ * A decisão entre `documento` e `corredor` troca a árvore inteira — de um
+ * empilhamento curto para um `sticky` de várias telas. Feita depois da
+ * pintura, ela era o maior salto de layout da página (CLS 0,42, começando
+ * 9ms depois do LCP). `canvas.getContext('webgl2')` é síncrono, então nada
+ * justifica esperar o quadro seguinte para saber o modo. O alias existe só
+ * porque `useLayoutEffect` não roda no servidor e o React avisa sobre isso.
+ */
+const useEfeitoDeLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 /**
  * A abertura e o corredor, numa peça só.
@@ -48,14 +60,14 @@ export function Corredor({ projetos }: { projetos: Projeto[] }) {
 
   const total = projetos.length;
 
-  useEffect(() => {
+  useEfeitoDeLayout(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = tela.current;
     if (!canvas || !canvas.getContext('webgl2')) return;
     setModo('corredor');
   }, []);
 
-  useEffect(() => {
+  useEfeitoDeLayout(() => {
     if (modo !== 'corredor') return;
     const medir = () => setVertical(window.innerWidth < LARGURA_ESTREITA);
     medir();

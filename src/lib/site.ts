@@ -6,7 +6,7 @@ export const site = {
   papel: 'Desenvolvedor full stack · Produto e operações',
   descricao:
     'Produtos digitais e sistemas para operações reais, da descoberta ao código em produção.',
-  url: 'https://lhsoliveira.dev',
+  url: 'https://devleandrooliveira.com.br',
   locale: 'pt-BR',
 
   whatsapp: '5544997762271',

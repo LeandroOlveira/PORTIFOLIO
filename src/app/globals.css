@@ -257,7 +257,10 @@
   .pilha-item {
     position: relative;
     transform: translate3d(0, calc((1 - var(--montagem)) * var(--carga, 0) * 1px), 0);
-    opacity: calc(0.12 + var(--montagem) * 0.88);
+    /* O piso é 0.4, não 0.12: a 12% o texto em repouso reprovava o contraste
+       mínimo. O assentar continua legível — o que muda é o ponto de partida,
+       que agora nasce como conteúdo em vez de fantasma. */
+    opacity: calc(0.4 + var(--montagem) * 0.6);
   }
 
   /* A régua vive num pseudo-elemento para poder se estender; como borda ela

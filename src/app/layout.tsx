@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Martian_Mono } from 'next/font/google';
-import { site } from '@/lib/site';
+import { site, stack } from '@/lib/site';
 import { Cabecalho } from '@/components/Cabecalho';
+import { JsonLd } from '@/components/JsonLd';
 import { Movimento } from '@/components/Movimento';
 import { Rodape } from '@/components/Rodape';
 import './globals.css';
@@ -19,7 +20,15 @@ const martian = Martian_Mono({
   display: 'swap',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+/*
+ * Em produção o domínio real é o piso, não `localhost`. A variável de ambiente
+ * continua tendo a palavra final (preview branches, staging), mas esquecê-la na
+ * Vercel não pode mais publicar `og:image` apontando para a máquina de quem
+ * buildou — que é exatamente o que acontecia antes.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.NODE_ENV === 'production' ? site.url : 'http://localhost:3000');
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -28,15 +37,34 @@ export const metadata: Metadata = {
     template: `%s — ${site.nome}`,
   },
   description: site.descricao,
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
     siteName: site.nome,
+    url: '/',
     title: `${site.nome} — ${site.papel}`,
     description: site.descricao,
   },
   twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true },
+};
+
+/**
+ * Identidade legível por máquina. Os dados já estavam estruturados em
+ * `site.ts` — aqui só são serializados no vocabulário que o buscador lê.
+ */
+const pessoaJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.nomeCompleto,
+  alternateName: site.nome,
+  jobTitle: site.papel,
+  description: site.descricao,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  sameAs: [site.github, site.linkedin, site.instagram],
+  knowsAbout: stack.map((item) => item.nome),
 };
 
 export const viewport: Viewport = {
@@ -76,6 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR" className={`${archivo.variable} ${martian.variable}`}>
       <body className="bg-ink text-paper antialiased">
         <div hidden dangerouslySetInnerHTML={{ __html: `<!--${CONTRATO}-->` }} />
+        <JsonLd dados={pessoaJsonLd} />
         <a
           href="#conteudo"
           className="meta sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-mark focus:px-4 focus:py-3 focus:text-black"
