@@ -34,17 +34,21 @@ export function Processo() {
           </Titulo>
         </div>
 
-        <ol data-process-grid className="mt-14 grid gap-px bg-line md:mt-20 lg:grid-cols-3">
-          {etapas.map((etapa) => (
-            <li data-motion-item key={etapa.numero} className="flex min-h-full flex-col bg-ink p-6 sm:p-8">
-              <span className="meta text-mark">{etapa.numero}</span>
+        <ol data-process-grid className="processo mt-14 grid gap-px bg-line md:mt-20 lg:grid-cols-3">
+          {etapas.map((etapa, index) => (
+            <li
+              key={etapa.numero}
+              style={{ '--ordem': index } as React.CSSProperties}
+              className="processo-quadro flex min-h-full flex-col bg-ink p-6 sm:p-8"
+            >
+              <span className="processo-numero meta">{etapa.numero}</span>
               <h3 className="title-tight mt-10 text-2xl text-paper sm:text-3xl">
                 {etapa.titulo}
               </h3>
               <p className="mt-5 text-sm leading-6 text-mid sm:text-base sm:leading-7">
                 {etapa.texto}
               </p>
-              <p className="mt-auto border-t border-line pt-6 text-sm leading-6 text-paper">
+              <p className="processo-remate mt-auto pt-6 text-sm leading-6 text-paper">
                 {etapa.detalhe}
               </p>
             </li>

@@ -7,6 +7,58 @@ const CAPTURAS = path.join(process.cwd(), 'public', 'projetos');
 const EXTENSOES = /\.(png|jpe?g|webp|avif)$/i;
 
 /**
+ * Dimensões reais do arquivo, lidas do cabeçalho.
+ *
+ * A galeria empilha capturas grandes de proporções diferentes. Sem `width` e
+ * `height` no HTML o navegador não sabe que altura reservar e a página pula a
+ * cada imagem que chega. Ler o cabeçalho custa alguns bytes por arquivo, uma
+ * vez por build, e resolve isso sem embutir número nenhum à mão.
+ *
+ * O formato é decidido pela assinatura, não pela extensão — quatro capturas
+ * deste projeto são JPEG salvos como `.png`, e confiar no nome daria a
+ * proporção errada justamente onde ela importa.
+ */
+function medirImagem(caminho: string): { largura: number; altura: number } | undefined {
+  let cabecalho: Buffer;
+  try {
+    cabecalho = fs.readFileSync(caminho);
+  } catch {
+    return undefined;
+  }
+
+  if (cabecalho.length > 24 && cabecalho.toString('ascii', 1, 4) === 'PNG') {
+    return { largura: cabecalho.readUInt32BE(16), altura: cabecalho.readUInt32BE(20) };
+  }
+
+  if (cabecalho.length > 4 && cabecalho[0] === 0xff && cabecalho[1] === 0xd8) {
+    let i = 2;
+    while (i + 9 < cabecalho.length) {
+      if (cabecalho[i] !== 0xff) {
+        i += 1;
+        continue;
+      }
+      const marcador = cabecalho[i + 1];
+      // SOF0..SOF15 carregam as dimensões; DHT, DAC e RSTn não são SOF.
+      const ehSOF =
+        marcador >= 0xc0 &&
+        marcador <= 0xcf &&
+        marcador !== 0xc4 &&
+        marcador !== 0xc8 &&
+        marcador !== 0xcc;
+      if (ehSOF) {
+        return {
+          largura: cabecalho.readUInt16BE(i + 7),
+          altura: cabecalho.readUInt16BE(i + 5),
+        };
+      }
+      i += 2 + cabecalho.readUInt16BE(i + 2);
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Lê a pasta de capturas uma vez por build e agrupa por slug.
  *
  * A convenção é o nome do arquivo: `roadmap.png` é a capa, e `roadmap-2.png`,
@@ -14,8 +66,8 @@ const EXTENSOES = /\.(png|jpe?g|webp|avif)$/i;
  * ordenados naturalmente. Assim publicar mais telas de um projeto é copiar
  * arquivo para dentro de `public/projetos/` — nenhum componente muda.
  */
-function lerCapturas(): Map<string, string[]> {
-  const porSlug = new Map<string, string[]>();
+function lerCapturas(): Map<string, Captura[]> {
+  const porSlug = new Map<string, Captura[]>();
   if (!fs.existsSync(CAPTURAS)) return porSlug;
 
   for (const arquivo of fs.readdirSync(CAPTURAS)) {
@@ -25,13 +77,16 @@ function lerCapturas(): Map<string, string[]> {
       ? base.replace(/-\d+$/, '')
       : base;
     const lista = porSlug.get(slug) ?? [];
-    lista.push(`/projetos/${arquivo}`);
+    lista.push({
+      src: `/projetos/${arquivo}`,
+      ...medirImagem(path.join(CAPTURAS, arquivo)),
+    });
     porSlug.set(slug, lista);
   }
 
   for (const [slug, lista] of porSlug) {
     lista.sort((a, b) =>
-      a.localeCompare(b, 'pt-BR', { numeric: true, sensitivity: 'base' }),
+      a.src.localeCompare(b.src, 'pt-BR', { numeric: true, sensitivity: 'base' }),
     );
     porSlug.set(slug, lista);
   }
@@ -48,6 +103,13 @@ export const projectStatuses = [
 
 export type ProjectStatus = (typeof projectStatuses)[number];
 
+/** Uma captura do projeto. As dimensões faltam se o formato não for legível. */
+export type Captura = {
+  src: string;
+  largura?: number;
+  altura?: number;
+};
+
 export type Projeto = {
   slug: string;
   titulo: string;
@@ -57,13 +119,16 @@ export type Projeto = {
   status: ProjectStatus;
   tipo: string;
   url?: string;
+  /** A capa. É a única que vai ao corredor: lá a chapa enquadrada é a prova. */
   imagem?: string;
   /**
-   * Todas as capturas do projeto, na ordem. A primeira é `imagem`.
+   * A galeria completa, na ordem, começando pela capa. Vive na página do
+   * projeto — o corredor mostra só a capa.
+   *
    * Descobertas em disco: qualquer arquivo `public/projetos/<slug>*.png|jpg|webp`
    * entra sozinho — basta soltar `roadmap-2.png` na pasta.
    */
-  imagens: string[];
+  imagens: Captura[];
   stack: string[];
   destaque: boolean;
   ordem: number;
@@ -103,11 +168,12 @@ export function getProjetos(): Projeto[] {
       const encontradas = capturas.get(slug) ?? [];
 
       // O frontmatter continua mandando na capa; o disco completa a sequência.
-      const imagens = projeto.imagem
-        ? [projeto.imagem, ...encontradas.filter((i) => i !== projeto.imagem)]
+      const capa = encontradas.find((c) => c.src === projeto.imagem);
+      const imagens = capa
+        ? [capa, ...encontradas.filter((c) => c !== capa)]
         : encontradas;
 
-      return { ...projeto, imagem: projeto.imagem ?? imagens[0], imagens };
+      return { ...projeto, imagem: projeto.imagem ?? imagens[0]?.src, imagens };
     })
     .sort((a, b) => a.ordem - b.ordem || a.titulo.localeCompare(b.titulo));
 }

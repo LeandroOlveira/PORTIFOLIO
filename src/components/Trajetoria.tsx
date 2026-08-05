@@ -23,10 +23,10 @@ export function Trajetoria() {
             </p>
           </div>
 
-          <ol data-trajectory-list className="border-b border-line">
+          <ol data-trajectory-list className="trajeto border-b border-line">
             {carreira.map((marco) => (
-              <li data-motion-item key={marco.periodo} className="grid gap-4 border-t border-line py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8 md:py-10">
-                <p className="meta text-mark">{marco.periodo}</p>
+              <li key={marco.periodo} className="trajeto-marco grid gap-4 border-t border-line py-8 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8 md:py-10">
+                <p className="trajeto-periodo meta">{marco.periodo}</p>
                 <div>
                   <h3 className="title-tight text-xl text-paper sm:text-2xl">
                     {marco.titulo}

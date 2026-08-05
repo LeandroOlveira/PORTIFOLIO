@@ -106,7 +106,7 @@ O cinema aparece como linguagem estrutural — enquadramento, ritmo, cortes reta
 - Tipografia larga e condensada por hierarquia, não por decoração.
 - Módulos retangulares articulados por linhas de um pixel.
 - Assimetria controlada em telas largas e fluxo direto no mobile.
-- Movimento concentrado na entrada automática, com conteúdo sempre disponível.
+- Movimento ancorado no corredor, com uma coreografia própria por seção depois dele e conteúdo sempre disponível.
 
 ## Colors
 
@@ -203,6 +203,7 @@ O vocabulário formal é ortogonal: cantos retos, linhas finas, pontos quadrados
 - **Border:** divisores de um pixel; o resultado de cartões menores recebe uma barra vertical verde.
 - **Internal Padding:** 1.5rem no mobile e 2rem em destaques ou telas maiores.
 - **Media:** fora do corredor, capturas aparecem em largura total com contorno de um pixel, em cor plena. Não há mais miniatura em escala de cinza: a captura é a prova, e prova reduzida a thumbnail não prova nada.
+- **Galeria:** a página do projeto mostra **todas** as capturas do projeto empilhadas na grade de um pixel, cada uma na proporção do arquivo. O corredor continua mostrando a capa enquadrada com as secundárias passando como satélites — ele é a chamada, a página é o dossiê. Nenhuma delas é recortada: o enquadramento em 16/9 escondia a lateral das telas largas e metade das verticais, que é justamente o que a captura tinha a provar. Cada `<img>` carrega `width` e `height` lidos do arquivo em build, então a página não salta enquanto elas chegam.
 - **Escopo:** cartão não é mais o esqueleto da home. Projetos vivem no corredor; o vocabulário de cartão sobrevive apenas em listas secundárias e páginas internas.
 
 ### Navigation
@@ -220,7 +221,7 @@ O hero não é uma seção que rola para fora: ele **é** a porta do corredor. O
 - **Composição desenhada em torno do corte.** A junta nunca atravessa conteúdo: no desktop o título ocupa a metade esquerda e a chamada a direita; no telefone o título fica na metade de cima, encostado na junta, e a chamada na de baixo. Por isso cada folha carrega conteúdo real e único — não há duplicação de markup nem título repetido para leitor de tela.
 - **Eixo por largura.** Acima de 768px as folhas giram em `rotateY`; abaixo, em `rotateX`, porque num quadro estreito o corte horizontal tem muito mais curso para percorrer.
 - **90° cheios.** A folha precisa terminar exatamente de perfil: a 84° ela ainda projeta uma faixa larga junto à dobradiça, que cobria as bordas do corredor. A opacidade também cai no último terço, então a tela inteira pertence ao corredor quando a primeira chapa chega.
-- **A face perde luz** conforme se afasta do eixo da câmera, e uma junta de um pixel em verde marca o corte enquanto a porta está fechada.
+- **Nenhuma marca na junta.** Fechada, a porta é uma tela preta inteira e nada denuncia que ela abre — a surpresa é o efeito. A face perde luz conforme se afasta do eixo da câmera, e é só isso que revela o volume durante o giro.
 - **"Ver projetos" conduz a rolagem** em vez de saltar: a abertura acontece na frente de quem clicou, e qualquer gesto do visitante devolve o controle na hora.
 
 ### Corredor
@@ -236,9 +237,24 @@ O momento autoral da página, e o único. Depois da porta, projetos não são se
 - **Véu:** vinheta e grão cobrem o quadro inteiro; o grão troca a cada cinco quadros, não a cada quadro.
 - **Fallback:** sem WebGL2, com movimento reduzido ou sem JavaScript, o corredor não existe e o mesmo conteúdo aparece empilhado, com as capturas em largura total. Títulos, textos e links são HTML real nos dois modos.
 
-### Chegada das seções
+### Movimento depois do corredor
 
-Depois do corredor, tudo entra com uma única animação curta e idêntica, movida por `animation-timeline: view()` — sem JavaScript. Uma passagem densa merece uma quieta.
+Por um tempo, tudo depois do corredor entrou com uma única animação idêntica — o mesmo desvanecer com 18px de subida para uma pilha, uma sequência, uma linha do tempo, um índice e uma placa. Era defensável como restrição, mas na página lia como desistência: cinco seções de natureza diferente executando o mesmo gesto não é coreografia, é reflexo. O corredor continua sendo o momento autoral; o que vem depois dele é a prova, e prova apresentada sem convicção não convence.
+
+Agora cada seção move o que ela é. Nenhuma delas usa biblioteca: `animation-timeline: view()` é o navegador resolvendo, e todo progresso é uma propriedade registrada que **nasce no valor concluído**, então sem suporte, com movimento reduzido ou com o script fora do ar a página aparece montada.
+
+- **Stack aplicada — a pilha se assenta.** As cinco linhas compartilham a linha do tempo do próprio `<ol>`; uma por item produziria o stagger decorativo de sempre, em que cada linha entra sozinha e nada se relaciona. O curso cresce para baixo (`--carga`), então a primeira é a âncora e as demais fecham contra ela. As réguas vivem em pseudo-elementos para poderem se estender da esquerda, e os numerais chegam depois delas: é o atraso que faz a chegada parecer peso assentando em vez de bloco deslizando.
+- **Como eu trabalho — a linha avança.** Três etapas numeradas são uma sequência, e a ordem carrega informação. Uma linha percorre 01 → 02 → 03 (vertical no telefone, horizontal a partir de 1024px), acesa só na cabeça e neutra no trecho já percorrido. Cada quadro lê sua fatia do mesmo avanço, então o segundo literalmente espera o primeiro. Os quadros **não se deslocam**: a grade de um pixel é o fundo do `<ol>` aparecendo nas frestas, e mover as células faria a grade piscar. O texto também nunca desbota — uma rolagem parada no meio do curso não pode deixar parágrafo ilegível.
+- **Trajetória — a régua marca posição.** O marco que cruza a faixa central acende a própria borda superior e planta um ponto quadrado na régua; a partir de 1024px a régua vertical se preenche com a leitura. Período, título e descrição ficam sempre na cor cheia: indicador de leitura não pode custar legibilidade.
+- **Notas — o índice é cortado.** Cada linha abre por `clip-path` da esquerda para a direita, com uma lâmina acesa na frente do corte que se apaga quando ele termina. A lâmina é a ferramenta, não o resultado.
+- **Contato — a chapa é aplicada.** A única superfície verde da página não desliza para dentro: ela sobe sobre o preto até cobrir a tela. Como o conteúdo é preto, ele não pode existir antes da chapa, então os dois derivam do mesmo progresso — a chapa fecha em 0,59 e o conteúdo só começa aí. Um progresso, duas leituras, nenhuma chance de dessincronizar.
+- **Títulos — o eixo sob carga.** A assinatura comum não é uma entrada, é contínua: a Archivo estreita e aperta sob rolagem rápida e reabre em 112 quando a pessoa para para ler. Vale nos quatro títulos de seção, que são curtos e não trocam de quebra em nenhuma largura do eixo; não vale na pergunta do contato, de seis linhas, nem nos projetos, que pertencem ao corredor.
+
+**The Earned-Motion Rule.** Uma seção só ganha movimento quando o movimento diz algo específico sobre o conteúdo dela. Movimento igual para coisas diferentes é reflexo, não sistema.
+
+**The Legible-Indicator Rule.** O que acende é sempre a marcação — régua, ponto, numeral, lâmina —, nunca o texto. Uma rolagem interrompida no meio de qualquer curso tem que deixar tudo legível.
+
+**The Narrow-Window Rule.** Marcar "a linha em leitura" numa lista curta foi descartado uma vez, e a objeção estava certa: com janela larga, três marcos acendem juntos e o indicador deixa de indicar — vira faixa verde. O que salva não é abandonar a ideia, é a largura da janela. Os marcos distam cerca de 10% do próprio curso, então a janela acesa vai de 36% a 68%: dois no máximo, o que lê como onda descendo a lista, não como pisca-pisca.
 
 ## Do's and Don'ts
 

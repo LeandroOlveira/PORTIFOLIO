@@ -9,7 +9,7 @@ export function Titulo({
 }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end lg:gap-16">
-      <h2 data-motion-title className="title max-w-[14ch] text-[2.25rem] text-paper sm:text-[3rem] md:text-[3.75rem]">
+      <h2 data-motion-title className="title title-vivo max-w-[14ch] text-[2.25rem] text-paper sm:text-[3rem] md:text-[3.75rem]">
         {children}
       </h2>
 

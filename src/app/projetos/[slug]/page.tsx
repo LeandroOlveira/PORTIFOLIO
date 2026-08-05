@@ -57,13 +57,28 @@ export default async function ProjetoPage({ params }: Props) {
           </dl>
         </div>
 
-        {projeto.imagem ? (
-          <div className="mt-14 aspect-[16/9] overflow-hidden border border-line bg-panel md:mt-20">
-            <img
-              src={projeto.imagem}
-              alt={`Interface do projeto ${projeto.titulo}`}
-              className="h-full w-full object-cover object-top"
-            />
+        {projeto.imagens.length > 0 ? (
+          <div className="mt-14 grid gap-px bg-line md:mt-20">
+            {projeto.imagens.map((captura, indice) => (
+              <figure key={captura.src} className="bg-panel">
+                <img
+                  src={captura.src}
+                  width={captura.largura}
+                  height={captura.altura}
+                  alt={
+                    indice === 0
+                      ? `Interface do projeto ${projeto.titulo}`
+                      : `${projeto.titulo}, tela ${indice + 1} de ${projeto.imagens.length}`
+                  }
+                  // A captura é a prova, então ela aparece inteira. O corte em
+                  // 16/9 escondia justamente o que a tela larga tinha a mostrar
+                  // — e no DocHub, que é vertical, escondia metade.
+                  className="block h-auto w-full"
+                  loading={indice === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </figure>
+            ))}
           </div>
         ) : null}
 

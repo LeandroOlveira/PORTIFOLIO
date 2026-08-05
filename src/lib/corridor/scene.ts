@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {
+  DISTANCIA_MINIMA,
   DISTANCIA_QUADRO,
   ESPACAMENTO,
   desvioDaEstacao,
@@ -30,22 +31,38 @@ const COR_MARCA = new THREE.Color('#d4ff00');
 const OCUPACAO_ALTURA = 0.62;
 
 /**
+ * Giro máximo que o ponteiro imprime na câmera, em radianos.
+ *
+ * Precisa entrar no orçamento de largura: 0,026rad a dez unidades de
+ * distância desloca o quadro em cerca de 0,26 — mais do que a folga que
+ * sobrava para várias capturas. Só existe no perfil `full`, que é o único
+ * que escuta o ponteiro.
+ */
+const GIRO_PONTEIRO = 0.026;
+
+/**
  * Enquadramento por largura de tela.
  *
  * Uma captura widescreen numa tela vertical é sempre baixa — não há truque
  * que mude isso. Em vez de esticar a imagem, o telefone recebe outra ótica:
  * a chapa toma a largura inteira, sobe para o terço superior e os satélites
  * saem de cena. O corredor continua sendo corredor, com menos objetos.
+ *
+ * `largura` é o teto de ocupação horizontal depois de descontado o orçamento
+ * de desvio. Antes ela guardava 14% de folga cega para absorver a parte do
+ * desvio que a câmera não corrige — folga generosa demais para umas capturas
+ * e insuficiente para outras, que é de onde vinha o corte. Com o desvio
+ * orçado por estação, o teto pode subir sem ninguém encostar na borda.
  */
 const ENQUADRAMENTO = {
-  amplo: { largura: 0.86, elevacao: 0.12, satelites: 3, inclinacao: 0, seguimento: 0.82 },
+  amplo: { largura: 0.96, elevacao: 0.12, satelites: 3, inclinacao: 0, seguimento: 0.82 },
   // A inclinação sobe o ponto de fuga: sem ela as chapas distantes convergem
   // para o centro da tela, que no telefone é justamente onde o título está.
   // A elevação fica baixa porque a inclinação já levanta o quadro inteiro —
   // somar as duas cortava a chapa enquadrada no topo. E a câmera centraliza
   // mais, porque num quadro estreito o desvio residual vira corte na borda.
   estreito: {
-    largura: 0.9,
+    largura: 0.96,
     elevacao: 0.1,
     satelites: 1,
     inclinacao: -0.075,
@@ -66,6 +83,8 @@ type Chapa = {
   /** 0 = chapa principal; >0 = satélites que passam pelas laterais. */
   ordem: number;
   carregando: boolean;
+  /** Desvio da estação dona, para orçar quanto do quadro ele consome. */
+  desvio: { x: number; y: number };
 };
 
 type Estacao = {
@@ -138,7 +157,7 @@ export function criarCorredor(
       malha.renderOrder = ordem === 0 ? 2 : 1;
       grupo.add(malha);
 
-      return { malha, material, fonte, aspecto: 16 / 9, ordem, carregando: false };
+      return { malha, material, fonte, aspecto: 16 / 9, ordem, carregando: false, desvio };
     });
 
     return { id: entrada.id, grupo, chapas, desvio, giro };
@@ -170,7 +189,11 @@ export function criarCorredor(
 
   function medirQuadro() {
     const rad = (camera.fov * Math.PI) / 180;
-    alturaVisivel = 2 * DISTANCIA_QUADRO * Math.tan(rad / 2);
+    // Medido onde a câmera chega, não onde ela passa. Durante a retenção ela
+    // deriva de DISTANCIA_QUADRO para DISTANCIA_MINIMA, e é essa fase que a
+    // pessoa usa para ler — dimensionar pela distância maior fazia a captura
+    // crescer 12% e escapar do quadro justamente ali.
+    alturaVisivel = 2 * DISTANCIA_MINIMA * Math.tan(rad / 2);
     larguraVisivel = alturaVisivel * camera.aspect;
     optica =
       (canvas.clientWidth || window.innerWidth) < 700
@@ -178,10 +201,29 @@ export function criarCorredor(
         : ENQUADRAMENTO.amplo;
   }
 
-  /** Escala a chapa para caber no quadro respeitando altura e largura. */
+  /**
+   * Escala a chapa para caber no quadro respeitando altura, largura e desvio.
+   *
+   * O corredor não centraliza as estações de propósito: a câmera segue só
+   * `seguimento` do desvio, e o resto é o que mantém o enquadramento vivo.
+   * Só que esse resto ocupa quadro, e ninguém descontava — daí capturas
+   * largas saírem cortadas na borda. Aqui ele é orçado junto com o paralaxe
+   * do ponteiro, e o que sobra é o espaço real que a chapa pode ocupar.
+   */
   function dimensionar(chapa: Chapa) {
+    const residual = (eixo: 'x' | 'y', giro: number) =>
+      Math.abs(chapa.desvio[eixo]) * (1 - optica.seguimento) +
+      (perfil === 'full' ? DISTANCIA_MINIMA * Math.tan(giro) : 0);
+
+    // O desconto é dos dois lados: a chapa é centrada na estação, então um
+    // deslocamento lateral aproxima uma borda e afasta a outra na mesma medida.
+    const larguraUtil = Math.max(
+      larguraVisivel * 0.3,
+      larguraVisivel * optica.largura - residual('x', GIRO_PONTEIRO) * 2,
+    );
+
     const porAltura = alturaVisivel * OCUPACAO_ALTURA;
-    const porLargura = (larguraVisivel * optica.largura) / chapa.aspecto;
+    const porLargura = larguraUtil / chapa.aspecto;
     const altura = Math.min(porAltura, porLargura) * (chapa.ordem === 0 ? 1 : 0.46);
     const largura = altura * chapa.aspecto;
 

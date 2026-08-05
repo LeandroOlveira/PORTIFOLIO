@@ -76,7 +76,7 @@ export function Corredor({ projetos }: { projetos: Projeto[] }) {
 
     const estacoes = projetos.map((projeto) => ({
       id: projeto.slug,
-      imagens: projeto.imagens,
+      imagens: projeto.imagens.map((captura) => captura.src),
     }));
 
     const perfil: PerfilMovimento =
@@ -259,9 +259,15 @@ export function Corredor({ projetos }: { projetos: Projeto[] }) {
             ))}
           </div>
 
-          {/* --- A porta: o próprio hero, partido ao meio ------------------ */}
+          {/* --- A porta: o próprio hero, partido ao meio ------------------
+              O contêiner não recebe clique. Ele cobre a tela inteira em z-30,
+              e as fichas dos projetos vivem em z-10: sem isto, a moldura da
+              porta engole todo clique do corredor mesmo depois das folhas
+              terem sumido, e "Conhecer projeto" e "Abrir site" ficam mortos.
+              Quem decide o clique são as folhas, que alternam entre `auto` e
+              `none` conforme a porta abre. */}
           <div
-            className="absolute inset-0 z-30"
+            className="pointer-events-none absolute inset-0 z-30"
             style={{ transformStyle: 'preserve-3d' }}
           >
             <Folha refFolha={folhaA} refSombra={sombraA} vertical={vertical} lado="a">
@@ -323,25 +329,25 @@ function Folha({
       : 'items-start pt-8'
     : 'items-end pb-16 md:pb-20';
 
-  const juncao = vertical
-    ? `inset-x-0 h-px ${primeira ? 'bottom-0' : 'top-0'}`
-    : `inset-y-0 w-px ${primeira ? 'right-0' : 'left-0'}`;
-
   return (
     <div
       ref={refFolha}
       style={{ transformOrigin: origem, backfaceVisibility: 'hidden' }}
-      className={`absolute ${caixa} bg-ink will-change-transform`}
+      // `pointer-events` é herdado, e o contêiner da porta não recebe clique.
+      // Sem reabrir aqui, os botões do hero nasceriam mortos e só ganhariam
+      // vida no primeiro quadro do laço, quando o estilo em linha assume.
+      className={`pointer-events-auto absolute ${caixa} bg-ink will-change-transform`}
     >
       <div className={`flex h-full w-full ${alinhamento}`}>{children}</div>
 
+      {/* Nenhuma marca na junta: fechada, a porta é uma tela preta inteira e
+          nada denuncia que ela abre. A surpresa é o efeito. */}
       <div
         ref={refSombra}
         aria-hidden
         style={{ opacity: 0 }}
         className="pointer-events-none absolute inset-0 bg-black"
       />
-      <span aria-hidden className={`absolute ${juncao} bg-mark/60`} />
     </div>
   );
 }

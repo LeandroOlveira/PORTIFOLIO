@@ -6,7 +6,7 @@
 
 Portfólio web em **Next.js 15 (App Router), TypeScript, Tailwind CSS v4, MDX e Three.js sobre WebGL2**. Projetos e notas são arquivos tipados em `content/`, e as capturas são descobertas em `public/projetos/` pelo nome do arquivo — publicar mais telas de um projeto é copiar arquivo para a pasta, sem tocar em componente.
 
-O canvas WebGL não é decoração: ele desenha o corredor onde abertura e projetos acontecem, com carregamento e descarte progressivo de textura conforme a câmera avança. Fora do corredor não há biblioteca de animação — as seções seguintes usam `animation-timeline: view()`, sem JavaScript. Não há GSAP, Lenis, playhead nem interface de reprodução.
+O canvas WebGL não é decoração: ele desenha o corredor onde abertura e projetos acontecem, com carregamento e descarte progressivo de textura conforme a câmera avança. Fora do corredor não há biblioteca de animação: cada seção tem coreografia própria movida por `animation-timeline: view()`, resolvida pelo navegador. O único script envolvido tem duas funções que o CSS não alcança — a velocidade da rolagem, que nenhuma timeline expõe, e a seção em leitura, que nenhum seletor relaciona ao `href` de um link. Sem dependências, sem laço em repouso. Não há GSAP, Lenis, playhead nem interface de reprodução.
 
 ## Purpose
 
@@ -63,7 +63,9 @@ Cinema é linguagem estrutural: enquadramento, contraste, ritmo, composição, p
 - O canvas WebGL é único, decorativo, invisível para tecnologias assistivas e não captura interação.
 - A experiência escolhe entre os perfis `full`, `compact` e `static`: `full` habilita a coreografia espacial completa; `compact` reduz densidade, deslocamento e custo; `static` preserva o layout sem coreografia.
 - `prefers-reduced-motion`, indisponibilidade do WebGL2 ou falha de inicialização levam ao perfil `static`, mantendo todo o conteúdo disponível.
-- ScrollTrigger é usado somente na home e não transforma páginas de projeto ou notas em experiências dependentes de rolagem.
+- Todo progresso de rolagem é uma propriedade CSS registrada que nasce no valor concluído. Sem suporte a `animation-timeline`, com movimento reduzido ou sem JavaScript, a página aparece montada — nenhuma seção depende de animação para existir.
+- A barra de progresso do cabeçalho é a única animação preservada com movimento reduzido: ela não se move sozinha, quem a desenha é a rolagem, e apagá-la removeria a indicação de quanto falta numa página longa.
+- A coreografia de rolagem existe somente na home e não transforma páginas de projeto ou notas em experiências dependentes de rolagem.
 - Navegação por teclado, foco visível, contraste adequado e alvos de toque de pelo menos 44px.
 - Layout mobile-first, sem rolagem horizontal.
 - Não fabricar métricas, clientes, depoimentos, telas ou resultados.

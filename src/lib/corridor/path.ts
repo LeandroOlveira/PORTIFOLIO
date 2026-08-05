@@ -31,8 +31,21 @@ const TRAVESSIA = 4;
  */
 const PARTIDA = 6;
 
-/** Deriva durante a retenção — a câmera nunca congela, só desacelera. */
-const DERIVA = 1.1;
+/**
+ * Deriva durante a retenção — a câmera nunca congela, só desacelera.
+ *
+ * Exportada porque a cena precisa dimensionar as chapas pela distância de
+ * chegada real, e não pela de quadro: é aqui que a câmera termina.
+ */
+export const DERIVA = 1.1;
+
+/**
+ * Menor distância entre câmera e plano enquanto ele está enquadrado.
+ *
+ * Dimensionar em `DISTANCIA_QUADRO` e desenhar aqui é desenhar 12% maior do
+ * que o medido, exatamente na fase em que a pessoa está lendo a captura.
+ */
+export const DISTANCIA_MINIMA = DISTANCIA_QUADRO - DERIVA;
 
 const APROXIMACAO = 0.44;
 const RETENCAO = 0.68;

@@ -13,7 +13,7 @@ export function Notas({ notas }: { notas: Nota[] }) {
             apoio="Reflexões sobre produto, integração, IA aplicada e software em operação."
             acao={
               notas.length > 3 ? (
-                <Link href="/notas" className="meta text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark">
+                <Link href="/notas" className="meta text-paper underline decoration-line-strong underline-offset-4 transition-colors hover:text-mark hover:decoration-mark">
                   Todas as notas
                 </Link>
               ) : undefined
@@ -26,7 +26,7 @@ export function Notas({ notas }: { notas: Nota[] }) {
         {notas.length > 0 ? (
           <ul className="mt-14 border-b border-line md:mt-20">
             {notas.slice(0, 3).map((nota) => (
-              <li data-motion-item key={nota.slug} className="border-t border-line">
+              <li key={nota.slug} className="nota-linha border-t border-line">
                 <Link href={`/notas/${nota.slug}`} className="group grid gap-4 py-8 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-baseline md:gap-10 md:py-10">
                   <time dateTime={nota.data} className="meta text-dim transition-colors group-hover:text-mark">
                     {dataCurta(nota.data)}

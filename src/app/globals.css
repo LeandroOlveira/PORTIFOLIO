@@ -31,6 +31,68 @@
   --ease-fast: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ---------------------------------------------------------------------------
+   Progressos registrados.
+
+   Propriedade custom não declarada não interpola, ela salta — registrar é o
+   que permite animar um número e derivar dele cor, escala e recorte. Todas
+   nascem no estado *concluído* (1), porque é esse valor que a página usa
+   quando não há animação nenhuma: sem suporte a `animation-timeline`, com
+   movimento reduzido ou com o script fora do ar, tudo aparece montado.
+
+   `--tensao` é a exceção e nasce em 0: ela não descreve uma chegada, e sim
+   uma força aplicada. Em repouso não há força.
+   --------------------------------------------------------------------------- */
+
+/** Assentamento da pilha da stack. */
+@property --montagem {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/** Avanço da linha que percorre as etapas do processo. */
+@property --avanco {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/** Corte que abre cada nota da esquerda para a direita. */
+@property --corte {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/** Distância percorrida na régua da trajetória. */
+@property --leitura {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/** Marco da trajetória na faixa de leitura: acende ao passar e apaga depois. */
+@property --foco {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/** Varredura da placa de contato sobre o preto. */
+@property --varredura {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+/** Velocidade de rolagem normalizada. Escrita por `observarTensao`. */
+@property --tensao {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 @layer base {
   *,
   *::before,
@@ -54,7 +116,12 @@
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* `clip`, nunca `hidden`. Em `hidden` o outro eixo é forçado de `visible`
+       para `auto`, o body vira container de rolagem, e toda
+       `animation-timeline: view()` passa a se resolver contra um scrollport
+       que nunca se move — o que matava silenciosamente todas as animações de
+       rolagem da página. `clip` contém o transbordo sem criar scroller. */
+    overflow-x: clip;
   }
 
   ::selection {
@@ -92,22 +159,33 @@
   }
 
   /* --- Depois do corredor -------------------------------------------------
-     A viagem é o momento autoral da página. O que vem depois dela entra com
-     uma única chegada curta, igual para tudo, movida pela timeline de
-     rolagem do próprio navegador — sem JavaScript e sem competir com o 3D. */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      [data-motion-title],
-      [data-motion-copy],
-      [data-motion-item] {
-        animation: chegada linear both;
-        animation-timeline: view();
-        animation-range: entry 8% cover 26%;
-      }
+     A viagem é o momento autoral da página, mas o que vem depois não é o
+     resto: é a prova. Antes, cinco seções de natureza diferente dividiam uma
+     única chegada — o mesmo fade com 18px de subida para uma pilha, uma
+     sequência, uma linha do tempo, um índice e uma placa. Movimento igual
+     para coisas diferentes não é coreografia, é reflexo.
 
-      [data-motion-copy] {
-        animation-range: entry 12% cover 30%;
-      }
+     Agora cada seção move o que ela é. A pilha se assenta, o processo avança,
+     a trajetória marca posição de leitura, as notas são cortadas e o contato
+     chega como chapa. O que permanece comum são só os títulos — e a assinatura
+     deles é contínua, não uma entrada: o eixo de largura da Archivo responde
+     à velocidade da rolagem.
+
+     Nada disso usa biblioteca. `animation-timeline: view()` é o navegador
+     resolvendo, e o único script envolvido escreve um número. */
+
+  /* Título de seção: abertura mecânica, de cima para baixo. O estado final
+     folga além da caixa para que descendente nenhuma fique aparada. */
+  @keyframes cortar-titulo {
+    from {
+      opacity: 0;
+      clip-path: inset(-0.15em -0.1em 100% -0.1em);
+      transform: translate3d(0, 10px, 0);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(-0.15em -0.1em -0.2em -0.1em);
+      transform: none;
     }
   }
 
@@ -119,6 +197,588 @@
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-motion-title] {
+        animation: cortar-titulo linear both;
+        animation-timeline: view();
+        animation-range: entry 8% cover 28%;
+      }
+
+      [data-motion-copy] {
+        animation: chegada linear both;
+        animation-timeline: view();
+        animation-range: entry 12% cover 32%;
+      }
+    }
+  }
+
+  /* --- A tipografia sob carga ---------------------------------------------
+     A Archivo é carregada com o eixo `wdth`, e `font-stretch` é a porta CSS
+     para ele — animável, ao contrário de `font-variation-settings`, que só
+     salta. Sob rolagem rápida o título se estreita e aperta; quando a pessoa
+     para para ler, ele reabre em 112. Em repouso `--tensao` vale 0 e a
+     largura é exatamente a que o sistema sempre teve.
+
+     Mexer no eixo de largura é mexer na métrica do texto, então isto só pode
+     valer onde a quebra de linha não muda. Vale nos quatro títulos de seção,
+     que são curtos e cabem numa ou duas linhas em qualquer largura do eixo.
+     Não vale na pergunta do contato, que tem seis linhas e trocaria de altura
+     no meio da rolagem, e não vale nos projetos, que pertencem ao corredor. */
+  .title {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+
+  .title-vivo {
+    font-stretch: calc(112% - var(--tensao) * 11%);
+    letter-spacing: calc(-0.03em - var(--tensao) * 0.006em);
+  }
+
+  /* --- A pilha se assenta -------------------------------------------------
+     A seção se chama "stack" e o movimento diz isso: as camadas fecham umas
+     contra as outras.
+
+     Uma linha do tempo só, do <ol> — uma por item produziria o stagger
+     decorativo de sempre, em que cada linha entra sozinha e nada se
+     relaciona. O compartilhamento é feito por uma propriedade registrada
+     animada no pai e herdada pelos filhos, e não por `view-timeline-name`:
+     referenciada por descendentes, a linha nomeada não avança com a rolagem,
+     ela congela num progresso fixo. Aqui os filhos não animam nada — só leem
+     `--montagem`, que vale 1 quando não há animação nenhuma, então sem
+     suporte ou com movimento reduzido a lista nasce montada. */
+  .pilha-item {
+    position: relative;
+    transform: translate3d(0, calc((1 - var(--montagem)) * var(--carga, 0) * 1px), 0);
+    opacity: calc(0.12 + var(--montagem) * 0.88);
+  }
+
+  /* A régua vive num pseudo-elemento para poder se estender; como borda ela
+     não teria como. Ela se desenha no acento e esfria para o traço neutro ao
+     assentar — a camada sendo posta antes do conteúdo pousar nela. */
+  .pilha-item::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background-color: var(--color-line);
+    background-color: color-mix(
+      in srgb,
+      var(--color-mark) calc((1 - var(--montagem)) * 100%),
+      var(--color-line)
+    );
+    transform: scaleX(clamp(0, calc(var(--montagem) * 1.35 - 0.08), 1));
+    transform-origin: left center;
+  }
+
+  /* O numeral só começa a andar depois que a régua terminou: é esse atraso
+     que faz a chegada parecer peso assentando, não bloco deslizando. */
+  .pilha-numero {
+    --atraso: clamp(0, calc(var(--montagem) * 1.5 - 0.5), 1);
+    transform: translate3d(0, calc((1 - var(--atraso)) * var(--carga, 0) * 0.55px), 0);
+    opacity: var(--atraso);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .pilha {
+        animation: montar linear both;
+        animation-timeline: view();
+        animation-range: entry 8% cover 52%;
+      }
+    }
+  }
+
+  @keyframes montar {
+    from {
+      --montagem: 0;
+    }
+    to {
+      --montagem: 1;
+    }
+  }
+
+  /* --- O processo avança --------------------------------------------------
+     Três etapas numeradas não são três cartões: são uma sequência, e a ordem
+     carrega informação. Então o que se move é uma linha percorrendo 01 → 02 →
+     03, e cada quadro só assume seu número quando a linha chega nele.
+
+     Um stagger comum faria os três entrarem em fila indiana sem relação
+     nenhuma entre si. Aqui o atraso não é arbitrário: `--local` é a posição
+     do quadro dentro do mesmo avanço, então o segundo quadro literalmente
+     espera o primeiro. */
+  .processo {
+    position: relative;
+  }
+
+  /* A linha percorrida fica neutra; só a cabeça é acesa, e ela se apaga ao
+     completar o curso — o acento marca o avanço, não decora o fim dele. */
+  .processo::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 -1px;
+    width: 1px;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent calc(var(--avanco) * 100% - 3rem),
+        color-mix(
+            in srgb,
+            var(--color-mark) calc((1 - var(--avanco)) * 100%),
+            transparent
+          )
+          calc(var(--avanco) * 100%),
+        transparent calc(var(--avanco) * 100%)
+      ),
+      linear-gradient(
+        to bottom,
+        var(--color-line-strong) calc(var(--avanco) * 100%),
+        transparent calc(var(--avanco) * 100%)
+      );
+  }
+
+  @media (min-width: 1024px) {
+    .processo::before {
+      inset: -1px 0 auto 0;
+      width: auto;
+      height: 1px;
+      background:
+        linear-gradient(
+          to right,
+          transparent calc(var(--avanco) * 100% - 3rem),
+          color-mix(
+              in srgb,
+              var(--color-mark) calc((1 - var(--avanco)) * 100%),
+              transparent
+            )
+            calc(var(--avanco) * 100%),
+          transparent calc(var(--avanco) * 100%)
+        ),
+        linear-gradient(
+          to right,
+          var(--color-line-strong) calc(var(--avanco) * 100%),
+          transparent calc(var(--avanco) * 100%)
+        );
+    }
+  }
+
+  /* Os quadros não se deslocam. A grade de um pixel é feita pelo fundo do
+     <ol> aparecendo nas frestas, então mover as células revelaria a fresta e
+     a grade piscaria. O avanço é dito pela linha e pelas marcações internas —
+     o painel fica firme e o que corre por dentro dele é que se move. */
+  .processo-quadro {
+    /* Fatias do mesmo avanço: 0 abre em 0,45; 1 em 0,70; 2 em 0,95. */
+    --local: clamp(0, calc(var(--avanco) * 2.2 - var(--ordem) * 0.55), 1);
+  }
+
+  /* O número é o que muda de estado. O texto do quadro nunca desbota: uma
+     rolagem parada no meio do curso não pode deixar parágrafo ilegível. */
+  .processo-numero {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    color: color-mix(
+      in srgb,
+      var(--color-mark) calc(var(--local) * 100%),
+      var(--color-dim)
+    );
+  }
+
+  /* A régua se desenha no acento e esfria para o traço neutro — o mesmo gesto
+     da pilha da stack. É o que faz as duas seções lerem como um sistema em
+     vez de dois efeitos. Verde permanente aqui seriam três barras disputando
+     atenção com os números, que já são o acento desta seção. */
+  .processo-numero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 1px;
+    background-color: color-mix(
+      in srgb,
+      var(--color-mark) calc((1 - var(--local)) * 100%),
+      var(--color-line-strong)
+    );
+    transform: scaleX(var(--local));
+    transform-origin: left center;
+  }
+
+  /* O remate fecha o quadro por último. O atraso é o que faz a chegada
+     parecer peso assentando em vez de bloco deslizando — mesma razão pela
+     qual o numeral da pilha espera a régua dela. */
+  .processo-remate {
+    --remate: clamp(0, calc(var(--local) * 1.7 - 0.7), 1);
+    position: relative;
+  }
+
+  .processo-remate::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background-color: color-mix(
+      in srgb,
+      var(--color-mark) calc((1 - var(--remate)) * 100%),
+      var(--color-line)
+    );
+    transform: scaleX(var(--remate));
+    transform-origin: left center;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .processo {
+        animation: avancar linear both;
+        animation-timeline: view();
+        animation-range: entry 12% cover 42%;
+      }
+    }
+  }
+
+  @keyframes avancar {
+    from {
+      --avanco: 0;
+    }
+    to {
+      --avanco: 1;
+    }
+  }
+
+  /* --- A trajetória marca posição -----------------------------------------
+     Uma linha do tempo deveria dizer onde você está nela. Esta diz: o marco
+     que cruza a faixa central de leitura acende a própria borda superior e
+     planta um ponto quadrado na origem dela; ao sair, devolve o acento para
+     o próximo. Cada marco tem sua própria linha do tempo, porque a pergunta
+     que ele responde — "é este que estou lendo?" — é sobre ele, não sobre a
+     lista.
+
+     O que acende é a marcação. Período, título e descrição ficam sempre na
+     cor cheia: indicador de leitura não pode custar legibilidade. */
+  .trajeto {
+    position: relative;
+  }
+
+  .trajeto-marco {
+    position: relative;
+  }
+
+  .trajeto-marco::before {
+    content: '';
+    position: absolute;
+    inset: -1px 0 auto 0;
+    height: 1px;
+    background: var(--color-mark);
+    transform: scaleX(var(--foco));
+    transform-origin: left center;
+  }
+
+  .trajeto-marco::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    background: var(--color-mark);
+    transform: scale(var(--foco));
+  }
+
+  /* Onde existe régua, o ponto pertence a ela: é a régua que atravessa a
+     lista, e o marco aceso é onde ela está agora. Solto na borda do texto o
+     ponto viraria um enfeite ao lado de uma linha que não o encosta. */
+  @media (min-width: 1024px) {
+    .trajeto-marco::after {
+      left: calc(-2.5rem - 2px);
+    }
+  }
+
+  .trajeto-periodo {
+    color: color-mix(
+      in srgb,
+      var(--color-mark) calc(40% + var(--foco) * 60%),
+      var(--color-dim)
+    );
+  }
+
+  /* A régua só existe onde há margem para ela: a partir de 1024px a lista
+     ocupa a coluna direita e sobra respiro à esquerda. Abaixo disso a
+     marcação nos próprios marcos já diz a mesma coisa. */
+  @media (min-width: 1024px) {
+    .trajeto::before,
+    .trajeto::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -2.5rem;
+      width: 1px;
+      height: 100%;
+    }
+
+    .trajeto::before {
+      background: var(--color-line);
+    }
+
+    .trajeto::after {
+      background: var(--color-mark);
+      transform: scaleY(var(--leitura));
+      transform-origin: top center;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .trajeto {
+        animation: percorrer linear both;
+        animation-timeline: view();
+        animation-range: cover 20% cover 80%;
+      }
+
+      .trajeto-marco {
+        animation: focar linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+
+  @keyframes percorrer {
+    from {
+      --leitura: 0;
+    }
+    to {
+      --leitura: 1;
+    }
+  }
+
+  /* A janela acesa é estreita de propósito. Os marcos distam cerca de 10% do
+     próprio curso, então uma janela larga acende três ao mesmo tempo e o
+     indicador deixa de indicar — vira faixa verde. Com 36%–68% ficam dois no
+     máximo, o que ainda lê como uma onda descendo a lista em vez de um
+     pisca-pisca, sem transformar a seção num campo de acento. */
+  @keyframes focar {
+    0%,
+    36% {
+      --foco: 0;
+    }
+    47%,
+    57% {
+      --foco: 1;
+    }
+    68%,
+    100% {
+      --foco: 0;
+    }
+  }
+
+  /* --- As notas são cortadas ----------------------------------------------
+     Um índice é uma pilha de recortes, e é assim que cada linha aparece:
+     cortada da esquerda para a direita, com uma lâmina acesa na frente do
+     corte. A lâmina se apaga quando o corte termina — ela é a ferramenta,
+     não o resultado. */
+  .nota-linha {
+    position: relative;
+    clip-path: inset(0 calc((1 - var(--corte)) * 100%) 0 0);
+    transition: background-color 220ms var(--ease-fast);
+  }
+
+  .nota-linha:hover {
+    background-color: var(--color-raise);
+  }
+
+  .nota-linha::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: clamp(0, calc((1 - var(--corte)) * 8), 1);
+    background: linear-gradient(
+      to right,
+      transparent calc(var(--corte) * 100% - 2px),
+      var(--color-mark) calc(var(--corte) * 100% - 2px),
+      var(--color-mark) calc(var(--corte) * 100%),
+      transparent calc(var(--corte) * 100%)
+    );
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .nota-linha {
+        animation: cortar linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 30%;
+      }
+    }
+  }
+
+  @keyframes cortar {
+    from {
+      --corte: 0;
+    }
+    to {
+      --corte: 1;
+    }
+  }
+
+  /* --- O contato chega como chapa -----------------------------------------
+     A seção é a única superfície verde da página, e ela não desliza para
+     dentro: ela é aplicada, subindo sobre o preto até cobrir a tela.
+
+     O conteúdo é preto, então ele não pode existir antes da chapa — texto
+     preto sobre preto seria um trecho invisível. Por isso os dois derivam do
+     mesmo `--varredura`: a chapa fecha em 0,59 e o conteúdo só começa aí. Um
+     progresso só, duas leituras, nenhuma chance de dessincronizar. */
+  .placa {
+    position: relative;
+    isolation: isolate;
+    background: var(--color-black);
+  }
+
+  .placa::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-mark);
+    clip-path: inset(
+      calc((1 - clamp(0, calc(var(--varredura) * 1.7), 1)) * 100%) 0 0 0
+    );
+  }
+
+  .placa-conteudo {
+    --plano: clamp(0, calc(var(--varredura) * 2.5 - 1.45), 1);
+    opacity: var(--plano);
+    transform: translate3d(0, calc((1 - var(--plano)) * 22px), 0);
+  }
+
+  /* O foco global é verde, e verde sobre verde não é foco nenhum. */
+  .placa :focus-visible {
+    outline-color: var(--color-black);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .placa {
+        animation: varrer linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 80%;
+      }
+    }
+  }
+
+  @keyframes varrer {
+    from {
+      --varredura: 0;
+    }
+    to {
+      --varredura: 1;
+    }
+  }
+
+  /* Cada canal fecha como um relé: a chapa preta corre da esquerda por baixo
+     do texto, e o texto vira verde em cima dela. */
+  .canal {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .canal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-black);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 260ms var(--ease-fast);
+  }
+
+  .canal:hover::before,
+  .canal:focus-visible::before {
+    transform: scaleX(1);
+  }
+
+  /* --- Sublinhado que se desenha ------------------------------------------
+     Um link de navegação não precisa de mais que isto, e precisa disto. */
+  .sub {
+    position: relative;
+  }
+
+  .sub::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -0.35rem 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 240ms var(--ease-fast);
+  }
+
+  .sub:hover::after,
+  .sub:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* --- Onde a leitura está ------------------------------------------------
+     O ponto do cabeçalho não é enfeite: é a única indicação de posição numa
+     página de rolagem longa. Ele mora na folga entre os links, então acender
+     não desloca nada. */
+  .elo {
+    position: relative;
+  }
+
+  .elo::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -0.7rem;
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
+    background: var(--color-mark);
+    transform: scale(0);
+    transition: transform 240ms var(--ease-fast);
+  }
+
+  .elo[data-ativo]::before {
+    transform: scale(1);
+  }
+
+  /* --- Quanto falta -------------------------------------------------------
+     A linha inferior do cabeçalho conta o progresso do documento. É
+     informação, não decoração, então ela continua valendo com movimento
+     reduzido: nada aqui se move sozinho — a posição da rolagem é quem
+     desenha. */
+  .progresso {
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 1px;
+    background: var(--color-mark);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .progresso {
+      animation: avancar-documento linear both;
+      animation-timeline: scroll(root block);
+      animation-duration: auto;
+    }
+  }
+
+  @keyframes avancar-documento {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
     }
   }
 
@@ -170,16 +830,9 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* --- Títulos ----------------------------------------------------------- */
-  .title {
-    font-family: var(--font-display);
-    font-variation-settings: 'wdth' 112;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 0.92;
-    text-transform: uppercase;
-  }
-
+  /* --- Títulos -------------------------------------------------------------
+     `.title` é declarada junto do movimento, acima: a largura dela é parte da
+     coreografia, não um valor fixo. */
   .title-tight {
     font-family: var(--font-display);
     font-variation-settings: 'wdth' 100;
@@ -191,8 +844,8 @@
   .hero-title {
     max-width: 18ch;
     font-family: var(--font-display);
-    /* No telefone o título cede altura para o corredor caber acima dele. */
-    font-size: clamp(1.9rem, 5.4vw, 4.5rem);
+    /* O teto é o que cabe na metade esquerda da porta sem quebrar palavra. */
+    font-size: clamp(2.15rem, 6vw, 5rem);
     font-variation-settings: 'wdth' 112;
     font-weight: 800;
     letter-spacing: -0.035em;
@@ -313,7 +966,15 @@
   }
 }
 
-/* --- Movimento reduzido: a página abre montada ---------------------------- */
+/* --- Movimento reduzido: a página abre montada ----------------------------
+   Todo progresso registrado nasce em 1, então zerar as durações entrega a
+   página no estado final: pilha montada, processo percorrido, notas abertas,
+   chapa aplicada. Nada fica pela metade e nada precisa de fallback separado.
+
+   A barra de progresso é a exceção deliberada, e é a única. Ela não se move
+   sozinha — quem a desenha é a posição da rolagem, o mesmo gesto que a pessoa
+   já está fazendo. Apagá-la não reduziria movimento, só removeria a única
+   indicação de quanto falta numa página longa. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -321,5 +982,9 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .progresso {
+    animation-duration: auto !important;
   }
 }

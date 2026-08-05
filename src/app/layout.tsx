@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Archivo, Martian_Mono } from 'next/font/google';
 import { site } from '@/lib/site';
 import { Cabecalho } from '@/components/Cabecalho';
+import { Movimento } from '@/components/Movimento';
 import { Rodape } from '@/components/Rodape';
 import './globals.css';
 
@@ -81,6 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Pular para o conteúdo
         </a>
+        <Movimento />
         <Cabecalho />
         <main id="conteudo">{children}</main>
         <Rodape />
