@@ -4,7 +4,9 @@
 
 ## Platform and stack
 
-Portfólio web em **Next.js 15 (App Router), TypeScript, Tailwind CSS v4, MDX, WebGL2 e GSAP**. Projetos e notas são arquivos tipados em `content/`, permitindo publicar conteúdo sem alterar componentes. Um único canvas WebGL decorativo sustenta a profundidade espacial; GSAP e ScrollTrigger ficam restritos à abertura e à coreografia da home. Não há Lenis, playhead ou interface de reprodução.
+Portfólio web em **Next.js 15 (App Router), TypeScript, Tailwind CSS v4, MDX e Three.js sobre WebGL2**. Projetos e notas são arquivos tipados em `content/`, e as capturas são descobertas em `public/projetos/` pelo nome do arquivo — publicar mais telas de um projeto é copiar arquivo para a pasta, sem tocar em componente.
+
+O canvas WebGL não é decoração: ele desenha o corredor onde abertura e projetos acontecem, com carregamento e descarte progressivo de textura conforme a câmera avança. Fora do corredor não há biblioteca de animação — as seções seguintes usam `animation-timeline: view()`, sem JavaScript. Não há GSAP, Lenis, playhead nem interface de reprodução.
 
 ## Purpose
 

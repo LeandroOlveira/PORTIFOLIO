@@ -1,11 +1,9 @@
-import { Abertura } from '@/components/Abertura';
-import { Processo } from '@/components/Processo';
-import { Projetos } from '@/components/Projetos';
+import { Corredor } from '@/components/Corredor';
 import { Stack } from '@/components/Stack';
+import { Processo } from '@/components/Processo';
 import { Trajetoria } from '@/components/Trajetoria';
 import { Notas } from '@/components/Notas';
 import { Contato } from '@/components/Contato';
-import { ScrollExperience } from '@/components/ScrollExperience';
 import { getNotas, getProjetos } from '@/lib/content';
 
 export default function Home() {
@@ -14,9 +12,7 @@ export default function Home() {
 
   return (
     <>
-      <ScrollExperience />
-      <Abertura />
-      <Projetos projetos={projetos} />
+      <Corredor projetos={projetos} />
       <Stack />
       <Processo />
       <Trajetoria />

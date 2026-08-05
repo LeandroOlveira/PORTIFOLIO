@@ -164,9 +164,15 @@ A composição começa em coluna única. Aos 640px surgem divisões simples para
 
 ## Elevation & Depth
 
-O sistema é plano e não usa sombras. Profundidade vem da alternância entre preto profundo, tinta e painel, reforçada por linhas de um pixel. O cabeçalho fixo pode aplicar desfoque discreto sobre a superfície quase opaca para separar navegação e conteúdo em movimento.
+Existem dois regimes de profundidade, e eles não se misturam.
 
-**The Flat-by-Default Rule.** Superfícies permanecem sem sombra; contraste tonal, linhas e recorte de imagem são os únicos mecanismos de profundidade.
+**No documento**, o sistema é plano e não usa sombras. Profundidade vem da alternância entre preto profundo, tinta e painel, reforçada por linhas de um pixel.
+
+**No corredor**, a profundidade é real: perspectiva, névoa exponencial e profundidade de campo por nível de mipmap. É o único lugar da página com eixo Z, e é o que sustenta a leitura de escala — a chapa enquadrada tem cerca de 62% da altura do quadro, a seguinte cerca de 40% dela, e a terceira ainda é reconhecível ao fundo.
+
+**The Flat-by-Default Rule.** Fora do corredor, superfícies permanecem sem sombra; contraste tonal, linhas e recorte de imagem são os únicos mecanismos de profundidade.
+
+**The One-Depth Rule.** Profundidade simulada não vaza para o documento: nada de parallax em seção de texto, card inclinado ou sombra imitando distância. Ou o elemento está no corredor, ou é plano.
 
 ## Shapes
 
@@ -196,7 +202,8 @@ O vocabulário formal é ortogonal: cantos retos, linhas finas, pontos quadrados
 - **Shadow Strategy:** nenhuma sombra.
 - **Border:** divisores de um pixel; o resultado de cartões menores recebe uma barra vertical verde.
 - **Internal Padding:** 1.5rem no mobile e 2rem em destaques ou telas maiores.
-- **Media:** imagens públicas aparecem em escala de cinza e ganham cor no hover; destaques sem imagem permanecem deliberadamente tipográficos.
+- **Media:** fora do corredor, capturas aparecem em largura total com contorno de um pixel, em cor plena. Não há mais miniatura em escala de cinza: a captura é a prova, e prova reduzida a thumbnail não prova nada.
+- **Escopo:** cartão não é mais o esqueleto da home. Projetos vivem no corredor; o vocabulário de cartão sobrevive apenas em listas secundárias e páginas internas.
 
 ### Navigation
 
@@ -206,9 +213,32 @@ O cabeçalho tem 3.5rem de altura, fica fixo, usa fundo tinta quase opaco e linh
 
 O bloco de contato inverte o sistema: superfície verde, texto e divisores pretos. Cada canal ocupa uma linha de pelo menos 3.5rem, inverte para preto no hover e move a seta um passo para a direita.
 
-### Automatic Opening
+### A porta
 
-A tese já está visível no HTML. Duas faixas diagonais estreitas atravessam a abertura automaticamente com 0.76s de duração, 0.12s de intervalo e curva exponencial; não dependem de rolagem. Em movimento reduzido, as faixas não são exibidas.
+O hero não é uma seção que rola para fora: ele **é** a porta do corredor. Ocupa a primeira tela inteira e, à primeira rolagem, se parte ao meio — as duas metades giram em torno da própria borda externa e são empurradas para dentro, para longe de quem olha, revelando o corredor que já estava atrás.
+
+- **Composição desenhada em torno do corte.** A junta nunca atravessa conteúdo: no desktop o título ocupa a metade esquerda e a chamada a direita; no telefone o título fica na metade de cima, encostado na junta, e a chamada na de baixo. Por isso cada folha carrega conteúdo real e único — não há duplicação de markup nem título repetido para leitor de tela.
+- **Eixo por largura.** Acima de 768px as folhas giram em `rotateY`; abaixo, em `rotateX`, porque num quadro estreito o corte horizontal tem muito mais curso para percorrer.
+- **90° cheios.** A folha precisa terminar exatamente de perfil: a 84° ela ainda projeta uma faixa larga junto à dobradiça, que cobria as bordas do corredor. A opacidade também cai no último terço, então a tela inteira pertence ao corredor quando a primeira chapa chega.
+- **A face perde luz** conforme se afasta do eixo da câmera, e uma junta de um pixel em verde marca o corte enquanto a porta está fechada.
+- **"Ver projetos" conduz a rolagem** em vez de saltar: a abertura acontece na frente de quem clicou, e qualquer gesto do visitante devolve o controle na hora.
+
+### Corredor
+
+O momento autoral da página, e o único. Depois da porta, projetos não são seções empilhadas: são estações de uma viagem única em que a rolagem empurra uma câmera, e as capturas são chapas suspensas no espaço.
+
+- **Ritmo:** cada estação tem três tempos — aproximação (44% do segmento), retenção (24%) e travessia (32%). É a retenção que dá tempo de ler. Velocidade constante vira esteira.
+- **Enquadramento:** a chapa é elevada acima do centro e o terço inferior fica livre para o texto. Isso não é composição por gosto: metade das interfaces do portfólio é clara, e texto branco sobre formulário branco não sobrevive a gradiente nenhum.
+- **Moldura:** um fio de verde no perímetro de cada chapa, compensado pela distância para manter espessura constante em pixels. É a repetição desse fio fugindo para o ponto de fuga que faz o conjunto ler como corredor.
+- **Tom da captura:** a interface aparece no tom em que foi desenhada. A textura não declara espaço de cor de propósito — com `SRGBColorSpace` a GPU decodifica para linear na amostragem, mas a conversão de volta só acontece nos materiais nativos do Three, e um shader próprio escreve direto no framebuffer. A névoa pesa menos de 3% na chapa enquadrada e a vinheta só entra perto da borda, pelo mesmo motivo: nada pode escurecer a prova.
+- **Ótica por largura:** acima de 700px a chapa ocupa 86% da largura, os satélites entram e a câmera não centraliza por completo. Abaixo disso a chapa toma 90%, os satélites saem, a câmera centraliza quase inteiramente e o quadro ganha inclinação para subir o ponto de fuga acima do texto.
+- **Saída:** a viagem termina com a última chapa ainda enquadrada. Sair do corredor para tela preta é anticlímax; o resto da página entra por cima do último quadro.
+- **Véu:** vinheta e grão cobrem o quadro inteiro; o grão troca a cada cinco quadros, não a cada quadro.
+- **Fallback:** sem WebGL2, com movimento reduzido ou sem JavaScript, o corredor não existe e o mesmo conteúdo aparece empilhado, com as capturas em largura total. Títulos, textos e links são HTML real nos dois modos.
+
+### Chegada das seções
+
+Depois do corredor, tudo entra com uma única animação curta e idêntica, movida por `animation-timeline: view()` — sem JavaScript. Uma passagem densa merece uma quieta.
 
 ## Do's and Don'ts
 
@@ -223,6 +253,8 @@ A tese já está visível no HTML. Duas faixas diagonais estreitas atravessam a 
 ### Don't:
 
 - **Don't** introduza cartões arredondados, sombras ou gradientes para simular profundidade.
+- **Don't** empilhe um segundo momento de espetáculo depois do corredor. Foco cria impacto; excesso cria ruído.
+- **Don't** trate o corredor como plano de fundo decorativo: as chapas são o conteúdo, não uma textura atrás dele.
 - **Don't** transforme cinema em nomes de seção, controles de reprodução ou metáforas para explicar o trabalho.
 - **Don't** use Martian Mono em parágrafos ou títulos de mensagem.
 - **Don't** crie uma segunda cor de acento nem uma grade de logos de tecnologia.

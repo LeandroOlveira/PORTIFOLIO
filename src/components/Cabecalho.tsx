@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { navegacao, whatsappLink } from '@/lib/site';
+import { entrarNoCorredor } from '@/lib/corridor/rolagem';
 
 export function Cabecalho() {
   return (
@@ -18,6 +21,17 @@ export function Cabecalho() {
               <li key={item.href}>
                 <a
                   href={item.href}
+                  // Um salto de âncora para o corredor pousaria com as portas
+                  // ainda fechadas, ou seja, numa tela preta. O link conduz a
+                  // rolagem pela abertura, como o botão do hero.
+                  onClick={
+                    item.href === '#projetos'
+                      ? (evento) => {
+                          evento.preventDefault();
+                          entrarNoCorredor();
+                        }
+                      : undefined
+                  }
                   className="text-sm text-mid transition-colors hover:text-paper"
                 >
                   {item.label}

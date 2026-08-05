@@ -13,6 +13,20 @@ const variantes: Record<Variante, string> = {
   invertido: 'border-2 border-black text-black hover:bg-black hover:text-mark',
 };
 
+/** Mesma casca do Botao para quando a ação é um gesto, não uma navegação. */
+export function BotaoAcao({
+  variante = 'contorno',
+  children,
+  ...rest
+}: { variante?: Variante; children: React.ReactNode } & ComponentProps<'button'>) {
+  return (
+    <button type="button" className={`${base} ${variantes[variante]}`} {...rest}>
+      {children}
+      <Seta />
+    </button>
+  );
+}
+
 type Props = {
   href: string;
   variante?: Variante;

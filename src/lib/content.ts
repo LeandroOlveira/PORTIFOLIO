@@ -3,6 +3,41 @@ import path from 'node:path';
 import matter from 'gray-matter';
 
 const RAIZ = path.join(process.cwd(), 'content');
+const CAPTURAS = path.join(process.cwd(), 'public', 'projetos');
+const EXTENSOES = /\.(png|jpe?g|webp|avif)$/i;
+
+/**
+ * Lê a pasta de capturas uma vez por build e agrupa por slug.
+ *
+ * A convenção é o nome do arquivo: `roadmap.png` é a capa, e `roadmap-2.png`,
+ * `roadmap-3.png` (ou qualquer sufixo depois de um hífen) entram na sequência,
+ * ordenados naturalmente. Assim publicar mais telas de um projeto é copiar
+ * arquivo para dentro de `public/projetos/` — nenhum componente muda.
+ */
+function lerCapturas(): Map<string, string[]> {
+  const porSlug = new Map<string, string[]>();
+  if (!fs.existsSync(CAPTURAS)) return porSlug;
+
+  for (const arquivo of fs.readdirSync(CAPTURAS)) {
+    if (!EXTENSOES.test(arquivo)) continue;
+    const base = arquivo.replace(EXTENSOES, '');
+    const slug = base.split('-').length > 1 && /-\d+$/.test(base)
+      ? base.replace(/-\d+$/, '')
+      : base;
+    const lista = porSlug.get(slug) ?? [];
+    lista.push(`/projetos/${arquivo}`);
+    porSlug.set(slug, lista);
+  }
+
+  for (const [slug, lista] of porSlug) {
+    lista.sort((a, b) =>
+      a.localeCompare(b, 'pt-BR', { numeric: true, sensitivity: 'base' }),
+    );
+    porSlug.set(slug, lista);
+  }
+
+  return porSlug;
+}
 
 export const projectStatuses = [
   'publicado',
@@ -23,6 +58,12 @@ export type Projeto = {
   tipo: string;
   url?: string;
   imagem?: string;
+  /**
+   * Todas as capturas do projeto, na ordem. A primeira é `imagem`.
+   * Descobertas em disco: qualquer arquivo `public/projetos/<slug>*.png|jpg|webp`
+   * entra sozinho — basta soltar `roadmap-2.png` na pasta.
+   */
+  imagens: string[];
   stack: string[];
   destaque: boolean;
   ordem: number;
@@ -54,8 +95,20 @@ function ler(pasta: string): { slug: string; data: Record<string, unknown>; corp
 }
 
 export function getProjetos(): Projeto[] {
+  const capturas = lerCapturas();
+
   return ler('projetos')
-    .map(({ slug, data, corpo }) => parseProjeto(slug, data, corpo))
+    .map(({ slug, data, corpo }) => {
+      const projeto = parseProjeto(slug, data, corpo);
+      const encontradas = capturas.get(slug) ?? [];
+
+      // O frontmatter continua mandando na capa; o disco completa a sequência.
+      const imagens = projeto.imagem
+        ? [projeto.imagem, ...encontradas.filter((i) => i !== projeto.imagem)]
+        : encontradas;
+
+      return { ...projeto, imagem: projeto.imagem ?? imagens[0], imagens };
+    })
     .sort((a, b) => a.ordem - b.ordem || a.titulo.localeCompare(b.titulo));
 }
 
@@ -97,6 +150,7 @@ export function parseProjeto(
     tipo,
     url: typeof data.url === 'string' && data.url ? data.url : undefined,
     imagem: typeof data.imagem === 'string' && data.imagem ? data.imagem : undefined,
+    imagens: [],
     stack: Array.isArray(data.stack) ? data.stack.map(String) : [],
     destaque: data.destaque === true,
     ordem,
