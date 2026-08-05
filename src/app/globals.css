@@ -106,6 +106,61 @@
     z-index: 1;
   }
 
+  html[data-motion-ready='true'] [data-motion-section='projects'],
+  html[data-motion-ready='true'] [data-motion-section='process'],
+  html[data-motion-ready='true'] [data-motion-section='notes'] {
+    background-color: color-mix(in srgb, var(--color-black) 94%, transparent);
+  }
+
+  html[data-motion-ready='true'] [data-motion-section='stack'],
+  html[data-motion-ready='true'] [data-motion-section='trajectory'] {
+    background-color: color-mix(in srgb, var(--color-ink) 94%, transparent);
+  }
+
+  html[data-motion-ready='true'] [data-motion-section='contact'] {
+    background-color: color-mix(in srgb, var(--color-mark) 97%, transparent);
+  }
+
+  html[data-motion-ready='true'] [data-project-stage] {
+    perspective: 1400px;
+  }
+
+  html[data-motion-ready='true'] [data-project-plane] {
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+  }
+
+  html[data-motion-ready='true'] [data-project-media] img {
+    will-change: transform;
+  }
+
+  html[data-motion-ready='true'] [data-process-grid] {
+    position: relative;
+  }
+
+  html[data-motion-ready='true'][data-motion-profile='full'] [data-process-grid]::before {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    z-index: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-mark), transparent);
+    pointer-events: none;
+  }
+
+  html[data-motion-ready='true'] [data-trajectory-list] {
+    position: relative;
+  }
+
+  html[data-motion-ready='true'][data-motion-profile='full'] [data-trajectory-list]::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: linear-gradient(var(--color-mark), transparent 88%);
+    pointer-events: none;
+  }
+
   /* --- Contenção --------------------------------------------------------- */
   .shell {
     width: 100%;
