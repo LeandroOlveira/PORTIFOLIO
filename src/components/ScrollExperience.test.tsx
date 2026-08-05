@@ -11,10 +11,11 @@ const renderer = {
 };
 const createSpatialRenderer = vi.fn(() => renderer);
 const createMotionOrchestrator = vi.fn(() => vi.fn());
+const registerPlugin = vi.fn();
 
 vi.mock('@/lib/motion/spatial-renderer', () => ({ createSpatialRenderer }));
 vi.mock('@/lib/motion/orchestrator', () => ({ createMotionOrchestrator }));
-vi.mock('gsap', () => ({ default: { registerPlugin: vi.fn() } }));
+vi.mock('gsap', () => ({ default: { registerPlugin } }));
 vi.mock('gsap/ScrollTrigger', () => ({ ScrollTrigger: {} }));
 
 afterEach(() => {
@@ -24,6 +25,8 @@ afterEach(() => {
   vi.restoreAllMocks();
   createSpatialRenderer.mockClear();
   createMotionOrchestrator.mockClear();
+  registerPlugin.mockClear();
+  Object.values(renderer).forEach((mock) => mock.mockClear());
 });
 
 it('renders one decorative canvas without exposing it to assistive technology', () => {
@@ -58,4 +61,21 @@ it('starts scroll choreography only after WebGL succeeds and cleans it up on unm
 
   unmount();
   expect(renderer.destroy).toHaveBeenCalled();
+});
+
+it('destroys the renderer when motion orchestration fails after WebGL initialization', async () => {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+  );
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({} as WebGL2RenderingContext);
+  registerPlugin.mockImplementationOnce(() => {
+    throw new Error('plugin unavailable');
+  });
+
+  render(<ScrollExperience />);
+
+  await waitFor(() => expect(renderer.destroy).toHaveBeenCalled());
+  expect(document.documentElement.dataset.motionProfile).toBe('static');
+  expect(document.documentElement.dataset.motionReady).toBeUndefined();
 });

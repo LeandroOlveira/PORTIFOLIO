@@ -53,6 +53,7 @@ export function ScrollExperience() {
           return;
         }
 
+        destroyRenderer = renderer.destroy;
         gsapModule.default.registerPlugin(ScrollTrigger);
         document.documentElement.dataset.motionReady = 'true';
         stopMotion = createMotionOrchestrator({
@@ -62,10 +63,13 @@ export function ScrollExperience() {
           gsap: gsapModule.default as unknown as GsapAdapter,
           ScrollTrigger: ScrollTrigger as unknown as ScrollTriggerAdapter,
         });
-        destroyRenderer = renderer.destroy;
       })
       .catch(() => {
         if (!active) return;
+        stopMotion?.();
+        stopMotion = undefined;
+        destroyRenderer?.();
+        destroyRenderer = undefined;
         delete document.documentElement.dataset.motionReady;
         document.documentElement.dataset.motionProfile = 'static';
       });
