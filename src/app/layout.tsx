@@ -60,7 +60,7 @@ const pessoaJsonLd = {
   name: site.nomeCompleto,
   alternateName: site.nome,
   jobTitle: site.papel,
-  description: site.descricao,
+  description: site.bio,
   url: site.url,
   email: `mailto:${site.email}`,
   sameAs: [site.github, site.linkedin, site.instagram],

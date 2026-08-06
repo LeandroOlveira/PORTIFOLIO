@@ -6,18 +6,39 @@ resultado: Uma carteira consolidada mostra exceções e orienta a ação do oper
 status: em-construcao
 tipo: SaaS próprio
 imagem: /projetos/radar-fiscal.png
+alt:
+  radar-fiscal.png: 'Tela de parcelamentos do Radar Fiscal num escritório demonstrativo. Cada apuração mostra situação, tipo, vencimento, quando foi apurada e de qual fonte veio o dado.'
+  radar-fiscal-2.png: 'Painel do Radar Fiscal resumindo a carteira na competência selecionada, separando quantos clientes estão em dia e quantos ainda não foram apurados.'
 stack: ['Node.js', 'React', 'NestJS', 'PostgreSQL', 'Prisma']
 destaque: false
 ordem: 4
 ---
 
-## Produto
+Um escritório de contabilidade com carteira grande não tem como abrir o e-CAC cliente
+por cliente todo mês. O que acontece na prática é que a inadimplência aparece quando já
+virou multa.
 
-O Radar Fiscal consulta dados fiscais de uma carteira e organiza o resultado para o
-escritório enxergar rapidamente quem exige ação, sem transformar a tela em outro portal
-governamental.
+## Por que não é um robô de e-CAC
 
-## O que ele demonstra
+A tentação óbvia é automatizar o login e raspar a tela. Isso quebra a cada mudança de
+layout, esbarra em captcha e coloca a credencial do escritório num lugar que ele não
+controla.
 
-Integrações sensíveis, isolamento entre escritórios, filas de processamento, segurança
-e produto desenhado para um operador não técnico.
+O Radar consulta pela integração com o SERPRO. É mais trabalhoso de montar e tem custo
+por consulta — daí existir uma tela de consumo — mas é uma fonte oficial, estável e que
+não pede a senha de ninguém.
+
+## A tela precisa dizer de onde veio o número
+
+Cada apuração carrega quando foi apurada e por qual fonte, e existe uma trilha de
+auditoria à parte. Num produto que informa que um cliente está devendo, "o sistema
+disse" não é resposta aceitável — o operador precisa poder mostrar a origem antes de
+ligar para o cliente.
+
+A leitura padrão é por exceção: a carteira se resume em quantos estão em dia, quantos
+não foram apurados na competência e quem exige ação. O resto fica fora do caminho.
+
+## Estado atual
+
+Em construção. Painel, carteira, parcelamentos, inadimplentes, grupos e a integração já
+existem; o produto ainda não passou por operação real e é aí que o desenho vai apanhar.

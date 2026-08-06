@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { dataCurta, getNota, getNotas } from '@/lib/content';
 import { Selo } from '@/components/Selo';
+import { AutorNota } from '@/components/AutorNota';
 import { Botao } from '@/components/Botao';
 import { JsonLd } from '@/components/JsonLd';
 import { site, whatsappLink } from '@/lib/site';
@@ -100,6 +101,8 @@ export default async function Nota({ params }: Props) {
         <div className="article-prose mt-12 max-w-[68ch]">
           <MDXRemote source={n.corpo} />
         </div>
+
+        <AutorNota />
 
         <div className="mt-16 max-w-[68ch] border-t border-line pt-12">
           <p className="title-tight max-w-[26ch] text-[1.5rem] text-paper sm:text-[1.875rem]">

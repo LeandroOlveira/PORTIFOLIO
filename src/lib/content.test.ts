@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { getNotas, getProjetos, parseProjeto } from '@/lib/content';
+import { getNotas, getProjetos, parseProjeto, tempoDeLeitura } from '@/lib/content';
 
 const valid = {
   titulo: 'Alinnea',
@@ -67,6 +67,45 @@ describe('project content', () => {
     for (const imagePath of Object.values(images).filter(Boolean)) {
       const assetPath = path.join(process.cwd(), 'public', String(imagePath).replace(/^\//, ''));
       expect(fs.existsSync(assetPath)).toBe(true);
+    }
+  });
+
+  it('describes each screenshot instead of numbering it', () => {
+    const semDescricao: string[] = [];
+
+    for (const projeto of getProjetos()) {
+      for (const captura of projeto.imagens) {
+        if (!captura.alt) {
+          semDescricao.push(captura.src);
+          continue;
+        }
+        // "tela 2 de 3" era ordem de arquivo, não descrição.
+        expect(captura.alt).not.toMatch(/tela \d+ de \d+/i);
+        expect(captura.alt.length).toBeGreaterThan(40);
+      }
+    }
+
+    expect(semDescricao).toEqual([]);
+  });
+
+  it('derives reading time from the text instead of the frontmatter', () => {
+    expect(tempoDeLeitura('palavra '.repeat(200))).toBe('1 min');
+    expect(tempoDeLeitura('palavra '.repeat(700))).toBe('4 min');
+    // Um texto curto nunca anuncia "0 min".
+    expect(tempoDeLeitura('três palavras aqui')).toBe('1 min');
+  });
+
+  it('does not count MDX syntax as words the reader reads', () => {
+    const cru = '## Título\n\n- item um\n- item dois\n\n[texto](https://exemplo.com/rota/longa)';
+    // 8 palavras de leitura: "Título", "item um", "item dois", "texto".
+    expect(tempoDeLeitura(cru)).toBe('1 min');
+    expect(tempoDeLeitura(`${cru}\n${'palavra '.repeat(600)}`)).toBe('3 min');
+  });
+
+  it('announces a reading time that matches every published note', () => {
+    for (const nota of getNotas()) {
+      expect(nota.leitura).toBe(tempoDeLeitura(nota.corpo));
+      expect(nota.leitura).toMatch(/^\d+ min$/);
     }
   });
 

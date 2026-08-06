@@ -6,6 +6,14 @@ export const site = {
   papel: 'Desenvolvedor full stack · Produto e operações',
   descricao:
     'Produtos digitais e sistemas para operações reais, da descoberta ao código em produção.',
+  /**
+   * Quem assina as notas. Fica aqui, e não no componente, porque o mesmo texto
+   * alimenta o rodapé de autoria e a descrição do `Person` em JSON-LD — e uma
+   * biografia que diverge de si mesma entre a página e os dados estruturados é
+   * pior do que não ter nenhuma.
+   */
+  bio:
+    'Trabalho com software ligado a operação desde 2014 — ERP, implantação, integrações e ferramentas internas. Hoje construo SaaS próprios e sistemas para quem depende deles todo dia.',
   url: 'https://devleandrooliveira.com.br',
   locale: 'pt-BR',
 

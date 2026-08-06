@@ -6,18 +6,38 @@ resultado: Uma base operacional com visões macro, semanal e de disponibilidade.
 status: entregue
 tipo: Sistema interno
 imagem: /projetos/roadmap.png
+alt:
+  roadmap.png: 'Mapa de Disponibilidade do Roadmap: os técnicos aparecem agrupados por coordenador, cada um com sua taxa de ocupação, e os blocos verdes marcam as janelas livres ao longo de duas semanas.'
+  roadmap-2.png: 'Visão Semanal do Roadmap: uma linha por técnico e uma coluna por dia, com cada agenda colorida pelo tipo — agenda técnica, levantamento, treinamento, deslocamento e ausência.'
 stack: ['Node.js', 'React', 'NestJS', 'SQL Server']
 destaque: true
 ordem: 2
 ---
 
-## Operação atendida
-
-O Roadmap substituiu o módulo legado usado para organizar a agenda dos técnicos de
+O Roadmap substituiu o módulo legado que organizava a agenda dos técnicos de
 implantação. Coordenadores planejam alocações no desktop e cada técnico consulta a
 própria semana pelo celular.
 
-## O que ele demonstra
+## A pergunta que a tela precisa responder
 
-Desenvolvimento ligado ao trabalho diário: agenda, capacidade, conflitos, confirmação
-e rastreabilidade dentro de uma operação real.
+Coordenador não abre o sistema para ver o que está agendado. Ele abre para achar quem
+está livre. São duas perguntas diferentes, e a segunda é mais difícil.
+
+Por isso existem duas visões separadas. A Visão Semanal mostra as agendas por técnico e
+por dia, cada uma tipada — agenda técnica, levantamento, treinamento, deslocamento,
+pós-virada, ausência. Já o Mapa de Disponibilidade inverte a leitura: ele destaca os
+vazios, mostra a ocupação de cada técnico em porcentagem e agrupa por coordenador.
+Achar uma janela de quatro dias livres virou uma varredura visual em vez de conferência
+manual.
+
+## Agendar sem tirar a mão do teclado
+
+No Mapa, um espaço livre agenda com duplo clique — ou com Tab até ele e Enter. Quem
+monta escala passa a manhã inteira nessa tela, e obrigar a mão a ir e voltar para o
+mouse a cada alocação é um custo que aparece no fim do dia.
+
+## Modo anônimo
+
+A tela tem um botão que troca todos os nomes por rótulos genéricos. Foi o que permitiu
+que ela aparecesse aqui: escala de pessoas é dado de pessoas, e um portfólio não é
+motivo para expor a agenda de ninguém.

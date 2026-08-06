@@ -106,11 +106,9 @@ export default async function ProjetoPage({ params }: Props) {
                   src={captura.src}
                   width={captura.largura}
                   height={captura.altura}
-                  alt={
-                    indice === 0
-                      ? `Interface do projeto ${projeto.titulo}`
-                      : `${projeto.titulo}, tela ${indice + 1} de ${projeto.imagens.length}`
-                  }
+                  // Sem descrição escrita, o rótulo genérico é melhor que `alt=""`:
+                  // a captura é a prova do projeto, não decoração.
+                  alt={captura.alt ?? `Interface do projeto ${projeto.titulo}`}
                   // A captura é a prova, então ela aparece inteira. O corte em
                   // 16/9 escondia justamente o que a tela larga tinha a mostrar
                   // — e no DocHub, que é vertical, escondia metade.

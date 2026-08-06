@@ -108,6 +108,15 @@ export type Captura = {
   src: string;
   largura?: number;
   altura?: number;
+  /**
+   * O que a tela mostra, escrito à mão no frontmatter.
+   *
+   * Vem do conteúdo e não do código porque só quem conhece o produto sabe dizer o
+   * que importa naquela captura. O texto gerado que existia antes — "tela 2 de 3" —
+   * é ordem de arquivo, não descrição: para quem usa leitor de tela ele não informa
+   * nada, e para o buscador é ruído.
+   */
+  alt?: string;
 };
 
 export type Projeto = {
@@ -159,6 +168,22 @@ function ler(pasta: string): { slug: string; data: Record<string, unknown>; corp
     });
 }
 
+/**
+ * O bloco `alt:` do frontmatter, indexado pelo nome do arquivo.
+ *
+ * A chave é só o nome (`roadmap-2.png`) porque o caminho `/projetos/` é sempre o
+ * mesmo e repeti-lo em toda linha convida ao erro de digitação silencioso.
+ */
+function lerAlternativos(bruto: unknown): Record<string, string> {
+  if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) return {};
+
+  const mapa: Record<string, string> = {};
+  for (const [arquivo, texto] of Object.entries(bruto as Record<string, unknown>)) {
+    if (typeof texto === 'string' && texto.trim()) mapa[arquivo] = texto.trim();
+  }
+  return mapa;
+}
+
 export function getProjetos(): Projeto[] {
   const capturas = lerCapturas();
 
@@ -166,12 +191,13 @@ export function getProjetos(): Projeto[] {
     .map(({ slug, data, corpo }) => {
       const projeto = parseProjeto(slug, data, corpo);
       const encontradas = capturas.get(slug) ?? [];
+      const alternativos = lerAlternativos(data.alt);
 
       // O frontmatter continua mandando na capa; o disco completa a sequência.
       const capa = encontradas.find((c) => c.src === projeto.imagem);
-      const imagens = capa
-        ? [capa, ...encontradas.filter((c) => c !== capa)]
-        : encontradas;
+      const imagens = (capa ? [capa, ...encontradas.filter((c) => c !== capa)] : encontradas).map(
+        (captura) => ({ ...captura, alt: alternativos[captura.src.split('/').pop() ?? ''] }),
+      );
 
       return { ...projeto, imagem: projeto.imagem ?? imagens[0]?.src, imagens };
     })
@@ -228,6 +254,31 @@ export function getProjeto(slug: string): Projeto | undefined {
   return getProjetos().find((p) => p.slug === slug);
 }
 
+/** Palavras por minuto. 200 é a faixa usual de leitura silenciosa em português. */
+const RITMO = 200;
+
+/**
+ * O tempo de leitura sai do texto, não do frontmatter.
+ *
+ * Declarado à mão ele mentia: as três notas anunciavam 3 a 4 minutos para textos de
+ * um a dois. E mentiria de novo a cada revisão, porque ninguém lembra de recontar
+ * depois de cortar um parágrafo. Contando aqui, o número não tem como divergir.
+ *
+ * A sintaxe de MDX sai antes da contagem — `##`, `-`, marcadores de ênfase e o alvo
+ * dos links não são lidos, e contá-los inflaria textos com muitas listas ou títulos.
+ */
+export function tempoDeLeitura(corpo: string): string {
+  const limpo = corpo
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/[*_`>]/g, ' ');
+
+  const palavras = limpo.split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.round(palavras / RITMO))} min`;
+}
+
 export function getNotas(): Nota[] {
   return ler('notas')
     .map(({ slug, data, corpo }) => ({
@@ -235,7 +286,7 @@ export function getNotas(): Nota[] {
       titulo: String(data.titulo ?? slug),
       resumo: String(data.resumo ?? ''),
       data: String(data.data ?? ''),
-      leitura: String(data.leitura ?? ''),
+      leitura: tempoDeLeitura(corpo),
       demo: Boolean(data.demo),
       corpo,
     }))

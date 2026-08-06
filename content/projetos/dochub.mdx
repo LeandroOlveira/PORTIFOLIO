@@ -6,17 +6,39 @@ resultado: Biblioteca central, checklist por funcionário, alertas e radar de ve
 status: entregue
 tipo: Sistema para obra
 imagem: /projetos/dochub.png
+alt:
+  dochub.png: 'Cadastro de nova obra no DocHub. No topo, a área para importar o PDF do CNO emitido no e-CAC, que preenche sozinha os campos de CNO, CNAE, endereço e responsável logo abaixo.'
+  dochub-2.png: 'Biblioteca de documentos do DocHub, com filtros por status, tipo, funcionário, obra e competência. Cada linha mostra se o documento é fixo ou mensal e se está válido, vencido ou não enviado.'
+  dochub-3.png: 'Lista de funcionários do DocHub, com o CPF exibido mascarado e uma ação de revelar ao lado.'
 stack: ['React', 'NestJS', 'PostgreSQL', 'Prisma']
 destaque: true
 ordem: 3
 ---
 
-## Operação atendida
+Documentação de obra tem uma característica que atrapalha: parte dela vence. ASO,
+CTPS, cartão ponto e certificados não são um arquivo que se envia uma vez e esquece —
+são um estado que muda sozinho com o calendário.
 
-O DocHub centraliza documentos de funcionários da construção civil, separa itens fixos
-e mensais e organiza o que está válido, vencendo, vencido ou ainda não foi enviado.
+## Fixo e mensal são coisas diferentes
 
-## O que ele demonstra
+O DocHub separa o que se envia uma vez do que se refaz todo mês. Um ASO tem data de
+validade; um cartão ponto tem competência. Tratar os dois como "documento" obrigava o
+administrativo a saber de cabeça qual era qual.
 
-Leitura de regras operacionais, cuidado com dados pessoais, alertas automáticos e uma
-interface pensada para quem precisa agir antes do vencimento.
+Cada item cai em um de quatro estados: válido, vencendo, vencido ou não enviado. O
+último é o que costuma sumir das planilhas, porque a ausência de uma linha não chama
+atenção como uma linha vermelha chama.
+
+## O atalho que economiza mais tempo
+
+O cadastro de obra aceita o PDF do CNO emitido no e-CAC e preenche o formulário
+inteiro a partir dele — CNO, CNAE, cadastro imobiliário, endereço, responsável. É a
+única parte do sistema que economiza minutos em vez de segundos, porque digitar esses
+campos à mão é onde o erro de digitação nasce.
+
+## Dado de terceiro exige cuidado explícito
+
+O sistema guarda CPF de gente que não é cliente dele. Por isso o CPF aparece mascarado
+por padrão, com ação de revelar, e existem seções próprias de privacidade e de
+controle de acessos. Não é enfeite de conformidade: é a diferença entre um vazamento
+ser possível e ser improvável.
