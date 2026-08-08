@@ -16,7 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...getNotas().map((n) => ({
       url: `${site.url}/notas/${n.slug}`,
-      lastModified: new Date(n.data),
+      // Revisar um texto antigo só vale como sinal se o sitemap contar.
+      lastModified: new Date(n.atualizado ?? n.data),
       priority: 0.6,
     })),
   ];

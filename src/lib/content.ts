@@ -158,6 +158,16 @@ export type Nota = {
   titulo: string;
   resumo: string;
   data: string;
+  /**
+   * Quando o texto foi revisado, se foi.
+   *
+   * Sem este campo o `dateModified` do JSON-LD repetia o `datePublished`, e uma
+   * nota reescrita em profundidade continuava se anunciando com a data original
+   * — o buscador não tinha como saber que valia reindexar. Fica opcional porque
+   * a maioria dos textos nunca é revisada, e declarar revisão que não houve é
+   * pior do que não declarar nada.
+   */
+  atualizado?: string;
   leitura: string;
   demo?: boolean;
   corpo: string;
@@ -265,6 +275,28 @@ export function getProjeto(slug: string): Projeto | undefined {
   return getProjetos().find((p) => p.slug === slug);
 }
 
+/**
+ * As dimensões de um arquivo servido de `public/`, a partir da URL dele.
+ *
+ * Mesma leitura de cabeçalho usada nas capturas de projeto, exposta para o corpo
+ * dos artigos: uma imagem no meio do texto sem `width`/`height` faz a página
+ * pular quando ela chega, e o CLS que custou uma auditoria inteira para zerar
+ * voltaria pela porta dos fundos a cada artigo ilustrado.
+ *
+ * Só resolve caminhos absolutos de dentro de `public/`. URL externa não tem como
+ * ser medida no build, e é por isso que a convenção é hospedar a imagem aqui.
+ */
+export function medirImagemPublica(src: string): { largura: number; altura: number } | undefined {
+  if (!src.startsWith('/') || src.startsWith('//')) return undefined;
+
+  const alvo = path.normalize(path.join(process.cwd(), 'public', decodeURIComponent(src)));
+  const raiz = path.join(process.cwd(), 'public');
+  // `../` no caminho sairia de `public/` e leria arquivo arbitrário do disco.
+  if (!alvo.startsWith(raiz + path.sep)) return undefined;
+
+  return medirImagem(alvo);
+}
+
 /** Palavras por minuto. 200 é a faixa usual de leitura silenciosa em português. */
 const RITMO = 200;
 
@@ -292,15 +324,22 @@ export function tempoDeLeitura(corpo: string): string {
 
 export function getNotas(): Nota[] {
   return ler('notas')
-    .map(({ slug, data, corpo }) => ({
-      slug,
-      titulo: String(data.titulo ?? slug),
-      resumo: String(data.resumo ?? ''),
-      data: String(data.data ?? ''),
-      leitura: tempoDeLeitura(corpo),
-      demo: Boolean(data.demo),
-      corpo,
-    }))
+    .map(({ slug, data, corpo }) => {
+      const publicado = String(data.data ?? '');
+      const revisado = typeof data.atualizado === 'string' ? data.atualizado.trim() : '';
+
+      return {
+        slug,
+        titulo: String(data.titulo ?? slug),
+        resumo: String(data.resumo ?? ''),
+        data: publicado,
+        // Uma revisão anterior à publicação é erro de digitação, não histórico.
+        atualizado: revisado && revisado > publicado ? revisado : undefined,
+        leitura: tempoDeLeitura(corpo),
+        demo: Boolean(data.demo),
+        corpo,
+      };
+    })
     .sort((a, b) => b.data.localeCompare(a.data));
 }
 

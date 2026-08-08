@@ -6,6 +6,7 @@ import { dataCurta, getNota, getNotas } from '@/lib/content';
 import { Selo } from '@/components/Selo';
 import { AutorNota } from '@/components/AutorNota';
 import { Botao } from '@/components/Botao';
+import { ImagemDoArtigo } from '@/components/ImagemDoArtigo';
 import { JsonLd } from '@/components/JsonLd';
 import { site, whatsappLink } from '@/lib/site';
 
@@ -49,7 +50,7 @@ export default async function Nota({ params }: Props) {
     headline: n.titulo,
     description: n.resumo,
     datePublished: n.data,
-    dateModified: n.data,
+    dateModified: n.atualizado ?? n.data,
     inLanguage: site.locale,
     // O mesmo card que o WhatsApp mostra. A diretriz de Article pede imagem, e
     // gerar uma segunda só para o JSON-LD seria manter duas verdades.
@@ -92,6 +93,13 @@ export default async function Nota({ params }: Props) {
           <span className="meta text-mid">
             <time dateTime={n.data}>{dataCurta(n.data)}</time>
           </span>
+          {/* A revisão só aparece quando existe: uma linha "atualizado em" com a
+              mesma data da publicação diz ao leitor que nada foi atualizado. */}
+          {n.atualizado ? (
+            <span className="meta text-dim">
+              atualizado em <time dateTime={n.atualizado}>{dataCurta(n.atualizado)}</time>
+            </span>
+          ) : null}
           {n.leitura ? (
             <span className="meta text-mid">{n.leitura} de leitura</span>
           ) : null}
@@ -103,7 +111,7 @@ export default async function Nota({ params }: Props) {
         </div>
 
         <div className="article-prose mt-12 max-w-[68ch]">
-          <MDXRemote source={n.corpo} />
+          <MDXRemote source={n.corpo} components={{ img: ImagemDoArtigo }} />
         </div>
 
         <AutorNota />
