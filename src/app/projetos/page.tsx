@@ -9,7 +9,8 @@ const DESCRICAO =
   'Sistemas e produtos digitais construídos para operações reais: SaaS próprios, ferramentas internas e sites profissionais.';
 
 export const metadata: Metadata = {
-  title: 'Projetos',
+  // Mesma razão de /notas: o <h1> é a palavra seca, o título carrega o termo.
+  title: 'Projetos — SaaS e sistemas para operação',
   description: DESCRICAO,
   alternates: { canonical: '/projetos' },
   openGraph: {

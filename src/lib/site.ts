@@ -5,15 +5,24 @@ export const site = {
   nomeCompleto: 'Leandro Oliveira',
   papel: 'Desenvolvedor full stack · Produto e operações',
   /**
-   * O papel sem o complemento, para caber em `<title>`.
+   * O papel calibrado para `<title>`.
    *
-   * `papel` inteiro estoura os ~60 caracteres que o Google mostra quando somado
-   * ao nome. Aqui é onde a busca lê; o complemento continua vivo na descrição,
-   * no `jobTitle` do JSON-LD e no rodapé do card social.
+   * `papel` inteiro somado ao nome dá 65 caracteres e o Google corta por volta
+   * de 60. Cortar até "Desenvolvedor full stack" dava 43 e desperdiçava um
+   * terço do campo. Com "e operações" o título fica em 55 — dentro da faixa e
+   * carregando a palavra que separa este portfólio dos outros. O `papel`
+   * completo continua no `jobTitle` do JSON-LD e no rodapé do card social.
    */
-  papelCurto: 'Desenvolvedor full stack',
+  papelCurto: 'Desenvolvedor full stack e operações',
+  /**
+   * Só metadado: alimenta a `meta description`, o `og:description` e o
+   * `llms.txt`. Não aparece como texto na página, então pode usar os ~155
+   * caracteres que o Google mostra sem negociar com o design. A primeira frase
+   * é a tese; a segunda diz o que existe de concreto, que é o que decide o
+   * clique quando o resultado aparece ao lado de outros seis.
+   */
   descricao:
-    'Produtos digitais e sistemas para operações reais, da descoberta ao código em produção.',
+    'Produtos digitais e sistemas para operações reais, da descoberta ao código em produção. SaaS próprios, ferramentas internas e integrações.',
   /**
    * Quem assina as notas. Fica aqui, e não no componente, porque o mesmo texto
    * alimenta o rodapé de autoria e a descrição do `Person` em JSON-LD — e uma

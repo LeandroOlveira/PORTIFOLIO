@@ -6,16 +6,27 @@ import { Selo } from '@/components/Selo';
 const DESCRICAO =
   'Reflexões sobre produto, integração, IA aplicada e software em operação.';
 
+/*
+ * A descrição da página é mais longa que a que aparece na tela: o campo mostra
+ * ~155 caracteres e o parágrafo de abertura usa 72. Quem lê o resultado na
+ * busca ainda não sabe de quem são as notas nem sobre o que elas versam de
+ * fato — a frase visível supõe um contexto que o resultado não tem.
+ */
+const META_DESCRICAO =
+  'Reflexões sobre produto, integração, IA aplicada e software em operação, escritas por quem constrói e mantém esses sistemas.';
+
 export const metadata: Metadata = {
-  title: 'Notas',
-  description: DESCRICAO,
+  // "Notas" sozinho dá 24 caracteres com o nome e não diz sobre o quê. O <h1>
+  // da página continua sendo a palavra seca — o título é onde a busca lê.
+  title: 'Notas sobre produto e operação',
+  description: META_DESCRICAO,
   alternates: { canonical: '/notas' },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
     url: '/notas',
     title: 'Notas',
-    description: DESCRICAO,
+    description: META_DESCRICAO,
   },
 };
 
