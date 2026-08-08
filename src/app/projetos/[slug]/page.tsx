@@ -29,16 +29,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
    */
   const titulo = `${projeto.titulo} — ${projeto.categoria}`;
 
+  /*
+   * O `resumo` sozinho dava 40 a 65 caracteres num campo que mostra ~155 — o
+   * resultado do projeto ficava de fora justamente do texto que decide o clique
+   * quando o link aparece ao lado de outros seis. Os dois já estão escritos e
+   * são a mesma verdade: o que o projeto é, e o que ele mudou. Emendá-los põe a
+   * descrição na faixa de 107 a 141 sem inventar copy nem mexer no que a página
+   * mostra — na tela o `resumo` continua sozinho, como subtítulo.
+   */
+  const descricao = `${projeto.resumo} ${projeto.resultado}`;
+
   return {
     title: titulo,
-    description: projeto.resumo,
+    description: descricao,
     alternates: { canonical: caminho },
     openGraph: {
       type: 'article',
       locale: 'pt_BR',
       url: caminho,
       title: titulo,
-      description: projeto.resumo,
+      description: descricao,
       ...(capa ? { images: [capa] } : {}),
     },
   };

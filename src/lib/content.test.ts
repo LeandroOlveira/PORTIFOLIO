@@ -73,6 +73,20 @@ describe('project content', () => {
     }
   });
 
+  it('composes a project meta description that fills the SERP snippet', () => {
+    for (const projeto of getProjetos()) {
+      // O mesmo par que `generateMetadata` emenda: o que o projeto é, e o que
+      // ele mudou. O `resumo` sozinho dava 40 a 65 num campo que mostra ~155.
+      const descricao = `${projeto.resumo} ${projeto.resultado}`;
+      expect(descricao.length, `${projeto.slug}: ${descricao.length} chars`).toBeGreaterThanOrEqual(
+        100,
+      );
+      expect(descricao.length, `${projeto.slug}: ${descricao.length} chars`).toBeLessThanOrEqual(
+        155,
+      );
+    }
+  });
+
   it('loads safe visual proof for the four operational products', () => {
     const images = Object.fromEntries(getProjetos().map(({ slug, imagem }) => [slug, imagem]));
 

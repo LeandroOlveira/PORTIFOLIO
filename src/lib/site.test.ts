@@ -10,6 +10,18 @@ describe('site identity', () => {
     expect(site.instagram).toBe('https://www.instagram.com/lhs.oliveira');
   });
 
+  it('fills the title and description fields the SERP actually shows', () => {
+    // O Google corta o título por volta de 60 caracteres e a descrição por
+    // volta de 155. Ficar muito abaixo não é penalidade — é campo desperdiçado
+    // no único lugar onde o resultado compete com outros seis.
+    const titulo = `${site.nomeCompleto} — ${site.papelCurto}`;
+    expect(titulo.length).toBeGreaterThanOrEqual(50);
+    expect(titulo.length).toBeLessThanOrEqual(60);
+
+    expect(site.descricao.length).toBeGreaterThanOrEqual(120);
+    expect(site.descricao.length).toBeLessThanOrEqual(155);
+  });
+
   it('builds a real encoded WhatsApp link', () => {
     const url = new URL(whatsappLink('Olá, Leandro.'));
     expect(`${url.origin}${url.pathname}`).toBe('https://wa.me/5544997762271');
