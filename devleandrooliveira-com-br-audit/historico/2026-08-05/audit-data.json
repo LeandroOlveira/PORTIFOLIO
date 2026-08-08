@@ -1,0 +1,272 @@
+{
+  "summary": {
+    "health_score": 47,
+    "business_type": "Portfólio pessoal / desenvolvedor full stack freelancer (pré-lançamento, domínio ainda não comprado)",
+    "top_findings": [
+      "og:image aponta para http://localhost:3000 em produção (NEXT_PUBLIC_SITE_URL não configurada na Vercel)",
+      "sitemap.xml e robots.txt declaram o domínio lhsoliveira.dev, que não é o domínio real em produção nem o devleandrooliveira.com.br planejado",
+      "Zero dados estruturados (JSON-LD) em qualquer página",
+      "CLS de 0,42 (ruim) causado pela troca de modo documento→corredor em Corredor.tsx, que roda após o primeiro paint",
+      "As 7 páginas de projeto têm 48-56 palavras de corpo cada, com estrutura e H2 quase idênticos entre si (template sameness)"
+    ],
+    "quick_wins": [
+      "Definir NEXT_PUBLIC_SITE_URL na Vercel (15 min) — resolve og:image quebrado",
+      "Corrigir site.url em src/lib/site.ts (5 min) — resolve sitemap/robots com domínio errado",
+      "Renderizar o link do GitHub já cadastrado em site.ts mas nunca usado (10 min)",
+      "Sobrescrever openGraph/twitter em projetos/[slug]/page.tsx com dados do projeto específico (1-2h)",
+      "Trocar useEffect por useLayoutEffect na detecção de WebGL em Corredor.tsx (1-2h) — elimina a maior causa de CLS"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 55,
+      "what_works": [
+        "SSR/SSG completo — todo conteúdo essencial no HTML bruto, sem depender de JS",
+        "robots.txt liberal, nenhum crawler de IA bloqueado",
+        "sitemap.xml estruturalmente válido com lastmod correto por página",
+        "HTTPS com HSTS ativo"
+      ],
+      "findings": [
+        {
+          "title": "sitemap.xml e robots.txt apontam para domínio não utilizado (lhsoliveira.dev)",
+          "severity": "Critical",
+          "description": "site.url em src/lib/site.ts está hardcoded para https://lhsoliveira.dev, um domínio nunca comprado. Todas as URLs do sitemap e o Sitemap: do robots.txt usam esse valor, divergindo do domínio real em produção (Vercel) e do planejado (devleandrooliveira.com.br).",
+          "recommendation": "Atualizar site.url para o domínio real de produção agora; migrar quando devleandrooliveira.com.br for comprado."
+        },
+        {
+          "title": "Nenhuma página declara <link rel=\"canonical\">",
+          "severity": "Critical",
+          "description": "Confirmado por grep no HTML de home e de página de projeto em produção — ausente em ambas.",
+          "recommendation": "Adicionar alternates.canonical em layout.tsx e em cada generateMetadata de rota dinâmica."
+        },
+        {
+          "title": "Faltam headers de segurança (CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)",
+          "severity": "Medium",
+          "description": "curl -I na home não retorna nenhum desses headers, apenas HSTS (herdado da Vercel).",
+          "recommendation": "Adicionar via headers() em next.config.ts."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 45,
+      "what_works": [
+        "Voz autoral consistente, direta, sem sinais de geração por IA de baixa qualidade",
+        "Provas reais de trabalho entregue (capturas de tela, timeline de carreira concreta)",
+        "Legibilidade boa em português: frases curtas, parágrafos de 2-4 linhas"
+      ],
+      "findings": [
+        {
+          "title": "Template sameness nas 7 páginas de projeto",
+          "severity": "High",
+          "description": "Todas seguem exatamente o mesmo esqueleto de dois H2, o segundo sempre \"O que ele demonstra\", com corpo de 48-56 palavras cada.",
+          "recommendation": "Variar profundidade por projeto conforme complexidade real; trocar o segundo H2 fixo por pergunta específica de cada projeto."
+        },
+        {
+          "title": "Thin content nas páginas de projeto",
+          "severity": "High",
+          "description": "48-56 palavras de corpo por projeto, muito abaixo do piso de 400-800 palavras esperado para um estudo de caso.",
+          "recommendation": "Adicionar seção 'Como funciona'/'Decisão técnica' com 2-3 parágrafos concretos por projeto."
+        },
+        {
+          "title": "Tempo de leitura declarado não bate com a contagem real de palavras",
+          "severity": "High",
+          "description": "As 3 notas têm 172-233 palavras (50-70s de leitura a ~200 palavras/min em português), mas o frontmatter declara 3-4 min.",
+          "recommendation": "Corrigir o rótulo de leitura para o tempo real, ou expandir o conteúdo para justificar o tempo declarado."
+        },
+        {
+          "title": "Zero dados estruturados (mesmo achado da categoria Schema, com peso de conteúdo)",
+          "severity": "High",
+          "description": "Nenhum Person, Article/BlogPosting, CreativeWork ou BreadcrumbList em nenhuma página.",
+          "recommendation": "Ver categoria Schema para detalhamento por tipo."
+        },
+        {
+          "title": "Ausência de bio de autor nas notas",
+          "severity": "Medium",
+          "description": "notas/[slug]/page.tsx não renderiza nome, cargo ou link do autor em nenhum lugar do artigo.",
+          "recommendation": "Adicionar bloco de autor reaproveitando dados já centralizados em src/lib/site.ts."
+        },
+        {
+          "title": "Alt text genérico e templado nas capturas de projeto",
+          "severity": "Medium",
+          "description": "Padrão \"${titulo}, tela ${indice} de ${total}\" não descreve o que a tela mostra, desperdiçando prova visual real.",
+          "recommendation": "Escrever alt text específico por captura descrevendo a funcionalidade mostrada."
+        },
+        {
+          "title": "Métricas quantificadas ausentes em 6 dos 7 projetos",
+          "severity": "Medium",
+          "description": "Só Roadmap cita um número concreto (\"operação de aproximadamente 80 pessoas\"); os demais são inteiramente qualitativos.",
+          "recommendation": "Incluir ao menos um número real por projeto, seguindo o padrão já existente no Roadmap."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 50,
+      "what_works": [
+        "Título e meta description únicos por página",
+        "Um único H1 por página, hierarquia H2/H3 correta sem pulos de nível",
+        "Notas já sobrescrevem openGraph corretamente com dados específicos"
+      ],
+      "findings": [
+        {
+          "title": "generateMetadata de projetos/[slug] não sobrescreve openGraph/twitter",
+          "severity": "Critical",
+          "description": "og:title de qualquer página de projeto (ex.: Alinnea) mostra o título genérico do site inteiro, não o do projeto.",
+          "recommendation": "Replicar o padrão já usado em notas/[slug]/page.tsx, incluindo a primeira imagem da galeria como og:image."
+        },
+        {
+          "title": "Meta descriptions muito curtas",
+          "severity": "Medium",
+          "description": "56-100 caracteres nas páginas testadas, bem abaixo dos ~155-160 recomendados para aproveitar o espaço de SERP.",
+          "recommendation": "Expandir incluindo um diferencial concreto de cada projeto."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Dados Estruturados",
+      "score": 10,
+      "what_works": [
+        "HTML semântico correto (dl/dt/dd para fatos de projeto, aria-label em listas) facilita a adição de schema depois"
+      ],
+      "findings": [
+        {
+          "title": "Zero JSON-LD em qualquer página",
+          "severity": "Critical",
+          "description": "Confirmado por grep em src/ e no HTML de produção — application/ld+json não aparece nenhuma vez.",
+          "recommendation": "Adicionar Person/ProfilePage no layout raiz, Article/BlogPosting nas notas, CreativeWork nos projetos, BreadcrumbList nas rotas dinâmicas. Fonte de dados já pronta em src/lib/content.ts e src/lib/carreira.ts."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 55,
+      "what_works": [
+        "LCP excelente: 287ms",
+        "Lighthouse Best Practices 100/100, Accessibility 96/100",
+        "Imagens da galeria com width/height explícitos, prevenindo CLS de carregamento de imagem"
+      ],
+      "findings": [
+        {
+          "title": "CLS ruim (0,42 em trace real; 0,23 no Lighthouse)",
+          "severity": "High",
+          "description": "Maior salto de layout (score 0,4250 isolado) começa 9ms depois do LCP finalizar — coincide com o useEffect de detecção de WebGL em Corredor.tsx trocando o modo documento→corredor e substituindo toda a árvore DOM depois do primeiro paint.",
+          "recommendation": "Trocar useEffect por useLayoutEffect na detecção de WebGL para decidir o modo antes do navegador pintar."
+        },
+        {
+          "title": "Falha de contraste de cor nos itens da seção Stack (Lighthouse)",
+          "severity": "Medium",
+          "description": "'.pilha-item' tem opacity: calc(0.12 + var(--montagem) * 0.88) — antes de entrar na janela de rolagem que dispara a animação, o texto fica a 12% de opacidade, contraste insuficiente.",
+          "recommendation": "Elevar o piso de opacidade de repouso (ex.: 0,35-0,4) ou aceitar como comportamento documentado da coreografia de entrada."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 50,
+      "what_works": [
+        "Conteúdo 100% SSR, legível por qualquer crawler sem executar JS",
+        "Fatos de projeto isolados em dl/dt/dd — padrão preferido por extratores de IA",
+        "robots.txt não bloqueia nenhum crawler de IA (GPTBot, ClaudeBot, PerplexityBot cobertos pelo wildcard)"
+      ],
+      "findings": [
+        {
+          "title": "Ausência de llms.txt",
+          "severity": "High",
+          "description": "404 confirmado. Site pequeno o suficiente (7 projetos + 3 notas) para caber em ~40 linhas.",
+          "recommendation": "Gerar via route.ts reaproveitando getProjetos()/getNotas() de src/lib/content.ts, sem duplicar conteúdo."
+        },
+        {
+          "title": "Parágrafos de prosa curtos demais para citação direta",
+          "severity": "Medium",
+          "description": "30-55 palavras por parágrafo, abaixo da janela ótima de 134-167 palavras recomendada para citação por IA.",
+          "recommendation": "Combinar/expandir parágrafos de notas e corpo de projeto para blocos de resposta mais completos."
+        },
+        {
+          "title": "Headings sempre declarativos, nunca formulados como pergunta",
+          "severity": "Low",
+          "description": "Nenhum H2/H3 do site bate diretamente com o formato de query de busca.",
+          "recommendation": "Considerar 1 seção de FAQ curta com FAQPage schema."
+        }
+      ]
+    },
+    {
+      "name": "Imagens",
+      "score": 65,
+      "what_works": [
+        "100% das imagens têm atributo alt (zero <img> sem alt na home ou galerias)",
+        "width/height presentes em todas as imagens da galeria, lidos do arquivo em build"
+      ],
+      "findings": [
+        {
+          "title": "radar-fiscal.png com 712KB, muito acima das demais capturas (52-207KB)",
+          "severity": "Low",
+          "description": "Desproporção de tamanho não justificada pela resolução (1821×864, similar às outras).",
+          "recommendation": "Reexportar/comprimir."
+        },
+        {
+          "title": "Alt text genérico (ver também em Content Quality)",
+          "severity": "Medium",
+          "description": "Padrão templado não descreve o conteúdo real de cada tela.",
+          "recommendation": "Escrever alt text específico por captura."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Fase 1: Correções críticas",
+        "timeframe": "Antes de qualquer divulgação do link",
+        "items": [
+          "Definir NEXT_PUBLIC_SITE_URL na Vercel",
+          "Corrigir site.url em src/lib/site.ts",
+          "Adicionar alternates.canonical em todas as rotas",
+          "Sobrescrever openGraph/twitter em projetos/[slug]/page.tsx",
+          "Validar og:image pós-deploy"
+        ]
+      },
+      {
+        "name": "Fase 2: Melhorias de alto impacto",
+        "timeframe": "Semana 1-2",
+        "items": [
+          "JSON-LD Person no layout raiz",
+          "JSON-LD Article/BlogPosting nas notas",
+          "JSON-LD CreativeWork nos projetos",
+          "Renderizar link do GitHub",
+          "useLayoutEffect na detecção de WebGL (corrige CLS)",
+          "Revisar piso de opacidade de .pilha-item"
+        ]
+      },
+      {
+        "name": "Fase 3: Conteúdo e autoridade",
+        "timeframe": "Mês 1-2",
+        "items": [
+          "Expandir as 7 páginas de projeto",
+          "Adicionar métricas quantificadas",
+          "Corrigir rótulos de tempo de leitura",
+          "Bio de autor nas notas",
+          "Alt text específico por captura",
+          "Criar /llms.txt",
+          "Declarar bots de IA explicitamente em robots.ts"
+        ]
+      },
+      {
+        "name": "Fase 4: Monitoramento e iteração",
+        "timeframe": "Contínuo",
+        "items": [
+          "Configurar devleandrooliveira.com.br na Vercel quando comprado, com redirect 301",
+          "Cadastrar Google Search Console e Bing Webmaster Tools",
+          "Reexportar radar-fiscal.png",
+          "Adicionar headers de segurança",
+          "Repetir auditoria após Fase 1 e 2"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

@@ -30,20 +30,29 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.NODE_ENV === 'production' ? site.url : 'http://localhost:3000');
 
+/*
+ * Quem procura este site procura por "Leandro Oliveira", não por "lhs.oliveira"
+ * — o handle é marca visual, não termo de busca, e antes ele ocupava sozinho os
+ * doze títulos do site enquanto o nome real só existia no JSON-LD. A marca
+ * continua no cabeçalho, no card social e como `alternateName` da entidade; o
+ * que muda é o campo que o buscador pesa mais.
+ */
+const tituloPadrao = `${site.nomeCompleto} — ${site.papelCurto}`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${site.nome} — ${site.papel}`,
-    template: `%s — ${site.nome}`,
+    default: tituloPadrao,
+    template: `%s — ${site.nomeCompleto}`,
   },
   description: site.descricao,
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    siteName: site.nome,
+    siteName: site.nomeCompleto,
     url: '/',
-    title: `${site.nome} — ${site.papel}`,
+    title: tituloPadrao,
     description: site.descricao,
   },
   twitter: { card: 'summary_large_image' },

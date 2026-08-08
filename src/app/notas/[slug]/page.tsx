@@ -6,6 +6,7 @@ import { dataCurta, getNota, getNotas } from '@/lib/content';
 import { Selo } from '@/components/Selo';
 import { AutorNota } from '@/components/AutorNota';
 import { Botao } from '@/components/Botao';
+import { ImagemDoArtigo } from '@/components/ImagemDoArtigo';
 import { JsonLd } from '@/components/JsonLd';
 import { site, whatsappLink } from '@/lib/site';
 
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: caminho },
     openGraph: {
       type: 'article',
+      locale: 'pt_BR',
       url: caminho,
       title: n.titulo,
       description: n.resumo,
@@ -48,8 +50,11 @@ export default async function Nota({ params }: Props) {
     headline: n.titulo,
     description: n.resumo,
     datePublished: n.data,
-    dateModified: n.data,
+    dateModified: n.atualizado ?? n.data,
     inLanguage: site.locale,
+    // O mesmo card que o WhatsApp mostra. A diretriz de Article pede imagem, e
+    // gerar uma segunda só para o JSON-LD seria manter duas verdades.
+    image: [`${endereco}/opengraph-image`],
     mainEntityOfPage: { '@type': 'WebPage', '@id': endereco },
     author: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
     publisher: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
@@ -88,6 +93,13 @@ export default async function Nota({ params }: Props) {
           <span className="meta text-mid">
             <time dateTime={n.data}>{dataCurta(n.data)}</time>
           </span>
+          {/* A revisão só aparece quando existe: uma linha "atualizado em" com a
+              mesma data da publicação diz ao leitor que nada foi atualizado. */}
+          {n.atualizado ? (
+            <span className="meta text-dim">
+              atualizado em <time dateTime={n.atualizado}>{dataCurta(n.atualizado)}</time>
+            </span>
+          ) : null}
           {n.leitura ? (
             <span className="meta text-mid">{n.leitura} de leitura</span>
           ) : null}
@@ -99,7 +111,7 @@ export default async function Nota({ params }: Props) {
         </div>
 
         <div className="article-prose mt-12 max-w-[68ch]">
-          <MDXRemote source={n.corpo} />
+          <MDXRemote source={n.corpo} components={{ img: ImagemDoArtigo }} />
         </div>
 
         <AutorNota />
@@ -108,8 +120,19 @@ export default async function Nota({ params }: Props) {
           <p className="title-tight max-w-[26ch] text-[1.5rem] text-paper sm:text-[1.875rem]">
             Tem um processo aí que se parece com isso?
           </p>
-          <div className="mt-7">
+          <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
             <Botao href={whatsappLink()}>Chamar no WhatsApp</Botao>
+            {/* A nota argumenta; os projetos são a prova. Sem este link o texto
+                terminava sem lugar para onde mandar quem se convenceu. */}
+            <Link
+              href="/projetos"
+              className="meta group inline-flex items-center gap-3 py-2 text-mid transition-colors hover:text-mark"
+            >
+              Ver os projetos
+              <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                &rarr;
+              </span>
+            </Link>
           </div>
         </div>
       </div>

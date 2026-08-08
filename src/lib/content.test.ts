@@ -1,11 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { getNotas, getProjetos, parseProjeto, tempoDeLeitura } from '@/lib/content';
+import {
+  getNotas,
+  getProjetos,
+  medirImagemPublica,
+  parseProjeto,
+  tempoDeLeitura,
+} from '@/lib/content';
 
 const valid = {
   titulo: 'Alinnea',
   resumo: 'CRM para psicólogos.',
+  categoria: 'CRM para psicólogos',
   problema: 'Rotinas clínicas espalhadas.',
   resultado: 'Agenda, prontuário e comunicação reunidos.',
   status: 'publicado',
@@ -52,6 +59,18 @@ describe('project content', () => {
       'gabriela-lorenson',
       'ebano',
     ]);
+  });
+
+  it('gives every project a title that says what it is, inside the ~60 chars Google shows', () => {
+    for (const projeto of getProjetos()) {
+      expect(projeto.categoria).toBeTruthy();
+      // O nome próprio sozinho não é buscável: a categoria precisa acrescentar
+      // termo, não repetir o título.
+      expect(projeto.categoria.toLowerCase()).not.toBe(projeto.titulo.toLowerCase());
+
+      const titulo = `${projeto.titulo} — ${projeto.categoria} — Leandro Oliveira`;
+      expect(titulo.length).toBeLessThanOrEqual(60);
+    }
   });
 
   it('loads safe visual proof for the four operational products', () => {
@@ -107,6 +126,38 @@ describe('project content', () => {
       expect(nota.leitura).toBe(tempoDeLeitura(nota.corpo));
       expect(nota.leitura).toMatch(/^\d+ min$/);
     }
+  });
+
+  it('only announces a revision that happened after publication', () => {
+    for (const nota of getNotas()) {
+      if (!nota.atualizado) continue;
+      expect(nota.atualizado > nota.data).toBe(true);
+      expect(nota.atualizado).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+
+  it('describes every image inside an article and hosts it where it can be measured', () => {
+    // `![alt](src)` — sem alt a imagem some do leitor de tela e da busca por
+    // imagem; hospedada fora de `public/` não há como medi-la no build, e a
+    // página volta a pular quando ela chega.
+    const imagem = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+
+    for (const nota of getNotas()) {
+      for (const [, alt, src] of nota.corpo.matchAll(imagem)) {
+        expect(alt.trim(), `${nota.slug}: imagem ${src} sem alt`).not.toBe('');
+        expect(src, `${nota.slug}: ${src} precisa vir de public/`).toMatch(/^\//);
+        expect(medirImagemPublica(src), `${nota.slug}: ${src} não encontrada`).toBeDefined();
+      }
+    }
+  });
+
+  it('refuses to measure outside public/', () => {
+    expect(medirImagemPublica('/../next.config.ts')).toBeUndefined();
+    expect(medirImagemPublica('https://exemplo.com/foto.png')).toBeUndefined();
+    expect(medirImagemPublica('/projetos/alinnea.png')).toMatchObject({
+      largura: expect.any(Number),
+      altura: expect.any(Number),
+    });
   });
 
   it('keeps editorial headings free of the discarded cinema labels', () => {
