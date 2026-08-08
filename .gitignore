@@ -11,4 +11,12 @@ next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo
 .impeccable/live
+.impeccable/hook.cache.json
 .playwright-mcp
+
+# Auditorias SEO: o relatório em markdown é o registro e vai versionado.
+# O que o gerador cospe a partir dele, não — HTML e PNG de gráfico se
+# refazem com `/seo google report full` e só engordam o histórico.
+*-audit/**/*.html
+*-audit/charts/
+*-audit/**/.impeccable/

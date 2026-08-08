@@ -1,0 +1,334 @@
+{
+  "meta": {
+    "domain": "devleandrooliveira.com.br",
+    "url": "https://devleandrooliveira.com.br/",
+    "audit_date": "2026-08-08",
+    "previous_audit": "2026-08-05 (47/100) — arquivada em historico/2026-08-05/",
+    "pages_crawled": 12,
+    "pages_in_sitemap": 12,
+    "coverage": "100%",
+    "limitations": [
+      "Runtime Python do plugin nao provisionado (claude-seo doctor: ready=false) — nenhuma ferramenta empacotada executou",
+      "Sem dado de campo CrUX: cota da API PageSpeed Insights sem chave esgotada e dominio novo demais para amostra",
+      "LCP e INP nao medidos — o painel do navegador nao registrou paint timing",
+      "Sem screenshots — painel do navegador nao exibido, pagina nao compunha frames",
+      "Sem Search Console, GA4 ou dados de backlink (sem credenciais, dominio sem historico)"
+    ]
+  },
+  "summary": {
+    "health_score": 71,
+    "previous_health_score": 47,
+    "business_type": "Portfolio pessoal / desenvolvedor autonomo (hibrido agency + publisher), conversao por WhatsApp",
+    "top_findings": [
+      "\"Leandro Oliveira\" nao aparece em nenhum <title> do site — todos usam o handle \"lhs.oliveira\"",
+      "Os 7 titulos de projeto nao contem nenhuma palavra-chave descritiva (20-32 de ~60 chars usados)",
+      "Nenhuma nota tem og:image — a rota /notas/[slug]/opengraph-image retorna 404",
+      "Linkagem interna quase nula: paginas de projeto emitem 1 link; /projetos retorna 404",
+      "CreativeWork.url aponta para o produto externo em vez da propria pagina"
+    ],
+    "quick_wins": [
+      "Usar nomeCompleto no template de titulo (site.ts:4-5) — 20 min",
+      "Redirect 301 www -> apex no painel Vercel — 5 min",
+      "Remover keywords:[] vazio e corrigir CreativeWork.url — 30 min",
+      "og:locale pt_BR no metadata compartilhado — 5 min",
+      "X-Content-Type-Options e Referrer-Policy em next.config.ts — 15 min"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "weight": 22,
+      "score": 82,
+      "previous_score": 55,
+      "what_works": [
+        "Canonical auto-referencial em 12/12 URLs",
+        "robots.txt e sitemap.xml com o dominio correto; 12 URLs, todas 200",
+        "meta robots index,follow e lang=pt-BR em todas as paginas",
+        "404 real (nao soft-404); HTTP redireciona para HTTPS",
+        "SSR/prerender: 748 palavras no HTML bruto da home apesar do WebGL",
+        "X-Nextjs-Prerender: 1, X-Vercel-Cache: HIT, TTFB 14-94ms, HSTS max-age=63072000"
+      ],
+      "findings": [
+        {
+          "title": "www responde 200 em vez de 301 para o apex",
+          "severity": "Medium",
+          "description": "https://www.devleandrooliveira.com.br/ serve o mesmo conteudo com status 200. O canonical aponta para o apex, entao nao ha indexacao duplicada, mas ha rastreio desperdicado e sinal dividido.",
+          "recommendation": "Configurar redirect 301 www -> apex no painel Vercel (Domains -> Redirect to). Falsificacao: curl -o /dev/null -w '%{http_code}' na URL www deve dar 301."
+        },
+        {
+          "title": "Headers de seguranca ausentes",
+          "severity": "Medium",
+          "description": "Presente apenas Strict-Transport-Security. Ausentes: Content-Security-Policy, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, X-Frame-Options.",
+          "recommendation": "Adicionar nosniff e Referrer-Policy: strict-origin-when-cross-origin em next.config.ts (risco zero). CSP por ultimo, com teste — o WebGL exige cuidado."
+        },
+        {
+          "title": "/projetos retorna 404 — nao existe hub de categoria",
+          "severity": "High",
+          "description": "Existem 7 paginas /projetos/[slug] e nenhum indice. O cluster de conteudo comercialmente mais relevante nao tem pagina de categoria indexavel.",
+          "recommendation": "Criar /projetos listando os sete; adicionar ao sitemap e ao nivel intermediario do BreadcrumbList dos projetos."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "weight": 23,
+      "score": 68,
+      "previous_score": 45,
+      "what_works": [
+        "Paginas de projeto de 48-56 para 237-348 palavras; template sameness eliminado",
+        "Sete projetos reais, quatro com link para produto no ar — experiencia demonstrada, nao declarada",
+        "Autor identificado: nome, e-mail, WhatsApp, GitHub, LinkedIn, Instagram; notas datadas com autoria",
+        "Tempo de leitura falso removido do frontmatter",
+        "Zero duplicacao: 12 titulos unicos, 12 descriptions unicas, nenhum bloco de corpo repetido"
+      ],
+      "findings": [
+        {
+          "title": "Notas curtas e em numero insuficiente",
+          "severity": "Low",
+          "description": "Tres notas de ~200-260 palavras de corpo. Funcionam como opiniao; nao estabelecem autoria tematica em nenhum assunto.",
+          "recommendation": "Cadencia de duas notas/mes, 600-900 palavras, ancoradas nos problemas que os projetos ja resolvem. As premissas existentes sao boas e subdesenvolvidas — expandir em vez de comecar do zero."
+        },
+        {
+          "title": "Metricas concretas quase ausentes nos projetos",
+          "severity": "Low",
+          "description": "So o Roadmap tem numero real (~80 pessoas). Os outros seis sao qualitativos.",
+          "recommendation": "Um dado verificavel por projeto (usuarios, tempo economizado, documentos processados). E o reforco de E-E-A-T mais barato disponivel."
+        },
+        {
+          "title": "/notas sem contexto editorial",
+          "severity": "Low",
+          "description": "105 palavras: um H1 e tres links.",
+          "recommendation": "Paragrafo dizendo o que sao as notas, para quem e com que frequencia saem."
+        },
+        {
+          "title": "Authoritativeness fraca — sem citacao externa",
+          "severity": "Info",
+          "description": "Dominio novo, nenhum backlink conhecido, nenhuma mencao de terceiro que corrobore o que o site diz sobre si. GitHub linkado ajuda.",
+          "recommendation": "Nao ha correcao tecnica. O caminho e publicar e ser citado."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "weight": 20,
+      "score": 58,
+      "previous_score": 50,
+      "what_works": [
+        "12 titulos unicos, apenas um acima de 60 chars",
+        "12 meta descriptions unicas e bem escritas (dizem o problema resolvido)",
+        "H1 unico em 12/12, hierarquia sem saltos, H2 descritivos e autorais",
+        "og:title/description/type/url proprios em 12/12; twitter:card summary_large_image em 12/12"
+      ],
+      "findings": [
+        {
+          "title": "\"Leandro Oliveira\" nao aparece em nenhum <title> nem <h1>",
+          "severity": "High",
+          "description": "Os 12 titulos usam o sufixo '— lhs.oliveira'. O JSON-LD declara name: 'Leandro Oliveira', o llms.txt abre com o nome completo, o dominio e devleandrooliveira.com.br — mas o nome nao esta em nenhum titulo. Causa: src/lib/site.ts:4 alimenta o title.template com 'lhs.oliveira'; o campo nomeCompleto na linha 5 nao e usado. Para portfolio pessoal, a consulta de maior intencao e o proprio nome; 'lhs.oliveira' e handle de Instagram sem volume de busca.",
+          "recommendation": "Usar nomeCompleto no template de titulo e manter lhs.oliveira como alternateName (ja esta no JSON-LD). Falsificacao: site:devleandrooliveira.com.br leandro oliveira no Google 2 semanas apos indexacao — se nenhum titulo contiver o nome, nao subiu."
+        },
+        {
+          "title": "Os 7 titulos de projeto nao contem palavra-chave descritiva",
+          "severity": "High",
+          "description": "Alinnea (22 chars), Ebano (20), DocHub (21), PetGest (22), Roadmap (22), Radar Fiscal (27), Gabriela Lorenson (32) — todos '{Nome} — lhs.oliveira'. 20-32 de ~60 chars usados, gastos em substantivos proprios desconhecidos. A categoria ja esta na meta description ('CRM para psicologos com agenda, prontuario e automacoes') — falta leva-la para o campo de maior peso.",
+          "recommendation": "Padrao '{nome} — {categoria} | Leandro Oliveira', ex.: 'Alinnea — CRM para psicologos | Leandro Oliveira' (48 chars). Dados ja existem em src/lib/content.ts. Falsificacao: se apos 30 dias o GSC nao registrar impressao para consultas de categoria, o problema e de conteudo, nao de titulo."
+        },
+        {
+          "title": "Linkagem interna quase inexistente",
+          "severity": "High",
+          "description": "Links internos emitidos: home 10, /notas 4, notas 2, paginas de projeto 1 (apenas '/'). Grafo estrela de um salto: as 7 paginas de projeto nao passam autoridade e nao recebem de nenhuma irma. Nao ha link projeto<->projeto, projeto->nota nem nota->projeto.",
+          "recommendation": "Hub /projetos + bloco 'outros projetos' (2-3 irmaos) em cada pagina de projeto + link cruzado nota<->projeto. Falsificacao: recontar links por pagina apos deploy; paginas de projeto devem sair de 1 para 4+."
+        },
+        {
+          "title": "og:locale apenas na home",
+          "severity": "Medium",
+          "description": "A home declara og:locale pt_BR; as outras 11 paginas nao declaram nada.",
+          "recommendation": "Adicionar ao metadata compartilhado — uma linha."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "weight": 10,
+      "score": 75,
+      "previous_score": 10,
+      "what_works": [
+        "Person em 12/12 paginas com sameAs (3 perfis) e knowsAbout explicitos",
+        "CreativeWork + BreadcrumbList nas 7 paginas de projeto",
+        "BlogPosting + BreadcrumbList nas 3 notas, com datePublished, dateModified, inLanguage, mainEntityOfPage, author e publisher",
+        "Zero erro de parse de JSON em 12 paginas"
+      ],
+      "findings": [
+        {
+          "title": "CreativeWork.url aponta para o produto externo",
+          "severity": "Medium",
+          "description": "Em /projetos/alinnea o JSON-LD declara url: 'https://alinnea.com.br/'. Mesmo padrao nos outros seis. Pelo vocabulario Schema.org, url e a URL canonica da entidade descrita naquela pagina; apontar para fora diz ao Google que a pagina nao e sobre si mesma. Ha ainda keywords: [] (array vazio) e falta mainEntityOfPage/@id — as notas fazem certo, os projetos nao.",
+          "recommendation": "url -> URL da pagina; produto ao vivo em sameAs (ou workExample); remover keywords vazio; adicionar mainEntityOfPage. Falsificacao: Rich Results Test — o url reportado deve ser o de devleandrooliveira.com.br."
+        },
+        {
+          "title": "BlogPosting sem propriedade image",
+          "severity": "Medium",
+          "description": "As tres notas tem BlogPosting bem formado mas sem image. A diretriz de Article do Google pede imagem.",
+          "recommendation": "Resolve junto com a criacao do opengraph-image das notas — a mesma imagem serve aos dois."
+        },
+        {
+          "title": "FAQPage nao deve ser adicionado",
+          "severity": "Info",
+          "description": "O Google aposentou os rich results de FAQ para todos os sites em 07/05/2026. Nao ha beneficio de SERP e nao ha evidencia confirmada de ganho de citacao em LLM.",
+          "recommendation": "Nao implementar. Se houver Q&A genuino de usuario no futuro, usar QAPage."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "weight": 10,
+      "score": 74,
+      "previous_score": 55,
+      "what_works": [
+        "CLS 0,000 medido em 3 carregamentos (era 0,42) — corrigido via useLayoutEffect em Corredor.tsx:35",
+        "TTFB 14-94ms, DOMContentLoaded 43-137ms, 13 requisicoes na home",
+        "X-Nextjs-Prerender: 1 e X-Vercel-Cache: HIT",
+        "Fontes com rel=preload e crossorigin",
+        "Home nao carrega nenhuma imagem no modo WebGL (0 requisicoes medidas)"
+      ],
+      "findings": [
+        {
+          "title": "LCP e INP nao medidos — sem dado de campo",
+          "severity": "Info",
+          "description": "O painel do navegador nao registrou entradas de paint timing (recursos vindo de cache de disco) e a cota da API PageSpeed Insights sem chave estava esgotada. O dominio e novo demais para amostra CrUX.",
+          "recommendation": "Reavaliar quando o Search Console acumular dado de campo. Nao ha estimativa confiavel a reportar hoje."
+        },
+        {
+          "title": "864 KB de JS descompactado, dominados por um chunk de 315 KB (Three.js)",
+          "severity": "Low",
+          "description": "864 KB descompactados, ~364 KB transferidos em 13 requisicoes. O corredor 3D e a peca autoral do site e o fallback textual ja pinta antes do WebGL inicializar, entao o custo nao bloqueia o primeiro conteudo.",
+          "recommendation": "Nao mexer agora. Falsificacao: se apos 30 dias de trafego o GSC mostrar LCP acima de 2,5s em movel, carregar o Three.js sob demanda depois do primeiro paint."
+        },
+        {
+          "title": "Primeira captura das paginas de projeto e PNG eager de ate 729 KB",
+          "severity": "Medium",
+          "description": "/projetos/radar-fiscal carrega 729 KB de PNG com loading=eager no caminho critico. next.config.ts declara formats avif/webp mas nada passa por next/image — 0 ocorrencias de srcset e de _next/image no HTML publicado.",
+          "recommendation": "Trocar <img> por next/image em src/app/projetos/[slug]/page.tsx:105. As dimensoes ja vem do conteudo, entao nao ha risco de reintroduzir CLS."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "weight": 10,
+      "score": 78,
+      "previous_score": 50,
+      "what_works": [
+        "llms.txt de 4.186 bytes com projetos no formato problema->resultado, stack, contato e links — acima da media",
+        "robots.txt sem bloqueio a GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot",
+        "Conteudo server-rendered: 748 palavras no HTML bruto da home apesar do WebGL",
+        "H2 autocontidos, bons pontos de extracao de passagem",
+        "Person com sameAs e knowsAbout — entidade bem definida"
+      ],
+      "findings": [
+        {
+          "title": "Sinal de entidade dividido entre JSON-LD e texto visivel",
+          "severity": "High",
+          "description": "O nome 'Leandro Oliveira' aparece no JSON-LD e no llms.txt, mas em nenhum <title> nem <h1>. Um modelo que resolve entidade por texto visivel encontra 'lhs.oliveira'; um que le dados estruturados encontra 'Leandro Oliveira'.",
+          "recommendation": "Mesma correcao do achado de titulo. Falsificacao: perguntar a ChatGPT Search e Perplexity 'quem e Leandro Oliveira desenvolvedor' em 60 dias — se nenhum citar o dominio, o problema e de autoridade externa, nao de estrutura."
+        },
+        {
+          "title": "Passagens curtas demais para citacao com contexto",
+          "severity": "Medium",
+          "description": "Os blocos sob cada H2 das paginas de projeto tem ~80 palavras. Bom para leitura, curto para um modelo citar com contexto suficiente.",
+          "recommendation": "Expandir para 150-250 palavras por bloco nas paginas de projeto."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "weight": 5,
+      "score": 66,
+      "previous_score": 65,
+      "what_works": [
+        "Zero imagens sem alt em 12 paginas; zero alt=\"\" indevido",
+        "Alt descritivo de verdade nas capturas dos projetos (descreve a tela, nao o arquivo)",
+        "width/height presentes nas paginas de projeto — sem risco de CLS",
+        "Primeira captura eager, restante lazy",
+        "og:image presente na home e nos 7 projetos"
+      ],
+      "findings": [
+        {
+          "title": "Nenhuma nota tem og:image — prévia de link sai em branco",
+          "severity": "High",
+          "description": "/notas e as tres notas nao tem og:image nem twitter:image. A rota /notas/[slug]/opengraph-image retorna 404 (verificado). As notas sao o conteudo feito para circular e a conversao declarada e WhatsApp, que renderiza card com imagem.",
+          "recommendation": "Adicionar opengraph-image.tsx em notas/[slug] e em notas/, no mesmo padrao do /opengraph-image da raiz, que ja funciona. Falsificacao: Facebook Sharing Debugger na URL da nota."
+        },
+        {
+          "title": "1,44 MB de capturas em PNG nao otimizado; next.config inerte",
+          "severity": "Medium",
+          "description": "radar-fiscal.png 729 KB, roadmap 212 KB, dochub 192 KB, gabriela-lorenson 91 KB, ebano 81 KB, petgest 73 KB, alinnea 65 KB. next.config.ts declara formats avif/webp mas nenhuma imagem passa por next/image (0 srcset, 0 _next/image no HTML). Custo real apenas nas paginas de projeto — na home o modo WebGL nao carrega imagem nenhuma.",
+          "recommendation": "next/image em src/app/projetos/[slug]/page.tsx e recomprimir radar-fiscal.png. Falsificacao: grep -c srcset na pagina do Radar Fiscal deve ser maior que zero."
+        },
+        {
+          "title": "Alt generico no fallback da home",
+          "severity": "Low",
+          "description": "As 7 <img> do modo documento usam 'Interface do projeto {titulo}', enquanto as paginas de projeto ja tem alt descritivo real.",
+          "recommendation": "Reaproveitar o texto que ja existe no conteudo."
+        },
+        {
+          "title": "Alvos de toque abaixo da diretriz movel",
+          "severity": "Medium",
+          "description": "22 links com altura abaixo de 40px: nav a 15px, CTAs 'CONHECER PROJETO' e 'ABRIR SITE' a 11px. A recomendacao do Google e ~48px de area tocavel.",
+          "recommendation": "Aumentar o padding vertical dos links; a tipografia nao precisa mudar."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Fase 1: Antes de submeter ao Search Console",
+        "timeframe": "Dia 1",
+        "items": [
+          "A1 — usar nomeCompleto no template de titulo (src/lib/site.ts:4-5 + layout.tsx) — 20 min",
+          "A2 — titulo de projeto = {nome} — {categoria} | Leandro Oliveira (generateMetadata) — 30 min",
+          "M3 — redirect 301 www -> apex no painel Vercel — 5 min",
+          "Depois: submeter sitemap.xml ao Google Search Console e Bing Webmaster Tools"
+        ]
+      },
+      {
+        "name": "Fase 2: Alto impacto",
+        "timeframe": "Semana 1",
+        "items": [
+          "A3 + M2 — opengraph-image.tsx para notas/[slug] e notas/; adicionar image ao BlogPosting — 1-2h",
+          "A4a — criar hub /projetos (hoje 404), incluir no sitemap e no breadcrumb — 2h",
+          "A4b — bloco 'outros projetos' (2-3 irmaos) em cada pagina de projeto — 1h",
+          "A4c — link cruzado nota <-> projeto que a exemplifica — 1h",
+          "M1 — CreativeWork.url para a propria pagina; site externo em sameAs; remover keywords vazio; adicionar mainEntityOfPage — 30 min"
+        ]
+      },
+      {
+        "name": "Fase 3: Otimizacao",
+        "timeframe": "Mes 1",
+        "items": [
+          "M5 — next/image nas paginas de projeto; recomprimir radar-fiscal.png (729 KB) — 1h",
+          "M4 — nosniff, Referrer-Policy e Permissions-Policy em next.config.ts; CSP por ultimo com teste — 1-2h",
+          "M6 — padding vertical nos links para ~48px de area tocavel — 1h",
+          "M7 — og:locale pt_BR no metadata compartilhado — 5 min",
+          "B2 — reaproveitar alt descritivo no fallback da home — 20 min",
+          "B3 — paragrafo de contexto em /notas — 20 min",
+          "B4 — 301 de lhs-oliveira-portfolio.vercel.app para o dominio proprio — 10 min"
+        ]
+      },
+      {
+        "name": "Fase 4: Conteudo e monitoramento",
+        "timeframe": "Continuo",
+        "items": [
+          "B1 — duas notas/mes de 600-900 palavras ancoradas nos problemas dos projetos",
+          "Uma metrica concreta e verificavel por projeto",
+          "Reavaliar performance com dado de campo CrUX antes de mexer no chunk do Three.js",
+          "Monitorar: impressoes para o nome proprio, impressoes para consultas de categoria, paginas indexadas (meta 13), cliques em paginas de projeto, CWV de campo"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": null,
+    "history_dir": "historico/2026-08-05/"
+  }
+}
