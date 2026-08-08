@@ -22,14 +22,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const caminho = `/projetos/${projeto.slug}`;
   const capa = projeto.imagens[0]?.src;
 
+  /*
+   * "Alinnea — lhs.oliveira" gastava 22 dos ~60 caracteres do título em dois
+   * nomes próprios que ninguém busca. A categoria entra aqui, no campo de maior
+   * peso, e não só na descrição, onde já estava.
+   */
+  const titulo = `${projeto.titulo} — ${projeto.categoria}`;
+
   return {
-    title: projeto.titulo,
+    title: titulo,
     description: projeto.resumo,
     alternates: { canonical: caminho },
     openGraph: {
       type: 'article',
+      locale: 'pt_BR',
       url: caminho,
-      title: projeto.titulo,
+      title: titulo,
       description: projeto.resumo,
       ...(capa ? { images: [capa] } : {}),
     },
@@ -42,15 +50,24 @@ export default async function ProjetoPage({ params }: Props) {
   if (!projeto) notFound();
 
   const endereco = `${site.url}/projetos/${projeto.slug}`;
+  const outros = getProjetos().filter((p) => p.slug !== projeto.slug).slice(0, 3);
 
   const obraJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name: projeto.titulo,
     description: projeto.resumo,
-    url: projeto.url ?? endereco,
+    /*
+     * `url` é a URL canônica da entidade descrita *nesta* página. Apontá-la para
+     * o produto no ar — como estava — diz ao buscador que a página não é sobre
+     * si mesma. O endereço externo é a mesma obra em outro lugar: `sameAs`.
+     */
+    url: endereco,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': endereco },
+    ...(projeto.url ? { sameAs: [projeto.url] } : {}),
     creator: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
-    keywords: projeto.stack,
+    // Array vazio é ruído: quatro dos sete projetos não declaram stack.
+    ...(projeto.stack.length > 0 ? { keywords: projeto.stack } : {}),
     ...(projeto.imagens.length > 0
       ? { image: projeto.imagens.map((captura) => `${site.url}${captura.src}`) }
       : {}),
@@ -61,7 +78,8 @@ export default async function ProjetoPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Início', item: site.url },
-      { '@type': 'ListItem', position: 2, name: projeto.titulo, item: endereco },
+      { '@type': 'ListItem', position: 2, name: 'Projetos', item: `${site.url}/projetos` },
+      { '@type': 'ListItem', position: 3, name: projeto.titulo, item: endereco },
     ],
   };
 
@@ -71,8 +89,8 @@ export default async function ProjetoPage({ params }: Props) {
       <JsonLd dados={trilhaJsonLd} />
       <div className="shell py-16 md:py-24">
         <Link
-          href="/#projetos"
-          className="meta group inline-flex items-center gap-3 text-mid transition-colors hover:text-mark"
+          href="/projetos"
+          className="meta group inline-flex items-center gap-3 py-2 text-mid transition-colors hover:text-mark"
         >
           <span aria-hidden className="transition-transform group-hover:-translate-x-1">
             ←
@@ -143,6 +161,34 @@ export default async function ProjetoPage({ params }: Props) {
             Conversar sobre um projeto
           </Botao>
         </div>
+
+        {outros.length > 0 ? (
+          /*
+           * Antes esta página emitia um único link interno — a home. Sete
+           * projetos que não se citam são sete becos: quem chega por um deles
+           * sai pelo mesmo lugar, e nenhum reforça o outro.
+           */
+          <nav aria-label="Outros projetos" className="mt-16 border-t border-line pt-10">
+            <h2 className="meta text-dim">Outros projetos</h2>
+            <ul className="mt-6 grid gap-px bg-line sm:grid-cols-3">
+              {outros.map((outro) => (
+                <li key={outro.slug} className="bg-black">
+                  <Link
+                    href={`/projetos/${outro.slug}`}
+                    className="group block h-full p-5 transition-colors hover:bg-panel sm:p-6"
+                  >
+                    <span className="title-tight block text-lg text-paper transition-colors group-hover:text-mark">
+                      {outro.titulo}
+                    </span>
+                    <span className="mt-2 block text-sm leading-6 text-mid">
+                      {outro.categoria}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
       </div>
     </article>
   );

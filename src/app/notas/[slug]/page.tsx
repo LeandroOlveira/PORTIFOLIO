@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: caminho },
     openGraph: {
       type: 'article',
+      locale: 'pt_BR',
       url: caminho,
       title: n.titulo,
       description: n.resumo,
@@ -50,6 +51,9 @@ export default async function Nota({ params }: Props) {
     datePublished: n.data,
     dateModified: n.data,
     inLanguage: site.locale,
+    // O mesmo card que o WhatsApp mostra. A diretriz de Article pede imagem, e
+    // gerar uma segunda só para o JSON-LD seria manter duas verdades.
+    image: [`${endereco}/opengraph-image`],
     mainEntityOfPage: { '@type': 'WebPage', '@id': endereco },
     author: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
     publisher: { '@type': 'Person', name: site.nomeCompleto, url: site.url },
@@ -108,8 +112,19 @@ export default async function Nota({ params }: Props) {
           <p className="title-tight max-w-[26ch] text-[1.5rem] text-paper sm:text-[1.875rem]">
             Tem um processo aí que se parece com isso?
           </p>
-          <div className="mt-7">
+          <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
             <Botao href={whatsappLink()}>Chamar no WhatsApp</Botao>
+            {/* A nota argumenta; os projetos são a prova. Sem este link o texto
+                terminava sem lugar para onde mandar quem se convenceu. */}
+            <Link
+              href="/projetos"
+              className="meta group inline-flex items-center gap-3 py-2 text-mid transition-colors hover:text-mark"
+            >
+              Ver os projetos
+              <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                &rarr;
+              </span>
+            </Link>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: site.url, lastModified: agora, priority: 1 },
+    { url: `${site.url}/projetos`, lastModified: agora, priority: 0.9 },
     { url: `${site.url}/notas`, lastModified: agora, priority: 0.7 },
     ...getProjetos().map((p) => ({
       url: `${site.url}/projetos/${p.slug}`,

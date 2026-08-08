@@ -6,6 +6,7 @@ import { getNotas, getProjetos, parseProjeto, tempoDeLeitura } from '@/lib/conte
 const valid = {
   titulo: 'Alinnea',
   resumo: 'CRM para psicólogos.',
+  categoria: 'CRM para psicólogos',
   problema: 'Rotinas clínicas espalhadas.',
   resultado: 'Agenda, prontuário e comunicação reunidos.',
   status: 'publicado',
@@ -52,6 +53,18 @@ describe('project content', () => {
       'gabriela-lorenson',
       'ebano',
     ]);
+  });
+
+  it('gives every project a title that says what it is, inside the ~60 chars Google shows', () => {
+    for (const projeto of getProjetos()) {
+      expect(projeto.categoria).toBeTruthy();
+      // O nome próprio sozinho não é buscável: a categoria precisa acrescentar
+      // termo, não repetir o título.
+      expect(projeto.categoria.toLowerCase()).not.toBe(projeto.titulo.toLowerCase());
+
+      const titulo = `${projeto.titulo} — ${projeto.categoria} — Leandro Oliveira`;
+      expect(titulo.length).toBeLessThanOrEqual(60);
+    }
   });
 
   it('loads safe visual proof for the four operational products', () => {

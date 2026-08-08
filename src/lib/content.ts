@@ -123,6 +123,15 @@ export type Projeto = {
   slug: string;
   titulo: string;
   resumo: string;
+  /**
+   * A categoria em três ou quatro palavras, para o `<title>`.
+   *
+   * "Alinnea" é um nome inventado que ninguém digita na busca; "CRM para
+   * psicólogos" é o que alguém procura. O `resumo` já dizia isso, mas longo
+   * demais para caber no título somado ao nome — daí um campo próprio, curto
+   * por contrato, em vez de recortar o resumo no código e torcer.
+   */
+  categoria: string;
   problema: string;
   resultado: string;
   status: ProjectStatus;
@@ -228,6 +237,7 @@ export function parseProjeto(
   }
 
   const resumo = requiredString(slug, data, 'resumo');
+  const categoria = requiredString(slug, data, 'categoria');
   const problema = requiredString(slug, data, 'problema');
   const resultado = requiredString(slug, data, 'resultado');
   const tipo = requiredString(slug, data, 'tipo');
@@ -236,6 +246,7 @@ export function parseProjeto(
     slug,
     titulo: requiredString(slug, data, 'titulo'),
     resumo,
+    categoria,
     problema,
     resultado,
     status: status as ProjectStatus,

@@ -4,6 +4,14 @@ export const site = {
   nome: 'lhs.oliveira',
   nomeCompleto: 'Leandro Oliveira',
   papel: 'Desenvolvedor full stack · Produto e operações',
+  /**
+   * O papel sem o complemento, para caber em `<title>`.
+   *
+   * `papel` inteiro estoura os ~60 caracteres que o Google mostra quando somado
+   * ao nome. Aqui é onde a busca lê; o complemento continua vivo na descrição,
+   * no `jobTitle` do JSON-LD e no rodapé do card social.
+   */
+  papelCurto: 'Desenvolvedor full stack',
   descricao:
     'Produtos digitais e sistemas para operações reais, da descoberta ao código em produção.',
   /**

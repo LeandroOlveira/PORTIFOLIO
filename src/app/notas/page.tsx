@@ -10,7 +10,13 @@ export const metadata: Metadata = {
   title: 'Notas',
   description: DESCRICAO,
   alternates: { canonical: '/notas' },
-  openGraph: { type: 'website', url: '/notas', title: 'Notas', description: DESCRICAO },
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: '/notas',
+    title: 'Notas',
+    description: DESCRICAO,
+  },
 };
 
 export default function ListaDeNotas() {
